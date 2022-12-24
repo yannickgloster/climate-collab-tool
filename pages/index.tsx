@@ -5,10 +5,11 @@ import io, { Socket } from "socket.io-client";
 import styles from "../styles/Home.module.css";
 
 import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import Stack from "@mui/material/Stack";
 import { gameCodeLength } from "../utils/constants";
+import Layout from "../components/layout";
 
 let socket: Socket;
 
@@ -72,26 +73,31 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
-        <Container maxWidth="lg">
-          <Typography variant="h3">IPCC Microworld</Typography>
-          <Button variant="contained" onClick={generateGameCode}>
+      <Layout>
+        <Stack spacing={2}>
+          <Typography variant="h3" textAlign="center">
+            IPCC Microworld
+          </Typography>
+          <Typography variant="subtitle1" textAlign="center">
+            This is the description.
+          </Typography>
+          <Button variant="contained" size="large" onClick={generateGameCode}>
             New Game
           </Button>
           <TextField
-            placeholder="FH6DA"
+            placeholder={"fh6sd93da0dm28s".substring(0, gameCodeLength)}
             inputProps={{ style: { textTransform: "uppercase" } }}
             onChange={handleChange}
             value={gameCode}
           />
-          <Button variant="contained" onClick={joinRoom}>
+          <Button variant="contained" size="large" onClick={joinRoom}>
             Join Game
           </Button>
-          <Button variant="contained" onClick={testRoom}>
+          <Button variant="contained" size="large" onClick={testRoom}>
             Test Room
           </Button>
-        </Container>
-      </main>
+        </Stack>
+      </Layout>
     </>
   );
 }
