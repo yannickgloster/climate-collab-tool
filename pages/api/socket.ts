@@ -3,6 +3,7 @@ import type { NextApiResponseWithSocket } from "../../utils/types/NextApiSocket"
 import { RemoteSocket, Server } from "socket.io";
 
 import sockets from "../../utils/socketHandler";
+import { socketEvent } from "../../utils/socketHandler";
 
 const socketHandler = function handler(
   req: NextApiRequest,
@@ -14,7 +15,7 @@ const socketHandler = function handler(
     const io = new Server(res.socket.server);
 
     io.on("connection", (socket) => {
-      socket.broadcast.emit("CONNECTED_USER", "a user connected");
+      socket.broadcast.emit(socketEvent.connected_user, "a user connected");
       sockets(io, socket);
     });
 

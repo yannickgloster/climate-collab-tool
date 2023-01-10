@@ -10,29 +10,33 @@ import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import { gameCodeLength } from "../utils/constants";
 import Layout from "../components/layout";
+import { user as userType } from "../utils/types/game";
+import { v4 as uuidv4 } from "uuid";
+import { socketEvent } from "../utils/socketHandler";
 
 let socket: Socket;
 
 export default function Home() {
   const [gameCode, setGameCode] = useState("");
+  const [user, setUser] = useState<userType>({ userId: uuidv4() });
 
   useEffect(() => {
     fetch("/api/socket").finally(() => {
       socket = io();
 
-      socket.on("connect", () => {
+      socket.on(socketEvent.connect, () => {
         console.log("connected");
       });
 
-      socket.on("CONNECTED_USER", (message) => {
+      socket.on(socketEvent.connected_user, (message) => {
         console.log(message);
       });
 
-      socket.on("ROOM_BROADCAST", (message) => {
+      socket.on(socketEvent.room_broadcast, (message) => {
         console.log(message);
       });
 
-      socket.on("disconnect", () => {
+      socket.on(socketEvent.disconnect, () => {
         console.log("disconnect");
       });
     });
@@ -54,15 +58,15 @@ export default function Home() {
 
     // TODO: Check if code exists. If it does, generate a new code.
 
-    socket.emit("CREATE_ROOM", generateGameCode);
+    socket.emit(socketEvent.create_room, user, generateGameCode);
   };
 
   const joinRoom = () => {
-    socket.emit("JOIN_ROOM", gameCode);
+    socket.emit(socketEvent.join_room, user, gameCode);
   };
 
   const testRoom = () => {
-    socket.emit("TEST_ROOM", gameCode, "TEST MESSAGE WOOO");
+    socket.emit(socketEvent.test_room, user, gameCode, "TEST MESSAGE WOOO");
   };
 
   return (

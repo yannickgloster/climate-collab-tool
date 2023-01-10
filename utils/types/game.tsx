@@ -8,7 +8,7 @@ export enum Regions {
 }
 
 export interface user {
-  userId: string;
+  readonly userId: string;
   region?: Regions;
   gameCode?: string;
 }
