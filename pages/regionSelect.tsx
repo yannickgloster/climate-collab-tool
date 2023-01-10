@@ -44,7 +44,7 @@ export default function RegionSelect() {
                   onClick={() => onRegionSelect(region)}
                   color={selectedRegion == region ? "success" : "primary"}
                 >
-                  Select Region
+                  Select{selectedRegion == region ? "ed" : ""} Region
                 </Button>
               </Stack>
             );
