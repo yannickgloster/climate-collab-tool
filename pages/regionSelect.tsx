@@ -7,12 +7,17 @@ import { Regions } from "../utils/types/game";
 
 import { useEffect, useState } from "react";
 import { userState } from "../utils/types/game";
+import { useRouter } from "next/router";
+
+import { socket } from "./_app";
 
 export default function RegionSelect({ user, setUser }: userState) {
   const [selectedRegion, setSelectedRegion] = useState("");
+  const router = useRouter();
 
   const onRegionSelect = (region: Regions) => {
     setSelectedRegion(region);
+    setUser({ ...user, region: region });
   };
 
   return (
@@ -24,6 +29,7 @@ export default function RegionSelect({ user, setUser }: userState) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout>
+        <Typography variant="overline">Game Code: {user.gameCode}</Typography>
         <Typography variant="h3" textAlign="center">
           Select Region
         </Typography>

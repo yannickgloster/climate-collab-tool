@@ -15,7 +15,7 @@ const socketHandler = function handler(
     const io = new Server(res.socket.server);
 
     io.on("connection", (socket) => {
-      socket.broadcast.emit(socketEvent.connected_user, "a user connected");
+      // socket.broadcast.emit(socketEvent.connected_user, "a user connected");
       sockets(io, socket);
     });
 

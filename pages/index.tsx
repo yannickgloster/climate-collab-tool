@@ -1,6 +1,5 @@
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import io, { Socket } from "socket.io-client";
 
 import styles from "../styles/Home.module.css";
 
@@ -12,34 +11,14 @@ import { gameCodeLength } from "../utils/constants";
 import Layout from "../components/layout";
 import { userState } from "../utils/types/game";
 import { socketEvent } from "../utils/socketHandler";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
-let socket: Socket;
+import { socket } from "./_app";
 
 export default function Home({ user, setUser }: userState) {
   const [gameCode, setGameCode] = useState("");
-
-  // TODO: think about moving this to _app.js as we want these events cross page.
-  useEffect(() => {
-    fetch("/api/socket").finally(() => {
-      socket = io();
-
-      socket.on(socketEvent.connect, () => {
-        console.log("connected");
-      });
-
-      socket.on(socketEvent.connected_user, (message) => {
-        console.log(message);
-      });
-
-      socket.on(socketEvent.room_broadcast, (message) => {
-        console.log(message);
-      });
-
-      socket.on(socketEvent.disconnect, () => {
-        console.log("disconnect");
-      });
-    });
-  }, []);
+  const router = useRouter();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.value.length <= gameCodeLength) {
@@ -47,17 +26,17 @@ export default function Home({ user, setUser }: userState) {
     }
   };
 
-  // TODO: Think about moving this into a sperate function
   const generateGameCode = () => {
     const generateGameCode = Math.random()
       .toString(16)
       .substring(2, 2 + gameCodeLength);
 
-    console.log(generateGameCode);
-
     // TODO: Check if code exists. If it does, generate a new code.
 
     socket.emit(socketEvent.create_room, user, generateGameCode);
+
+    setUser({ ...user, gameCode: generateGameCode });
+    router.push("/regionSelect");
   };
 
   const joinRoom = () => {
