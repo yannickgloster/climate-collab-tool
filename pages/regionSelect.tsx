@@ -6,8 +6,9 @@ import Stack from "@mui/material/Stack";
 import { Regions } from "../utils/types/game";
 
 import { useEffect, useState } from "react";
+import { userState } from "../utils/types/game";
 
-export default function RegionSelect() {
+export default function RegionSelect({ user, setUser }: userState) {
   const [selectedRegion, setSelectedRegion] = useState("");
 
   const onRegionSelect = (region: Regions) => {

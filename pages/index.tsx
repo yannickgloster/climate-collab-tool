@@ -10,16 +10,15 @@ import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import { gameCodeLength } from "../utils/constants";
 import Layout from "../components/layout";
-import { user as userType } from "../utils/types/game";
-import { v4 as uuidv4 } from "uuid";
+import { userState } from "../utils/types/game";
 import { socketEvent } from "../utils/socketHandler";
 
 let socket: Socket;
 
-export default function Home() {
+export default function Home({ user, setUser }: userState) {
   const [gameCode, setGameCode] = useState("");
-  const [user, setUser] = useState<userType>({ userId: uuidv4() });
 
+  // TODO: think about moving this to _app.js as we want these events cross page.
   useEffect(() => {
     fetch("/api/socket").finally(() => {
       socket = io();

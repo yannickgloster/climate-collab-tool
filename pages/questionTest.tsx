@@ -1,5 +1,6 @@
 import Layout from "../components/layout";
 import Question, { Answer } from "../components/question";
+import { userState } from "../utils/types/game";
 
 const questionData = {
   text: "Where where you born?",
@@ -16,7 +17,7 @@ const questionData = {
   ],
 };
 
-export default function QuestionTest() {
+export default function QuestionTest({ user, setUser }: userState) {
   const answerCallback = (answer: Answer) => {
     console.log(answer);
   };

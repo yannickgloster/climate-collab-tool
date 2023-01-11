@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from "react";
+
 export enum Regions {
   EU = "European Union",
   US = "United States",
@@ -11,4 +13,9 @@ export interface user {
   readonly userId: string;
   region?: Regions;
   gameCode?: string;
+}
+
+export interface userState {
+  user: user;
+  setUser: Dispatch<SetStateAction<user>>;
 }
