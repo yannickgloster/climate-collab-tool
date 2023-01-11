@@ -85,19 +85,35 @@ export default function Home() {
           <Typography variant="subtitle1" textAlign="center">
             This is the description.
           </Typography>
-          <Button variant="contained" size="large" onClick={generateGameCode}>
+          <Button
+            variant="contained"
+            size="large"
+            onClick={generateGameCode}
+            data-cy="newGameButton"
+          >
             New Game
           </Button>
           <TextField
+            id="gameCodeTextField"
             placeholder={"fh6sd93da0dm28s".substring(0, gameCodeLength)}
             inputProps={{ style: { textTransform: "uppercase" } }}
             onChange={handleChange}
             value={gameCode}
           />
-          <Button variant="contained" size="large" onClick={joinRoom}>
+          <Button
+            variant="contained"
+            size="large"
+            onClick={joinRoom}
+            data-cy="joinGameButton"
+          >
             Join Game
           </Button>
-          <Button variant="contained" size="large" onClick={testRoom}>
+          <Button
+            variant="contained"
+            size="large"
+            onClick={testRoom}
+            data-cy="testRoomButton"
+          >
             Test Room
           </Button>
         </Stack>
