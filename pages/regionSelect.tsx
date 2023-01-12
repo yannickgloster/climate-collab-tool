@@ -10,6 +10,7 @@ import { userState } from "../utils/types/game";
 import { useRouter } from "next/router";
 
 import { socket } from "./_app";
+import { socketEvent } from "../utils/socketHandler";
 
 export default function RegionSelect({ user, setUser }: userState) {
   const [selectedRegion, setSelectedRegion] = useState("");
@@ -27,6 +28,15 @@ export default function RegionSelect({ user, setUser }: userState) {
     }
   });
 
+  const testRoom = () => {
+    socket.emit(
+      socketEvent.test_room,
+      user,
+      user.gameCode,
+      "TEST MESSAGE WOOO"
+    );
+  };
+
   return (
     <>
       <Head>
@@ -37,6 +47,14 @@ export default function RegionSelect({ user, setUser }: userState) {
       </Head>
       <Layout>
         <Typography variant="overline">Game Code: {user.gameCode}</Typography>
+        <Button
+          variant="contained"
+          size="large"
+          onClick={testRoom}
+          data-cy="testRoomButton"
+        >
+          Test Room
+        </Button>
         <Typography variant="h3" textAlign="center">
           Select Region
         </Typography>

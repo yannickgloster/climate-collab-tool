@@ -33,18 +33,23 @@ export default function Home({ user, setUser }: userState) {
 
     // TODO: Check if code exists. If it does, generate a new code.
 
-    socket.emit(socketEvent.create_room, user, generateGameCode);
+    const newUser = { ...user, gameCode: generateGameCode };
 
-    setUser({ ...user, gameCode: generateGameCode });
+    // TODO: Check if valid join
+    socket.emit(socketEvent.create_room, newUser, generateGameCode);
+
+    setUser(newUser);
     router.push("/regionSelect");
   };
 
   const joinRoom = () => {
-    socket.emit(socketEvent.join_room, user, gameCode);
-  };
+    const newUser = { ...user, gameCode: gameCode };
 
-  const testRoom = () => {
-    socket.emit(socketEvent.test_room, user, gameCode, "TEST MESSAGE WOOO");
+    // TODO: Check if valid join
+    socket.emit(socketEvent.join_room, newUser, gameCode);
+
+    setUser(newUser);
+    router.push("/regionSelect");
   };
 
   return (
@@ -85,14 +90,6 @@ export default function Home({ user, setUser }: userState) {
             data-cy="joinGameButton"
           >
             Join Game
-          </Button>
-          <Button
-            variant="contained"
-            size="large"
-            onClick={testRoom}
-            data-cy="testRoomButton"
-          >
-            Test Room
           </Button>
         </Stack>
       </Layout>
