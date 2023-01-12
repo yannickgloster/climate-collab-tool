@@ -4,8 +4,7 @@ on: [push]
 
 jobs:
   cypress-run:
-    runs-on: ubuntu-latest
-    container: cypress/browsers:node12.18.3-chrome87-ff82
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -15,12 +14,7 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v5.0.5 # use the explicit version number
         with:
-          # Specify Browser since container image is compile with Firefox
-          browser: firefox
+          browser: chrome
           build: npm run build
           start: npm run start
           wait-on: "http://localhost:3000"
-  if: failure()
-    with:
-      name: npm-logs
-      path: ~/.npm/_logs
