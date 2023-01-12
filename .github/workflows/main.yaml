@@ -1,4 +1,4 @@
-name: Cypress Firefox Tests
+name: Cypress Firefox Test
 
 on: [push]
 
