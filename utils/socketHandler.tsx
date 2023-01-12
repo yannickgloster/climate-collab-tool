@@ -18,6 +18,7 @@ export enum socketEvent {
   start_game = "start_game",
   completed_questions = "completed_questions",
   visualize_data = "visualize_data",
+  error_game = "game_error",
 }
 
 // TODO: have some script to remove empty rooms or untouched rooms after a certain period of time
