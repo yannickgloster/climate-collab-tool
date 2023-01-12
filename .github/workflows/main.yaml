@@ -20,3 +20,7 @@ jobs:
           build: npm run build
           start: npm run start
           wait-on: "http://localhost:3000"
+  if: failure()
+    with:
+      name: npm-logs
+      path: ~/.npm/_logs
