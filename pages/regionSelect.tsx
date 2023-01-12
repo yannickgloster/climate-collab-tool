@@ -20,6 +20,13 @@ export default function RegionSelect({ user, setUser }: userState) {
     setUser({ ...user, region: region });
   };
 
+  useEffect(() => {
+    if (!user?.gameCode) {
+      // TODO: Add error handling for going to a page without a gamecode
+      router.push("/");
+    }
+  });
+
   return (
     <>
       <Head>

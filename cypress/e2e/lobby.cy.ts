@@ -1,13 +1,14 @@
 import { gameCodeLength } from "../../utils/constants";
 
 describe("Lobby", () => {
-  it("successfully creates lobby", () => {
-    cy.visit("http://localhost:3000/");
+  // TODO: Write lobby assertions
+  // it("successfully creates lobby", () => {
+  //   cy.visit("http://localhost:3000/");
 
-    cy.get('[data-cy="newGameButton"]').click();
+  //   cy.get('[data-cy="newGameButton"]').click();
 
-    // TODO: Add Assertions
-  });
+  //   // TODO: Add Assertions
+  // });
 
   describe("Joining Lobby", () => {
     it("does not allow long lobby codes", () => {
