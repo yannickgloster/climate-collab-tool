@@ -6,20 +6,19 @@ import Stack from "@mui/material/Stack";
 import { Regions } from "../utils/types/game";
 
 import { useEffect, useState } from "react";
-import { userState } from "../utils/types/game";
+import { userState, gameState } from "../utils/types/game";
 import { useRouter } from "next/router";
 
 import { socket } from "./_app";
 import { socketEvent } from "../utils/socketHandler";
 
-export default function RegionSelect({ user, setUser }: userState) {
-  const [selectedRegion, setSelectedRegion] = useState("");
+export default function RegionSelect({
+  user,
+  setUser,
+  game,
+  setGame,
+}: userState & gameState) {
   const router = useRouter();
-
-  const onRegionSelect = (region: Regions) => {
-    setSelectedRegion(region);
-    setUser({ ...user, region: region });
-  };
 
   useEffect(() => {
     if (!user?.gameCode) {
@@ -27,15 +26,6 @@ export default function RegionSelect({ user, setUser }: userState) {
       router.push("/");
     }
   });
-
-  const testRoom = () => {
-    socket.emit(
-      socketEvent.test_room,
-      user,
-      user.gameCode,
-      "TEST MESSAGE WOOO"
-    );
-  };
 
   return (
     <>
@@ -47,14 +37,6 @@ export default function RegionSelect({ user, setUser }: userState) {
       </Head>
       <Layout>
         <Typography variant="overline">Game Code: {user.gameCode}</Typography>
-        <Button
-          variant="contained"
-          size="large"
-          onClick={testRoom}
-          data-cy="testRoomButton"
-        >
-          Test Room
-        </Button>
         <Typography variant="h3" textAlign="center">
           Select Region
         </Typography>
@@ -62,8 +44,17 @@ export default function RegionSelect({ user, setUser }: userState) {
           This is the description.
         </Typography>
         <Stack spacing={2}>
+          {/* TODO: This isn't very efficient, fix this. Loopings over all the users for every region.*/}
           {Object.keys(Regions).map((r) => {
-            const region = Regions[r];
+            const region: Regions = Regions[r];
+            const selfRegion =
+              game?.users.filter(
+                (u) => u.userId === user.userId && u.region === region
+              ).length > 0;
+
+            const takenRegion =
+              !selfRegion &&
+              game?.users.filter((u) => u.region === region).length > 0;
             return (
               <Stack direction="row" spacing={2} key={r}>
                 <Typography variant="h6" textAlign="center">
@@ -73,15 +64,39 @@ export default function RegionSelect({ user, setUser }: userState) {
                 <Button
                   variant="contained"
                   size="small"
-                  onClick={() => onRegionSelect(region)}
-                  color={selectedRegion == region ? "success" : "primary"}
+                  color={selfRegion ? "success" : "primary"}
+                  disabled={takenRegion}
                 >
-                  Select{selectedRegion == region ? "ed" : ""} Region
+                  {selfRegion && "Your"}
+                  {takenRegion && "Taken"}
+                  {!takenRegion && !selfRegion && "Unselected"} Region
                 </Button>
               </Stack>
             );
           })}
         </Stack>
+        <Button
+          variant="contained"
+          size="large"
+          onClick={() => {
+            alert("start game");
+          }}
+          disabled={game && game?.availableRegions.length > 0}
+        >
+          Start Game
+        </Button>
+        <br />
+        <Button
+          variant="contained"
+          size="large"
+          onClick={() => {
+            console.log(user);
+            console.log(game);
+          }}
+          data-cy="testRoomButton"
+        >
+          Test
+        </Button>
       </Layout>
     </>
   );

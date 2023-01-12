@@ -1,3 +1,4 @@
+import { getMaxAge } from "next/dist/server/image-optimizer";
 import type { Server, Socket } from "socket.io";
 import { user as userType, Game } from "../utils/types/game";
 
@@ -27,18 +28,24 @@ export default (io: Server, socket: Socket) => {
   const createRoom = (user: userType, code: string) => {
     if (!rooms.has(code)) {
       socket.join(code);
-      rooms.set(code, new Game(user, code));
+      const game = new Game(code, [user]);
+      game.randomlyAssignRegion(user);
+      rooms.set(code, game);
+      // TODO: Assign user region.
+      io.to(code).emit(socketEvent.joined_room, rooms.get(code));
     } else {
       // TODO: if there is random collision, handle this somehow. Throw error or loop to generate new one or something
     }
   };
   socket.on(socketEvent.create_room, createRoom);
 
-  // TODO: Differentiate from create room. Check to see if room exists.
   const joinRoom = (user: userType, code: string) => {
+    // TODO: Check if room is full
     if (rooms.has(code)) {
       socket.join(code);
-      rooms.get(code).addUser(user);
+      const game = rooms.get(code);
+      game.addUser(user);
+      game.randomlyAssignRegion(user);
       io.to(code).emit(socketEvent.joined_room, rooms.get(code));
     } else {
       // TODO: throw error that the room doesn't exist

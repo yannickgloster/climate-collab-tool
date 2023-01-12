@@ -1,6 +1,6 @@
 import type { AppProps } from "next/app";
 
-import { user as userType } from "../utils/types/game";
+import { Game, user as userType } from "../utils/types/game";
 import { v4 as uuidv4 } from "uuid";
 import { useEffect, useState } from "react";
 import io, { Socket } from "socket.io-client";
@@ -15,6 +15,7 @@ export let socket: Socket;
 
 export default function App({ Component, pageProps }: AppProps) {
   const [user, setUser] = useState<userType>({ userId: uuidv4() });
+  const [game, setGame] = useState<Game>();
 
   useEffect(() => {
     fetch("/api/socket").finally(() => {
@@ -35,8 +36,21 @@ export default function App({ Component, pageProps }: AppProps) {
       socket.on(socketEvent.disconnect, () => {
         console.log("disconnect");
       });
+
+      socket.on(socketEvent.joined_room, (game) => {
+        // HACK: Instead of getting back the class, we only actually get an object with no functions so we need to create a new one
+        setGame(new Game(game._gameCode, game._users, game._availableRegions));
+      });
     });
   }, []);
 
-  return <Component {...pageProps} user={user} setUser={setUser} />;
+  return (
+    <Component
+      {...pageProps}
+      user={user}
+      setUser={setUser}
+      game={game}
+      setGame={setGame}
+    />
+  );
 }
