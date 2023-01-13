@@ -26,7 +26,7 @@ export enum socketEvent {
   error_lobby_does_not_exist = "error_lobby_does_not_exist",
   error_lobby_already_exists = "error_lobby_already_exists",
   error_lobby_full = "error_lobby_full",
-  lobby_timeout = "lobby_timedout",
+  lobby_timeout = "lobby_timeout",
 }
 
 // export const rooms = new Map<string, Game>();
