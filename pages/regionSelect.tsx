@@ -1,19 +1,17 @@
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+
 import Layout from "../components/layout";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import { Regions } from "../utils/types/game";
-
+import LoopIcon from "@mui/icons-material/Loop";
 import { motion } from "framer-motion";
 
-import { useEffect, useState } from "react";
-import { userState, gameState } from "../utils/types/game";
-import { useRouter } from "next/router";
-
 import { snackbarProps, socket } from "./_app";
-import { socketEvent } from "../utils/socketHandler";
-
-import LoopIcon from "@mui/icons-material/Loop";
+import { socketEvent } from "../utils/socketServerHandler";
+import { userState, gameState } from "../utils/types/game";
+import { Regions } from "../utils/types/game";
 
 export default function RegionSelect({
   user,
@@ -24,6 +22,10 @@ export default function RegionSelect({
   setSnackbar,
 }: userState & gameState & snackbarProps) {
   const router = useRouter();
+
+  const leaveRoom = () => {
+    socket.emit(socketEvent.leave_room, user, user.gameCode);
+  };
 
   useEffect(() => {
     if (!user?.gameCode) {
@@ -106,12 +108,15 @@ export default function RegionSelect({
         Start Game
       </Button>
       <br />
+      <Button variant="contained" size="large" onClick={leaveRoom}>
+        Leave Game
+      </Button>
+      <br />
       <Button
         variant="contained"
         size="large"
         onClick={() => {
-          console.log(user);
-          console.log(game);
+          socket.emit("test");
         }}
         data-cy="testRoomButton"
       >

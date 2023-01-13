@@ -73,7 +73,9 @@ export class Game {
 
   removeUser(user: user) {
     this._timestamp = Date.now();
-    this._users.splice(this._users.indexOf(user), 1);
+    const removedUser = this._users.splice(this._users.indexOf(user), 1)[0];
+    // FIXME: This assumes that the user has a region
+    this._availableRegions.push(removedUser.region);
   }
 }
 

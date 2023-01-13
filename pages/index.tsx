@@ -1,20 +1,18 @@
-import Head from "next/head";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { useState } from "react";
 
-import styles from "../styles/Home.module.css";
-
+import Layout from "../components/layout";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
-import { gameCodeLength } from "../utils/constants";
-import Layout from "../components/layout";
-import { userState } from "../utils/types/game";
-import { socketEvent } from "../utils/socketHandler";
-import Link from "next/link";
-import { useRouter } from "next/router";
 
 import { socket, snackbarProps } from "./_app";
+import { socketEvent } from "../utils/socketServerHandler";
+import { userState } from "../utils/types/game";
+import { gameCodeLength } from "../utils/constants";
+
+import styles from "../styles/Home.module.css";
 
 export default function Home({
   user,
@@ -36,25 +34,16 @@ export default function Home({
       .toString(16)
       .substring(2, 2 + gameCodeLength);
 
-    // TODO: Check if code exists. If it does, generate a new code.
-
     const newUser = { ...user, gameCode: generateGameCode };
 
-    // TODO: Check if valid join
     socket.emit(socketEvent.create_room, newUser, generateGameCode);
-
     setUser(newUser);
-    router.push("/regionSelect");
   };
 
   const joinRoom = () => {
     const newUser = { ...user, gameCode: gameCode };
-
-    // TODO: Check if valid join
     socket.emit(socketEvent.join_room, newUser, gameCode);
-
     setUser(newUser);
-    router.push("/regionSelect");
   };
 
   return (

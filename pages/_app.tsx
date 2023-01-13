@@ -1,14 +1,16 @@
 import type { AppProps } from "next/app";
 import Head from "next/head";
-
-import { Game, user as userType } from "../utils/types/game";
-import { v4 as uuidv4 } from "uuid";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
+
 import io, { Socket } from "socket.io-client";
-import { socketEvent } from "../utils/socketHandler";
+import { socketEvent } from "../utils/socketServerHandler";
+import { v4 as uuidv4 } from "uuid";
+import { Game, user as userType } from "../utils/types/game";
+
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
-import type { Dispatch, SetStateAction } from "react";
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -36,7 +38,9 @@ export default function App({ Component, pageProps }: AppProps) {
     enabled: false,
     severity: "error",
   });
+  const router = useRouter();
 
+  // TODO: Move to a different file
   useEffect(() => {
     fetch("/api/socket").finally(() => {
       socket = io();
@@ -49,17 +53,57 @@ export default function App({ Component, pageProps }: AppProps) {
         console.log(message);
       });
 
-      socket.on(socketEvent.room_broadcast, (message) => {
-        console.log(message);
-      });
-
       socket.on(socketEvent.disconnect, () => {
         console.log("disconnect");
       });
 
-      socket.on(socketEvent.joined_room, (game) => {
+      socket.on(socketEvent.game_update, (game) => {
         // HACK: Instead of getting back the class, we only actually get an object with no functions so we need to create a new one
         setGame(new Game(game._gameCode, game._users, game._availableRegions));
+      });
+
+      socket.on(socketEvent.joined_room, () => {
+        router.push("/regionSelect");
+      });
+
+      socket.on(socketEvent.left_room, () => {
+        router.push("/");
+        setUser({ ...user, gameCode: null });
+      });
+
+      socket.on(socketEvent.lobby_timeout, () => {
+        router.push("/");
+        setUser({ ...user, gameCode: null });
+        setSnackbar({
+          text: "Lobby timed out and you have been disconnected.",
+          enabled: true,
+          severity: "warning",
+        });
+      });
+
+      socket.on(socketEvent.error_lobby_does_not_exist, () => {
+        setSnackbar({
+          text: "Lobby does not exist.",
+          enabled: true,
+          severity: "error",
+        });
+        setUser({ ...user, gameCode: null });
+      });
+
+      socket.on(socketEvent.error_lobby_already_exists, () => {
+        setSnackbar({
+          text: "Lobby code already in use. Try again by clicking New Game.",
+          enabled: true,
+          severity: "error",
+        });
+      });
+
+      socket.on(socketEvent.error_lobby_full, () => {
+        setSnackbar({
+          text: "Cannot join lobby, lobby full.",
+          enabled: true,
+          severity: "error",
+        });
       });
     });
   }, []);
