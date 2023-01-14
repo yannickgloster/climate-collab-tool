@@ -7,7 +7,6 @@ describe("Lobby", () => {
 
   //   cy.get('[data-cy="newGameButton"]').click();
 
-  //   // TODO: Add Assertions
   // });
 
   describe("Joining Lobby", () => {
