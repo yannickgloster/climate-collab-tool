@@ -35,24 +35,6 @@ export default function Questions({
     }
   };
 
-  if (!user?.gameCode || game?.status != GameStatus.questions)
-    return (
-      <Layout>
-        <motion.div
-          animate={{
-            rotate: -360,
-          }}
-          transition={{
-            repeat: Infinity,
-            duration: 1.5,
-            ease: "easeInOut",
-          }}
-        >
-          <LoopIcon fontSize="large" />
-        </motion.div>
-      </Layout>
-    );
-
   return (
     <Layout>
       <Question
