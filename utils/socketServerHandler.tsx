@@ -1,6 +1,6 @@
 import { getMaxAge } from "next/dist/server/image-optimizer";
 import type { Server, Socket } from "socket.io";
-import { user as userType, Game } from "./types/game";
+import { user as userType, Game, GameStatus, SSP } from "./types/game";
 import { gameCodeLength } from "./constants";
 
 export enum socketEvent {
@@ -18,29 +18,29 @@ export enum socketEvent {
   room_broadcast = "room_broadcast",
   connected_user = "connected_user",
   select_region = "select_region",
+  user_request_start_game = "user_request_start_game",
   start_game = "start_game",
   completed_questions = "completed_questions",
-  visualize_data = "visualize_data",
+  recieved_questions = "recieved_questions",
 
   // Errors
   error_lobby_does_not_exist = "error_lobby_does_not_exist",
   error_lobby_already_exists = "error_lobby_already_exists",
   error_lobby_full = "error_lobby_full",
+  error_lobby_not_full = "error_lobby_not_full",
   lobby_timeout = "lobby_timeout",
 }
-
-// export const rooms = new Map<string, Game>();
 
 export default (io: Server, socket: Socket, rooms: Map<string, Game>) => {
   // Room Logic
   const createRoom = (user: userType, code: string) => {
     if (!rooms.has(code)) {
       socket.join(code);
-      const game = new Game(code, [user]);
-      game.randomlyAssignRegion(user);
+      const game = new Game(code, [user], true);
+      const region = game.randomlyAssignRegion(user);
       rooms.set(code, game);
-      io.to(socket.id).emit(socketEvent.joined_room);
-      io.to(code).emit(socketEvent.game_update, rooms.get(code));
+      io.to(socket.id).emit(socketEvent.joined_room, code, region);
+      io.to(code).emit(socketEvent.game_update, game);
     } else {
       io.to(socket.id).emit(socketEvent.error_lobby_already_exists);
     }
@@ -53,9 +53,9 @@ export default (io: Server, socket: Socket, rooms: Map<string, Game>) => {
       if (game.availableRegions.length > 0) {
         socket.join(code);
         game.addUser(user);
-        game.randomlyAssignRegion(user);
-        io.to(socket.id).emit(socketEvent.joined_room);
-        io.to(code).emit(socketEvent.game_update, rooms.get(code));
+        const region = game.randomlyAssignRegion(user);
+        io.to(socket.id).emit(socketEvent.joined_room, code, region);
+        io.to(code).emit(socketEvent.game_update, game);
       } else {
         io.to(socket.id).emit(socketEvent.error_lobby_full);
       }
@@ -71,7 +71,7 @@ export default (io: Server, socket: Socket, rooms: Map<string, Game>) => {
       socket.leave(code);
       game.removeUser(user);
       io.to(socket.id).emit(socketEvent.left_room);
-      io.to(code).emit(socketEvent.game_update, rooms.get(code));
+      io.to(code).emit(socketEvent.game_update, game);
       if (game.users.length == 0) {
         rooms.delete(code);
       }
@@ -81,15 +81,38 @@ export default (io: Server, socket: Socket, rooms: Map<string, Game>) => {
   };
   socket.on(socketEvent.leave_room, leaveRoom);
 
+  const startGame = (code: string) => {
+    if (rooms.has(code)) {
+      const game = rooms.get(code);
+      if (game.availableRegions.length == 0) {
+        game.status = GameStatus.questions;
+        io.to(code).emit(socketEvent.game_update, game);
+        io.to(code).emit(socketEvent.start_game);
+      } else {
+        io.to(socket.id).emit(socketEvent.error_lobby_not_full);
+      }
+    } else {
+      io.to(socket.id).emit(socketEvent.error_lobby_does_not_exist);
+    }
+  };
+  socket.on(socketEvent.user_request_start_game, startGame);
+
   // Game Logic
-  const userCompletedQuestions = (user: userType) => {
-    /* 
-      TODO: Check if all other users are done, keep track of them somehow.
-      Once all users are completed, trigger visualize_data event.
-      Before triggering the visualize event, process all the weights from each user.
-    */
+  const userCompletedQuestions = (user: userType, code: string) => {
+    if (rooms.has(code)) {
+      const game = rooms.get(code);
+      game.userCompletedQuestion(user);
+      io.to(code).emit(socketEvent.game_update, game);
+      io.to(socket.id).emit(socketEvent.recieved_questions);
+      if (game.allUsersCompletedQuestion()) {
+        game.status = GameStatus.visualize;
+        // TODO: process weights from users
+        game.ssp = SSP["1-1.9"];
+        io.to(code).emit(socketEvent.game_update, game);
+      }
+    } else {
+      io.to(socket.id).emit(socketEvent.error_lobby_does_not_exist);
+    }
   };
   socket.on(socketEvent.completed_questions, userCompletedQuestions);
-
-  // Visualize Logic
 };

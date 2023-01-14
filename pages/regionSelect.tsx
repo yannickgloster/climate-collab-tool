@@ -1,5 +1,4 @@
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 
 import Layout from "../components/layout";
 import Typography from "@mui/material/Typography";
@@ -10,7 +9,7 @@ import { motion } from "framer-motion";
 
 import { snackbarProps, socket } from "./_app";
 import { socketEvent } from "../utils/socketServerHandler";
-import { userState, gameState } from "../utils/types/game";
+import { userState, gameState, GameStatus } from "../utils/types/game";
 import { Regions } from "../utils/types/game";
 
 export default function RegionSelect({
@@ -27,23 +26,24 @@ export default function RegionSelect({
     socket.emit(socketEvent.leave_room, user, user.gameCode);
   };
 
-  useEffect(() => {
-    if (!user?.gameCode) {
+  const startGame = () => {
+    if (game.availableRegions.length == 0) {
+      socket.emit(socketEvent.user_request_start_game, user.gameCode);
+    } else {
       setSnackbar({
-        text: "You aren't in a lobby.",
+        text: "Cannot start game, lobby not full.",
         enabled: true,
         severity: "error",
       });
-      router.push("/");
     }
-  }, []);
+  };
 
-  if (!user?.gameCode)
+  if (!user?.gameCode || game?.status != GameStatus.lobby)
     return (
       <Layout>
         <motion.div
           animate={{
-            rotate: 360,
+            rotate: -360,
           }}
           transition={{
             repeat: Infinity,
@@ -100,9 +100,7 @@ export default function RegionSelect({
       <Button
         variant="contained"
         size="large"
-        onClick={() => {
-          alert("start game");
-        }}
+        onClick={startGame}
         disabled={game && game?.availableRegions.length > 0}
       >
         Start Game
@@ -110,17 +108,6 @@ export default function RegionSelect({
       <br />
       <Button variant="contained" size="large" onClick={leaveRoom}>
         Leave Game
-      </Button>
-      <br />
-      <Button
-        variant="contained"
-        size="large"
-        onClick={() => {
-          socket.emit("test");
-        }}
-        data-cy="testRoomButton"
-      >
-        Test
       </Button>
     </Layout>
   );

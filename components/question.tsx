@@ -3,22 +3,9 @@ import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Image from "next/image";
+import { questionProps } from "../utils/types/game";
 
-export interface QuestionProps {
-  question: {
-    text: string;
-    img: string;
-    answers: Answer[];
-  };
-  answerCallback: (answer: Answer) => void;
-}
-
-export interface Answer {
-  text: string;
-  cost: number;
-}
-
-export default function Question(props: QuestionProps) {
+export default function Question(props: questionProps) {
   return (
     <Paper>
       <Image
@@ -27,6 +14,9 @@ export default function Question(props: QuestionProps) {
         width={500}
         height={500}
       />
+      <Typography variant="h3" textAlign="center">
+        {props.question.title}
+      </Typography>
       <Typography variant="h4" textAlign="center">
         {props.question.text}
       </Typography>
@@ -34,7 +24,7 @@ export default function Question(props: QuestionProps) {
         return (
           <Box key={i} onClick={() => props.answerCallback(answer)}>
             <Typography variant="body1" textAlign="center">
-              {answer.text}
+              {answer.text} - {answer.cost}
             </Typography>
           </Box>
         );

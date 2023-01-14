@@ -12,8 +12,16 @@ export enum Regions {
 // TODO: consider changing to class
 export interface user {
   readonly userId: string;
+  power: number;
   region?: Regions;
   gameCode?: string;
+  completedQuestions?: boolean;
+}
+
+export enum GameStatus {
+  lobby,
+  questions,
+  visualize,
 }
 
 export class Game {
@@ -21,9 +29,20 @@ export class Game {
   private _gameCode: string;
   private _timestamp: number;
   private _availableRegions: string[];
+  private _status: GameStatus;
+  private _ssp: SSP;
 
-  constructor(gameCode: string, users: user[], availableRegions?: string[]) {
+  constructor(
+    gameCode: string,
+    users: user[],
+    newGame: boolean = false,
+    availableRegions?: string[],
+    status?: GameStatus
+  ) {
     this._gameCode = gameCode;
+    if (newGame) {
+      users.forEach((u) => (u.completedQuestions = false));
+    }
     this._users = users;
     this._timestamp = Date.now();
 
@@ -32,6 +51,12 @@ export class Game {
       this._availableRegions = availableRegions;
     } else {
       this._availableRegions = Object.keys(Regions);
+    }
+
+    if (status) {
+      this._status = status;
+    } else {
+      this._status = GameStatus.lobby;
     }
   }
 
@@ -54,6 +79,26 @@ export class Game {
     return this._availableRegions;
   }
 
+  get status() {
+    this._timestamp = Date.now();
+    return this._status;
+  }
+
+  set status(status: GameStatus) {
+    this._timestamp = Date.now();
+    this._status = status;
+  }
+
+  get ssp() {
+    this._timestamp = Date.now();
+    return this._ssp;
+  }
+
+  set ssp(ssp: SSP) {
+    this._timestamp = Date.now();
+    this._ssp = ssp;
+  }
+
   randomlyAssignRegion(user: user) {
     const randomRegion = this._availableRegions.splice(
       Math.floor(Math.random() * this._availableRegions.length),
@@ -64,16 +109,29 @@ export class Game {
     this.users.filter((u) => u.userId === user.userId)[0].region =
       Regions[randomRegion];
     this._timestamp = Date.now();
+
+    return randomRegion;
+  }
+
+  userCompletedQuestion(user: user) {
+    this._users.filter((u) => u.userId == user.userId)[0].completedQuestions =
+      true;
+  }
+
+  allUsersCompletedQuestion() {
+    return this._users.every((u) => u.completedQuestions);
   }
 
   addUser(user: user) {
     this._timestamp = Date.now();
+    user.completedQuestions = false;
     this._users.push(user);
   }
 
   removeUser(user: user) {
     this._timestamp = Date.now();
     const removedUser = this._users.splice(this._users.indexOf(user), 1)[0];
+    removedUser.completedQuestions = null;
     // FIXME: This assumes that the user has a region
     this._availableRegions.push(removedUser.region);
   }
@@ -87,4 +145,34 @@ export interface userState {
 export interface gameState {
   game: Game;
   setGame: Dispatch<SetStateAction<Game>>;
+}
+
+export interface questionProps {
+  question: question;
+  answerCallback: (answer: answer) => void;
+}
+
+export interface question {
+  title: string;
+  text: string;
+  img: string;
+  answers: answer[];
+}
+
+export interface answer {
+  text: string;
+  cost: number;
+  // TODO: Update when impact has been determined
+  impact?: { ssp: SSP; weighting: number }[];
+}
+
+export enum SSP {
+  "1-1.9",
+  "1-2.6",
+  "2-4.5",
+  "3-7.0",
+  "4-3.4",
+  "4-6.0",
+  "5-3.4OS",
+  "5-8.5",
 }

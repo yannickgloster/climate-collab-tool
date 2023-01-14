@@ -4,7 +4,7 @@ import { Server } from "socket.io";
 import cron from "node-cron";
 
 import sockets, { socketEvent } from "../../utils/socketServerHandler";
-import { Game } from "../../utils/types/game";
+import { Game, GameStatus } from "../../utils/types/game";
 import { cronjobLengthHours } from "../../utils/constants";
 
 const socketHandler = function handler(
@@ -28,6 +28,22 @@ const socketHandler = function handler(
         if (
           Date.now() - game.timestamp >
           (cronjobLengthHours / 2) * 1000 * 60 * 60
+        ) {
+          io.to(code).emit(socketEvent.lobby_timeout);
+          io.socketsLeave(code);
+          rooms.delete(code);
+          console.log(`Deleted ${code} room`);
+        }
+      });
+    });
+
+    cron.schedule(`0 0 */${cronjobLengthHours / 2} * * *`, function () {
+      console.log("Checking for finished rooms");
+      rooms.forEach((game, code) => {
+        if (
+          Date.now() - game.timestamp >
+            (cronjobLengthHours / 4) * 1000 * 60 * 60 &&
+          game.status == GameStatus.visualize
         ) {
           io.to(code).emit(socketEvent.lobby_timeout);
           io.socketsLeave(code);
