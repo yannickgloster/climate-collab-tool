@@ -48,37 +48,35 @@ export default function Home({
 
   return (
     <Layout>
-      <Stack spacing={2}>
-        <Typography variant="h3" textAlign="center">
-          IPCC Microworld
-        </Typography>
-        <Typography variant="subtitle1" textAlign="center">
-          This is the description.
-        </Typography>
-        <Button
-          variant="contained"
-          size="large"
-          onClick={generateGameCode}
-          data-cy="newGameButton"
-        >
-          New Game
-        </Button>
-        <TextField
-          id="gameCodeTextField"
-          placeholder={"fh6sd93da0dm28s".substring(0, gameCodeLength)}
-          inputProps={{ style: { textTransform: "uppercase" } }}
-          onChange={handleChange}
-          value={gameCode}
-        />
-        <Button
-          variant="contained"
-          size="large"
-          onClick={joinRoom}
-          data-cy="joinGameButton"
-        >
-          Join Game
-        </Button>
-      </Stack>
+      <Typography variant="h3" textAlign="center">
+        Climate Change Game
+      </Typography>
+      <Typography variant="subtitle1" textAlign="center">
+        Built using the IPCC Dataset. This is the description.
+      </Typography>
+      <Button
+        variant="contained"
+        size="large"
+        onClick={generateGameCode}
+        data-cy="newGameButton"
+      >
+        New Game
+      </Button>
+      <TextField
+        id="gameCodeTextField"
+        placeholder={"fh6sd93da0dm28s".substring(0, gameCodeLength)}
+        inputProps={{ style: { textTransform: "uppercase" } }}
+        onChange={handleChange}
+        value={gameCode}
+      />
+      <Button
+        variant="contained"
+        size="large"
+        onClick={joinRoom}
+        data-cy="joinGameButton"
+      >
+        Join Game
+      </Button>
     </Layout>
   );
 }

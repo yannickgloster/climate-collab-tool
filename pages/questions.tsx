@@ -1,10 +1,9 @@
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import Head from "next/head";
 
 import Layout from "../components/layout";
 import Question from "../components/question";
-import LoopIcon from "@mui/icons-material/Loop";
-import { motion } from "framer-motion";
 
 import { snackbarProps, socket } from "./_app";
 import { socketEvent } from "../utils/socketServerHandler";
@@ -36,11 +35,16 @@ export default function Questions({
   };
 
   return (
-    <Layout>
-      <Question
-        question={sampleQuestions[questionIndex]}
-        answerCallback={(answer) => answerCallback(answer, questionIndex)}
-      />
-    </Layout>
+    <>
+      <Head>
+        <title>Answer Questions</title>
+      </Head>
+      <Layout gameCode={user.gameCode} region={user.region}>
+        <Question
+          question={sampleQuestions[questionIndex]}
+          answerCallback={(answer) => answerCallback(answer, questionIndex)}
+        />
+      </Layout>
+    </>
   );
 }
