@@ -21,3 +21,5 @@ https://liveblocks.io - Requires account
 Testing next js https://nextjs.org/docs/testing#cypress
 
 Example using socket io for testing: https://glebbahmutov.com/blog/test-socketio-chat-using-cypress/
+
+Favicon (https://thenounproject.com/icon/climate-change-3389596/)

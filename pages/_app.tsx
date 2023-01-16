@@ -83,7 +83,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
       socket.on(socketEvent.joined_room, (code: string, region: string) => {
         setUser({ ...user, gameCode: code, region: Regions[region] });
-        router.push("/regionSelect");
+        router.push("/join");
       });
 
       socket.on(socketEvent.left_room, () => {
@@ -182,10 +182,35 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>Thesis</title>
+        <title>Climate Change Game</title>
         <meta name="description" content="TODO: Write Description" />
+        <meta name="theme-color" content="#005EB8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link
+          rel="icon"
+          href="/favicon-light.png"
+          media="(prefers-color-scheme: light)"
+        />
+        <link
+          rel="icon"
+          href="/favicon-dark.png"
+          media="(prefers-color-scheme: dark)"
+        />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="/" />
+        <meta property="og:title" content="Climate Change Game" />
+        <meta property="og:description" content="TODO: Write Description" />
+        <meta property="og:image" content="/social-image.png" />
+
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="/" />
+        <meta property="twitter:title" content="Climate Change Game" />
+        <meta
+          property="twitter:description"
+          content="TODO: Write Description"
+        />
+        <meta property="twitter:image" content="/social-image.png" />
       </Head>
       <Component
         {...pageProps}
