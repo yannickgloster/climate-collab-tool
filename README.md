@@ -8,6 +8,10 @@ Cannot deploy to Vercel due to serverless functions not supporting sockets.
 
 Can probably deploy to Heroku. Might need to set up a custom server for that.
 
+Compare Digital Ocean, Heroku
+
+Post college might use something like : https://www.hetzner.com/cloud
+
 ## Alternative to Sockets.io
 
 https://boardgame.io/ - Turn based so not ideal
