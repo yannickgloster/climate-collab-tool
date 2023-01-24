@@ -1,7 +1,10 @@
 import { ReactNode, Children } from "react";
+import { useRouter } from "next/router";
 import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
+import Link from "@mui/material/Link";
+import Box from "@mui/material/Box";
 import { Regions } from "../utils/types/game";
 
 export interface LayoutProps {
@@ -11,6 +14,12 @@ export interface LayoutProps {
 }
 
 export default function Layout(props: LayoutProps) {
+  const router = useRouter();
+
+  const copy = async (text: string) => {
+    await navigator.clipboard.writeText(text);
+  };
+
   return (
     <>
       <div style={{ position: "relative" }}>
@@ -28,16 +37,31 @@ export default function Layout(props: LayoutProps) {
           </Typography>
         )}
         {props.gameCode && (
-          <Typography
-            variant="overline"
-            textAlign="right"
-            position="absolute"
-            top={0}
-            right={0}
-            fontSize={15}
-          >
-            Game Code: <strong>{props.gameCode}</strong>
-          </Typography>
+          <Box position="absolute" top={0} right={0}>
+            <Typography
+              variant="overline"
+              textAlign="right"
+              fontSize={15}
+              display="block"
+              onClick={() => copy(props.gameCode)}
+            >
+              Game Code: <strong>{props.gameCode}</strong>
+            </Typography>
+            {router.pathname === "/lobby" && (
+              <Typography
+                component={Link}
+                textAlign="right"
+                fontSize={15}
+                underline="hover"
+                display="block"
+                onClick={() =>
+                  copy(`${window.location.origin}?join=${props.gameCode}`)
+                }
+              >
+                {window.location.origin}?join={props.gameCode}
+              </Typography>
+            )}
+          </Box>
         )}
       </div>
       <Grid
