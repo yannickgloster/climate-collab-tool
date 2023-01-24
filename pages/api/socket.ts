@@ -1,6 +1,7 @@
 import type { NextApiRequest } from "next";
 import type { NextApiResponseWithSocket } from "../../utils/types/NextApiSocket";
 import { Server } from "socket.io";
+import { instrument } from "@socket.io/admin-ui";
 import cron from "node-cron";
 
 import sockets, { socketEvent } from "../../utils/socketServerHandler";
@@ -14,11 +15,25 @@ const socketHandler = function handler(
   if (!res.socket.server.io) {
     console.log("*First use, starting socket.io");
 
-    const io = new Server(res.socket.server);
+    const io = new Server(res.socket.server, {
+      cors: {
+        origin: ["https://admin.socket.io"],
+        credentials: true,
+      },
+    });
     const rooms = new Map<string, Game>();
 
     io.on("connection", (socket) => {
       sockets(io, socket, rooms);
+    });
+
+    instrument(io, {
+      auth: {
+        type: "basic",
+        username: "admin",
+        password:
+          "$2b$10$9.1eoj31nAQW2WBMqk72d.NeDYb1YiAIvDmwHuQ.77hUbIrgMxOIG",
+      },
     });
 
     // TODO: Investigate if this is the best way to run a cron job
