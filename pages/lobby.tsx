@@ -62,7 +62,7 @@ export default function Join({
       <Head>
         <title>
           {game.availableRegions.length > 0
-            ? `${game.availableRegions.length} Region ${
+            ? `${game.availableRegions.length} Region${
                 game.availableRegions.length > 1 ? "s" : ""
               } Remaining`
             : `Ready to start!`}
