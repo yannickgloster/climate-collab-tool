@@ -1,11 +1,10 @@
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Layout from "../components/layout";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import Stack from "@mui/material/Stack";
 
 import { socket, snackbarProps } from "./_app";
 import { socketEvent } from "../utils/socketServerHandler";
@@ -40,11 +39,18 @@ export default function Home({
     setUser(newUser);
   };
 
-  const joinRoom = () => {
-    const newUser = { ...user, gameCode: gameCode };
-    socket.emit(socketEvent.join_room, newUser, gameCode);
+  const joinRoom = (code: string) => {
+    const newUser = { ...user, gameCode: code };
+    socket.emit(socketEvent.join_room, newUser, code);
     setUser(newUser);
   };
+
+  useEffect(() => {
+    if (router.query?.join && socket) {
+      setGameCode(router.query.join.toString());
+      joinRoom(router.query.join.toString());
+    }
+  }, [router.query, socket]);
 
   return (
     <Layout>
@@ -72,7 +78,7 @@ export default function Home({
       <Button
         variant="contained"
         size="large"
-        onClick={joinRoom}
+        onClick={() => joinRoom(gameCode)}
         data-cy="joinGameButton"
       >
         Join Game
