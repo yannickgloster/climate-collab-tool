@@ -83,7 +83,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
       socket.on(socketEvent.joined_room, (code: string, region: string) => {
         setUser({ ...user, gameCode: code, region: Regions[region] });
-        router.push("/join");
+        router.push("/lobby");
       });
 
       socket.on(socketEvent.left_room, () => {
