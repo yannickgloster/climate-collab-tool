@@ -37,7 +37,8 @@ export class Game {
     users: user[],
     newGame: boolean = false,
     availableRegions?: string[],
-    status?: GameStatus
+    status?: GameStatus,
+    ssp?: SSP
   ) {
     this._gameCode = gameCode;
     if (newGame) {
@@ -57,6 +58,10 @@ export class Game {
       this._status = status;
     } else {
       this._status = GameStatus.lobby;
+    }
+
+    if (ssp) {
+      this._ssp = ssp;
     }
   }
 
@@ -167,12 +172,19 @@ export interface answer {
 }
 
 export enum SSP {
-  "1-1.9",
-  "1-2.6",
-  "2-4.5",
-  "3-7.0",
-  "4-3.4",
-  "4-6.0",
-  "5-3.4OS",
-  "5-8.5",
+  "1-1.9" = "SSP 1-1.9",
+  "1-2.6" = "SSP 1-2.6",
+  "2-4.5" = "SSP 2-4.5",
+  "3-7.0" = "SSP 3-7.0",
+  "4-3.4" = "SSP 4-3.4",
+  "4-6.0" = "SSP 4-6.0",
+  "5-3.4OS" = "SSP 5-3.4OS",
+  "5-8.5" = "SSP 5-8.5",
 }
+
+export const AtlasMeanTemperatureLinks = {
+  [SSP["1-2.6"]]: "https://interactive-atlas.ipcc.ch/permalink/kb5pXfjf",
+  [SSP["2-4.5"]]: "https://interactive-atlas.ipcc.ch/permalink/DknmXOcr",
+  [SSP["3-7.0"]]: "https://interactive-atlas.ipcc.ch/permalink/l9ZvwmMd",
+  [SSP["5-8.5"]]: "https://interactive-atlas.ipcc.ch/permalink/TKJP21BH",
+};

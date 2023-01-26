@@ -68,7 +68,8 @@ export default function App({ Component, pageProps }: AppProps) {
             game._users,
             false,
             game._availableRegions,
-            game._status
+            game._status,
+            game._ssp
           )
         );
       });
