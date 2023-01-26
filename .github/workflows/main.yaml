@@ -12,6 +12,7 @@ jobs:
       # Install NPM dependencies, cache them correctly
       - name: Run E2E on Chrome 🌐
         uses: cypress-io/github-action@v5.0.5 # use the explicit version number
+        working-directory: ./app
         with:
           browser: chrome
           build: npm run build
@@ -20,6 +21,7 @@ jobs:
 
       - name: Run Component tests 🧪
         uses: cypress-io/github-action@v5.0.5 # use the explicit version number
+        working-directory: ./app
         with:
           install: false
           component: true

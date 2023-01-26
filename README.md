@@ -1,29 +1,11 @@
 # Thesis
 
-IPCC Database Project
+## `./app`
 
-## Deployment Notes
+A fullstack app written in Typescript using Next.js, socket.io, and Material UI which simulates the decision making that countries make and how those decisions affect our enviromental future. It uses data from the IPCC Report 6 as the backbone for the visualizations.
 
-Cannot deploy to Vercel due to serverless functions not supporting sockets.
+Deployed to [thesis.yannickgloster.com](https://thesis.yannickgloster.com)
 
-Can probably deploy to Heroku. Might need to set up a custom server for that.
+## `./data-preprocessing`
 
-Compare Digital Ocean, Heroku
-
-Post college might use something like : https://www.hetzner.com/cloud
-
-## Alternative to Sockets.io
-
-https://boardgame.io/ - Turn based so not ideal
-
-https://peerjs.com/ - Would need to manage multiple peer to peer connections
-
-https://liveblocks.io - Requires account
-
-# Testing
-
-Testing next js https://nextjs.org/docs/testing#cypress
-
-Example using socket io for testing: https://glebbahmutov.com/blog/test-socketio-chat-using-cypress/
-
-Favicon (https://thenounproject.com/icon/climate-change-3389596/)
+Python scripts which take the IPCC data and manipulates it to store for faster access for the app.
