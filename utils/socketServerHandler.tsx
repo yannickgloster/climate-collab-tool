@@ -107,7 +107,7 @@ export default (io: Server, socket: Socket, rooms: Map<string, Game>) => {
       if (game.allUsersCompletedQuestion()) {
         game.status = GameStatus.visualize;
         // TODO: process weights from users
-        game.ssp = SSP["1-1.9"];
+        game.ssp = SSP["1-2.6"];
         io.to(code).emit(socketEvent.game_update, game);
       }
     } else {

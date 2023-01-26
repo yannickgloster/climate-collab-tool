@@ -3,9 +3,15 @@ import Head from "next/head";
 
 import Layout from "../components/layout";
 import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 
 import { snackbarProps, socket } from "./_app";
-import { userState, gameState, GameStatus } from "../utils/types/game";
+import {
+  userState,
+  gameState,
+  GameStatus,
+  AtlasMeanTemperatureLinks,
+} from "../utils/types/game";
 
 export default function Visualize({
   user,
@@ -32,6 +38,22 @@ export default function Visualize({
           <Typography variant="h3" textAlign="center">
             Visualize Data: {game.ssp}
           </Typography>
+        )}
+        {game.status == GameStatus.visualize && (
+          <Typography variant="body1" textAlign="center">
+            SSP Description
+          </Typography>
+        )}
+        {game.status == GameStatus.visualize && (
+          <Button
+            variant="contained"
+            size="large"
+            href={AtlasMeanTemperatureLinks[game.ssp]}
+            target="_blank"
+            rel="noopener noreffer"
+          >
+            View Interactive Atlas
+          </Button>
         )}
       </Layout>
     </>
