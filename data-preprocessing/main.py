@@ -1,47 +1,56 @@
 import numpy as np
+import pandas as pd
 import xarray as xr
 
 import matplotlib.path as mpath
 import matplotlib.pyplot as plt
+import cartopy.crs as ccrs
+import cftime
 
 from shapely.geometry import Point, Polygon
 
+import constants
+
 datasets_root = "data"
 
-monthly_air_temperature_2015_to_2099_netCDF = (
-    "ta_Amon_EC-Earth3-Veg_ssp119_r1i1p1f1_gr_20150116-20991216_v20200226.nc"
+monthly_near_surface_air_temperature_2015_to_2099_netCDF = (
+    "tasmax_Amon_EC-Earth3_ssp119_r4i1p1f1_gr_20150116-20991216_v20200425.nc"
 )
 
-ds = xr.open_dataset(f"{datasets_root}/{monthly_air_temperature_2015_to_2099_netCDF}")
+ds = xr.open_dataset(
+    f"{datasets_root}/{monthly_near_surface_air_temperature_2015_to_2099_netCDF}",
+    decode_times=True,
+    use_cftime=True,
+)
 
-print(ds.stack(lat_lon=["lat", "lon"]))
+ds_var_name = "tasmax"
 
-# TODO: Average the mean for all the areas within the boundary of the 8 regions.
+for region in constants.regions.keys():
+    # Generate Polygons
+    polygons = []
 
-# loop over each long/lat pairing
+    for coords in constants.regions[region]["points"]:
+        r = Polygon(coords)
+        polygons.append(r)
 
-# i = 0
-# # FIXME: this doesn't do the comment above
-# for data_point in ds.ta.groupby("lat", "lon"):
-#     print(data_point)
-#     print("-----------------------------------")
-#     i += 1
-#     if i == 2:
-#         break
+    all_means = []
 
+    for polygon in polygons:
+        in_region = ds.where(
+            (ds.lat >= polygon.bounds[0])
+            & (ds.lat <= polygon.bounds[2])
+            & (ds.lon >= polygon.bounds[1])
+            & (ds.lon <= polygon.bounds[3]),
+            drop=True,
+        )
+        # Get Mean across time
+        # TODO: consider getting median
+        mean_data = in_region[ds_var_name].mean(dim=["lat", "lon"]).drop_vars("height")
+        all_means.append(mean_data)
 
-# check if it's within the area defined by the region
-"""
-Example Code:
+    if len(all_means) > 0:
+        combinded_means: xr.DataArray = xr.merge(all_means)
 
-coords = [(10, 20), (30, 20), (30, 40), (10, 40), (10, 20)]
-point = Point(25, 35)
-bounding_area = Polygon(coords)
-print(point.within(bounding_area))
-"""
-
-# if it's in the region, add it to a rolling average (or sum and increase count)
-
-# once completed, store in .nc file for the time being.
-
-# TODO: Upload to DB
+        # TODO: Upload to DB
+        # FIXME: Temporarily saving to CSV
+        combinded_means.to_dataframe().to_csv(f"{datasets_root}/{region}.csv")
