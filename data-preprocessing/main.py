@@ -24,6 +24,7 @@ ds = xr.open_dataset(
 )
 
 ds_var_name = "tasmax"
+ssp = "ssp_119"
 
 for region in constants.regions.keys():
     # Generate Polygons
@@ -53,4 +54,6 @@ for region in constants.regions.keys():
 
         # TODO: Upload to DB
         # FIXME: Temporarily saving to CSV
-        combinded_means.to_dataframe().to_csv(f"{datasets_root}/{region}.csv")
+        combinded_means.to_dataframe().to_csv(
+            f"{datasets_root}/{ssp}_{ds_var_name}_{region}.csv"
+        )
