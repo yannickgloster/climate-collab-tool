@@ -34,7 +34,7 @@ for region in constants.regions.keys():
         r = Polygon(coords)
         polygons.append(r)
 
-    all_means = []
+    all_in_region = []
 
     for polygon in polygons:
         in_region = ds.where(
@@ -44,16 +44,18 @@ for region in constants.regions.keys():
             & (ds.lon <= polygon.bounds[3]),
             drop=True,
         )
+
+        all_in_region.append(in_region[ds_var_name])
+
+    if len(all_in_region) > 0:
+        whole_region: xr.DataArray = xr.merge(all_in_region)
+
         # Get Mean across time
         # TODO: consider getting median
-        mean_data = in_region[ds_var_name].mean(dim=["lat", "lon"]).drop_vars("height")
-        all_means.append(mean_data)
-
-    if len(all_means) > 0:
-        combinded_means: xr.DataArray = xr.merge(all_means)
+        mean_whole_region = whole_region.mean(dim=["lat", "lon"]).drop_vars("height")
 
         # TODO: Upload to DB
         # FIXME: Temporarily saving to CSV
-        combinded_means.to_dataframe().to_csv(
+        mean_whole_region.to_dataframe().to_csv(
             f"{datasets_root}/{ssp}_{ds_var_name}_{region}.csv"
         )
