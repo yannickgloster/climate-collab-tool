@@ -1,26 +1,25 @@
 import Layout from "../components/layout";
 import Visualize, { VisualizeProps } from "../components/visualize";
 
-import { useEffect, useState } from "react";
-import axios from "axios";
-
 import { userState } from "../utils/types/game";
+import useSWR from "swr";
+
+import { fetcher } from "../utils/fetcher";
+
+const ssp = 119;
 
 export default function Test({ user, setUser }: userState) {
-  const [lineData, setLineData] = useState<VisualizeProps["data"]["line"]>();
+  const { data, error } = useSWR<VisualizeProps["data"]>(
+    `api/data/${ssp}`,
+    fetcher
+  );
 
-  useEffect(() => {
-    const ssp = 119;
-
-    axios.get(`/api/data/${ssp}`).then((resp) => {
-      setLineData(resp.data.line);
-      console.log(resp.data.line);
-    });
-  }, []);
+  if (error) return "An error has occurred.";
+  if (!data) return "Loading...";
 
   return (
     <Layout>
-      <Visualize data={{ line: lineData }} />
+      <Visualize data={data} />
     </Layout>
   );
 }
