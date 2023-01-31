@@ -140,7 +140,11 @@ export default function App({ Component, pageProps }: AppProps) {
   }, []);
 
   useEffect(() => {
-    if (router.pathname !== "/" && !user?.gameCode) {
+    if (
+      router.pathname !== "/" &&
+      router.pathname !== "/test" &&
+      !user?.gameCode
+    ) {
       setSnackbar({
         text: "You aren't in a lobby.",
         enabled: true,
@@ -150,7 +154,11 @@ export default function App({ Component, pageProps }: AppProps) {
     }
   }, []);
 
-  if (router.pathname !== "/" && !user?.gameCode) {
+  if (
+    router.pathname !== "/" &&
+    router.pathname !== "/test" &&
+    !user?.gameCode
+  ) {
     return (
       <Layout>
         <motion.div

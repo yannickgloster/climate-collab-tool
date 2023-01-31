@@ -9,7 +9,7 @@ import { Game, GameStatus } from "../../utils/types/game";
 import { cronjobLengthHours } from "../../utils/constants";
 
 const socketHandler = function handler(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponseWithSocket
 ) {
   if (!res.socket.server.io) {
