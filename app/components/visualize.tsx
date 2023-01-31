@@ -56,7 +56,7 @@ export default function Visualize(props: VisualizeProps) {
         <XAxis
           dataKey="date"
           tickFormatter={(unixTime) =>
-            DateTime.fromMillis(unixTime).toLocaleString()
+            DateTime.fromMillis(unixTime).toLocaleString({ year: "numeric" })
           }
         />
         <Tooltip content={<CustomTooltip />} />
