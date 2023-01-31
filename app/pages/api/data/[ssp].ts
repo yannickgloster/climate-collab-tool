@@ -12,7 +12,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const data = [];
 
   await new Promise((resolve) => {
-    fs.createReadStream(`../data-preprocessing/data/ssp_${ssp}_tasmax_EU.csv`)
+    fs.createReadStream(`../data-preprocessing/data/ssp${ssp}_tasmax_EU.csv`)
       .pipe(parse({ delimiter: ",", from_line: 2 }))
       .on("data", (row) => {
         data.push({

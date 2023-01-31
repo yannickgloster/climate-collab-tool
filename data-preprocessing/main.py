@@ -11,54 +11,55 @@ from shapely.geometry import Point, Polygon
 
 import constants
 
+downloaded_ssps = ["ssp126", "ssp245", "ssp370", "ssp585"]
+
 datasets_root = "data"
-
-monthly_near_surface_air_temperature_2015_to_2099_netCDF = (
-    "tasmax_Amon_EC-Earth3_ssp119_r4i1p1f1_gr_20150116-20991216_v20200425.nc"
-)
-
-ds = xr.open_dataset(
-    f"{datasets_root}/{monthly_near_surface_air_temperature_2015_to_2099_netCDF}",
-    decode_times=True,
-    use_cftime=True,
-)
-
 ds_var_name = "tasmax"
-ssp = "ssp_119"
+model = "CNRM-CM6-1"
 
-for region in constants.regions.keys():
-    # Generate Polygons
-    polygons = []
+for ssp in downloaded_ssps:
+    # Dataset renamed to follow the following format
+    ds = xr.open_dataset(
+        f"{datasets_root}/{ssp}_{ds_var_name}_{model}.nc",
+        decode_times=True,
+        use_cftime=True,
+    )
 
-    for coords in constants.regions[region]["points"]:
-        r = Polygon(coords)
-        polygons.append(r)
+    for region in constants.regions.keys():
+        # Generate Polygons
+        polygons = []
 
-    all_in_region = []
+        for coords in constants.regions[region]["points"]:
+            r = Polygon(coords)
+            polygons.append(r)
 
-    for polygon in polygons:
-        in_region = ds.where(
-            (ds.lat >= polygon.bounds[0])
-            & (ds.lat <= polygon.bounds[2])
-            & (ds.lon >= polygon.bounds[1])
-            & (ds.lon <= polygon.bounds[3]),
-            drop=True,
-        )
+        all_in_region = []
 
-        all_in_region.append(in_region[ds_var_name])
+        for polygon in polygons:
+            in_region = ds.where(
+                (ds.lat >= polygon.bounds[0])
+                & (ds.lat <= polygon.bounds[2])
+                & (ds.lon >= polygon.bounds[1])
+                & (ds.lon <= polygon.bounds[3]),
+                drop=True,
+            )
 
-    if len(all_in_region) > 0:
-        whole_region: xr.DataArray = xr.merge(all_in_region)
+            all_in_region.append(in_region[ds_var_name])
 
-        # Get the mean of a region
-        # TODO: consider getting median
-        mean_whole_region = whole_region.mean(dim=["lat", "lon"]).drop_vars("height")
+        if len(all_in_region) > 0:
+            whole_region: xr.DataArray = xr.merge(all_in_region)
 
-        # Get the max of the max temperatures per year
-        monthly_max_mean_region = mean_whole_region.groupby("time.year").max()
+            # Get the mean of a region
+            # TODO: consider getting median
+            mean_whole_region = whole_region.mean(dim=["lat", "lon"]).drop_vars(
+                "height"
+            )
 
-        # TODO: Upload to DB
-        # FIXME: Temporarily saving to CSV
-        monthly_max_mean_region.to_dataframe().to_csv(
-            f"{datasets_root}/{ssp}_{ds_var_name}_{region}.csv"
-        )
+            # Get the max of the max temperatures per year
+            monthly_max_mean_region = mean_whole_region.groupby("time.year").max()
+
+            # TODO: Upload to DB
+            # FIXME: Temporarily saving to CSV
+            monthly_max_mean_region.to_dataframe().to_csv(
+                f"{datasets_root}/{ssp}_{ds_var_name}_{region}.csv"
+            )

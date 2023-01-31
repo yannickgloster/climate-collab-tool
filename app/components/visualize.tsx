@@ -25,9 +25,9 @@ const CustomTooltip = ({
   if (active && payload && payload.length) {
     return (
       <Paper sx={{ p: 1 }}>
-        <Typography variant="body2">{`Predicted Max Temperature on ${DateTime.fromMillis(
+        <Typography variant="body2">{`Predicted Max Temperature in ${DateTime.fromMillis(
           label
-        ).toLocaleString()}`}</Typography>
+        ).toLocaleString({ year: "numeric" })}`}</Typography>
         <Typography variant="body2">{`${payload[0].value}°C`}</Typography>
       </Paper>
     );
