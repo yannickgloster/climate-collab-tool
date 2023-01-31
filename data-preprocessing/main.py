@@ -50,12 +50,15 @@ for region in constants.regions.keys():
     if len(all_in_region) > 0:
         whole_region: xr.DataArray = xr.merge(all_in_region)
 
-        # Get Mean across time
+        # Get the mean of a region
         # TODO: consider getting median
         mean_whole_region = whole_region.mean(dim=["lat", "lon"]).drop_vars("height")
 
+        # Get the max of the max temperatures per year
+        monthly_max_mean_region = mean_whole_region.groupby("time.year").max()
+
         # TODO: Upload to DB
         # FIXME: Temporarily saving to CSV
-        mean_whole_region.to_dataframe().to_csv(
+        monthly_max_mean_region.to_dataframe().to_csv(
             f"{datasets_root}/{ssp}_{ds_var_name}_{region}.csv"
         )
