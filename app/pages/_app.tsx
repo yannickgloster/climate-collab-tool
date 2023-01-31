@@ -43,7 +43,6 @@ export default function App({ Component, pageProps }: AppProps) {
   });
   const router = useRouter();
 
-  // TODO: Move to a different file
   useEffect(() => {
     fetch("/api/socket").finally(() => {
       socket = io();

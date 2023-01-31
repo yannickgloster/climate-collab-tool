@@ -9,7 +9,6 @@ export enum Regions {
   Island = "Alliance of Small Island States", // https://en.wikipedia.org/wiki/Alliance_of_Small_Island_States
 }
 
-// TODO: consider changing to class
 export interface user {
   readonly userId: string;
   power: number;

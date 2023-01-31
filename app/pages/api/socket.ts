@@ -36,7 +36,6 @@ const socketHandler = function handler(
       },
     });
 
-    // TODO: Investigate if this is the best way to run a cron job
     cron.schedule(`0 0 */${cronjobLengthHours} * * *`, function () {
       console.log("Checking for hanging rooms");
       rooms.forEach((game, code) => {
