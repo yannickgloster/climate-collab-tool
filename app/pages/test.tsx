@@ -6,8 +6,8 @@ import useSWR from "swr";
 
 import { fetcher } from "../utils/fetcher";
 
-const ssp = 126;
-const region = "US";
+const ssp = 585;
+const region = "EU";
 
 export default function Test({ user, setUser }: userState) {
   const { data, error } = useSWR<VisualizeProps["data"]>(
@@ -20,6 +20,8 @@ export default function Test({ user, setUser }: userState) {
 
   return (
     <Layout>
+      <p>SSP: {ssp}</p>
+      <p>Region: {region}</p>
       <Visualize data={data} />
     </Layout>
   );

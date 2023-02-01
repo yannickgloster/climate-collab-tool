@@ -12,9 +12,12 @@ import { TooltipProps } from "recharts";
 import { DateTime } from "luxon";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
+import { useTheme } from "@mui/material/styles";
 
 export interface VisualizeProps {
-  data: { line: { date: Number; temp: Number }[] };
+  data: {
+    line: { date: Number; temp: Number }[];
+  };
 }
 
 const CustomTooltip = ({
@@ -40,6 +43,8 @@ const CustomTooltip = ({
 // https://recharts.org/en-US/examples/HighlightAndZoomLineChart
 
 export default function Visualize(props: VisualizeProps) {
+  const theme = useTheme();
+
   return (
     <ResponsiveContainer width={1200} height={300}>
       <LineChart
@@ -51,7 +56,18 @@ export default function Visualize(props: VisualizeProps) {
           bottom: 0,
         }}
       >
-        <Line type="monotone" dataKey="temp" stroke="#8884d8" />
+        <Line
+          type="monotone"
+          dataKey="temp"
+          stroke={theme.palette.primary.main}
+        />
+        <Line
+          type="monotone"
+          dataKey="linear_regression"
+          stroke={theme.palette.secondary.main}
+          dot={false}
+          activeDot={false}
+        />
         <CartesianGrid stroke="#ccc" />
         <XAxis
           dataKey="date"

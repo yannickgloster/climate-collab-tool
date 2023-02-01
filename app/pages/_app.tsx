@@ -10,6 +10,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Game, Regions, user as userType } from "../utils/types/game";
 
 import Layout from "../components/layout";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 import LoopIcon from "@mui/icons-material/Loop";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
@@ -32,6 +33,9 @@ export interface snackbarProps {
   snackbar: snackbarType;
   setSnackbar: Dispatch<SetStateAction<snackbarType>>;
 }
+
+// TODO: create custom theme and move location
+const theme = createTheme();
 
 export default function App({ Component, pageProps }: AppProps) {
   const [user, setUser] = useState<userType>({ userId: uuidv4(), power: 100 });
@@ -220,28 +224,30 @@ export default function App({ Component, pageProps }: AppProps) {
         />
         <meta property="twitter:image" content="/social-image.png" />
       </Head>
-      <Component
-        {...pageProps}
-        user={user}
-        setUser={setUser}
-        game={game}
-        setGame={setGame}
-        snackbar={snackbar}
-        setSnackbar={setSnackbar}
-      />
-      <Snackbar
-        open={snackbar.enabled}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-      >
-        <MuiAlert
+      <ThemeProvider theme={theme}>
+        <Component
+          {...pageProps}
+          user={user}
+          setUser={setUser}
+          game={game}
+          setGame={setGame}
+          snackbar={snackbar}
+          setSnackbar={setSnackbar}
+        />
+        <Snackbar
+          open={snackbar.enabled}
+          autoHideDuration={6000}
           onClose={handleSnackbarClose}
-          severity={snackbar.severity}
-          sx={{ width: "100%" }}
         >
-          {snackbar.text}
-        </MuiAlert>
-      </Snackbar>
+          <MuiAlert
+            onClose={handleSnackbarClose}
+            severity={snackbar.severity}
+            sx={{ width: "100%" }}
+          >
+            {snackbar.text}
+          </MuiAlert>
+        </Snackbar>
+      </ThemeProvider>
     </>
   );
 }

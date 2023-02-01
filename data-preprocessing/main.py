@@ -49,7 +49,7 @@ for ssp in downloaded_ssps:
         if len(all_in_region) > 0:
             whole_region: xr.DataArray = xr.merge(all_in_region)
 
-            # FIXME: there's something broken here the numbers don't seem right
+            # FIXME: there's something broken here the numbers don't seem right, I think it's the region boundaries for the US
             # TODO: consider using median or mean
             mean_whole_region = whole_region.max(dim=["lat", "lon"]).drop_vars("height")
             print(mean_whole_region)
