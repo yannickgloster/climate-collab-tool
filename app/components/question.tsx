@@ -7,13 +7,13 @@ import { questionProps } from "../utils/types/game";
 
 export default function Question(props: questionProps) {
   return (
-    <Paper>
-      <Image
+    <Paper sx={{ p: 2 }} elevation={3}>
+      {/* <Image
         src={props.question.img}
         alt="Question Image"
         width={500}
         height={500}
-      />
+      /> */}
       <Typography variant="h3" textAlign="center">
         {props.question.title}
       </Typography>
@@ -22,11 +22,18 @@ export default function Question(props: questionProps) {
       </Typography>
       {props.question.answers.map((answer, i) => {
         return (
-          <Box key={i} onClick={() => props.answerCallback(answer)}>
+          <Button
+            fullWidth
+            variant="contained"
+            size="large"
+            key={i}
+            onClick={() => props.answerCallback(answer)}
+            sx={{ mt: 2 }}
+          >
             <Typography variant="body1" textAlign="center">
               {answer.text} - {answer.cost}
             </Typography>
-          </Box>
+          </Button>
         );
       })}
     </Paper>

@@ -7,7 +7,7 @@ import useSWR from "swr";
 import { fetcher } from "../../utils/fetcher";
 
 const ssp = 126;
-const region = "US";
+const region = "EU";
 
 export default function VisualizeTest({ user, setUser }: userState) {
   const { data, error } = useSWR<VisualizeProps["data"]>(

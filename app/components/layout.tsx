@@ -11,6 +11,8 @@ export interface LayoutProps {
   children: ReactNode;
   region?: Regions;
   gameCode?: string;
+  // TODO: add image to background
+  img?: string;
 }
 
 export default function Layout(props: LayoutProps) {
@@ -64,6 +66,20 @@ export default function Layout(props: LayoutProps) {
           </Box>
         )}
       </div>
+      <div
+        style={{
+          position: "absolute",
+          height: "100%",
+          width: "100%",
+          backgroundImage: `url(${props.img})`,
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+          top: 0,
+          left: 0,
+          zIndex: -99,
+        }}
+      />
       <Grid
         container
         spacing={0}

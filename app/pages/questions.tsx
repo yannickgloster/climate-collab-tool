@@ -39,7 +39,11 @@ export default function Questions({
       <Head>
         <title>Answer Questions</title>
       </Head>
-      <Layout gameCode={user.gameCode} region={user.region}>
+      <Layout
+        gameCode={user.gameCode}
+        region={user.region}
+        img={sampleQuestions[questionIndex].img}
+      >
         <Question
           question={sampleQuestions[questionIndex]}
           answerCallback={(answer) => answerCallback(answer, questionIndex)}
