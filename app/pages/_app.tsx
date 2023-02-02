@@ -145,7 +145,7 @@ export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
     if (
       router.pathname !== "/" &&
-      router.pathname !== "/test" &&
+      !router.pathname.startsWith("/test") &&
       !user?.gameCode
     ) {
       setSnackbar({
@@ -159,7 +159,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   if (
     router.pathname !== "/" &&
-    router.pathname !== "/test" &&
+    !router.pathname.startsWith("/test") &&
     !user?.gameCode
   ) {
     return (

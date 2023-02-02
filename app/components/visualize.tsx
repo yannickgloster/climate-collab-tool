@@ -7,12 +7,15 @@ import {
   ResponsiveContainer,
   Tooltip,
   Legend,
+  ReferenceArea,
+  TooltipProps,
+  Brush,
 } from "recharts";
-import { TooltipProps } from "recharts";
 import { DateTime } from "luxon";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import { useTheme } from "@mui/material/styles";
+import { useState } from "react";
 
 export interface VisualizeProps {
   data: {
@@ -31,7 +34,7 @@ const CustomTooltip = ({
         <Typography variant="body2">{`Predicted Max Temperature in ${DateTime.fromMillis(
           label
         ).toLocaleString({ year: "numeric" })}`}</Typography>
-        <Typography variant="body2">{`${payload[0].value}°C`}</Typography>
+        <Typography variant="body2">{`${payload[1].value}°C`}</Typography>
       </Paper>
     );
   }
@@ -41,44 +44,74 @@ const CustomTooltip = ({
 
 // TODO: make chart more responsive
 // https://recharts.org/en-US/examples/HighlightAndZoomLineChart
+// Add zoom on mouse wheel event: https://codesandbox.io/s/highlight-zomm-line-chart-forked-j560ov?file=/src/index.tsx
 
 export default function Visualize(props: VisualizeProps) {
   const theme = useTheme();
 
+  const temps = props.data.line.map<Number>((point) => point.temp);
+
+  const minDomainTemp = Math.floor(Math.min.apply(Math, temps));
+  const maxDomainTemp = Math.ceil(Math.max.apply(Math, temps));
+
   return (
-    <ResponsiveContainer width={1200} height={300}>
-      <LineChart
-        data={props.data.line}
-        margin={{
-          top: 10,
-          right: 30,
-          left: 0,
-          bottom: 0,
-        }}
-      >
-        <Line
-          type="monotone"
-          dataKey="temp"
-          stroke={theme.palette.primary.main}
-        />
-        <Line
-          type="monotone"
-          dataKey="linear_regression"
-          stroke={theme.palette.secondary.main}
-          dot={false}
-          activeDot={false}
-        />
-        <CartesianGrid stroke="#ccc" />
-        <XAxis
-          dataKey="date"
-          tickFormatter={(unixTime) =>
-            DateTime.fromMillis(unixTime).toLocaleString({ year: "numeric" })
-          }
-        />
-        <Tooltip content={<CustomTooltip />} />
-        <Legend />
-        <YAxis />
-      </LineChart>
-    </ResponsiveContainer>
+    <>
+      <Typography variant="h6" textAlign="center">
+        Predicted Max Temperature in Celcius
+      </Typography>
+      <Typography variant="body1" textAlign="center">
+        Descriptive paragraph on the visualization.
+      </Typography>
+      <div onWheel={(e) => console.log(e)}>
+        <ResponsiveContainer width={1200} height={300}>
+          <LineChart
+            data={props.data.line}
+            margin={{
+              top: 10,
+              right: 45,
+              left: 0,
+              bottom: 0,
+            }}
+            // onMouseMove={(e) => console.log(e)}
+          >
+            <Line
+              type="monotone"
+              dataKey="linear_regression"
+              stroke={theme.palette.secondary.main}
+              dot={false}
+              activeDot={false}
+              name="Best Fit Line"
+            />
+            <Line
+              type="monotone"
+              dataKey="temp"
+              stroke={theme.palette.primary.main}
+              name="Max Temperature (°C)"
+            />
+            <CartesianGrid stroke="#ccc" />
+            <XAxis
+              dataKey="date"
+              tickFormatter={(unixTime) =>
+                DateTime.fromMillis(unixTime).toLocaleString({
+                  year: "numeric",
+                })
+              }
+            />
+            <Tooltip content={<CustomTooltip />} />
+            <Legend iconType="plainline" />
+            <YAxis domain={[minDomainTemp, maxDomainTemp]} unit="°C" />
+            <Brush
+              dataKey="date"
+              height={20}
+              tickFormatter={(unixTime) =>
+                DateTime.fromMillis(unixTime).toLocaleString({
+                  year: "numeric",
+                })
+              }
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+    </>
   );
 }
