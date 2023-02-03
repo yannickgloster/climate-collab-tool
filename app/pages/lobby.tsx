@@ -77,7 +77,7 @@ export default function Join({
         </title>
       </Head>
       <Layout gameCode={user.gameCode} region={user.region}>
-        <Typography variant="h3" textAlign="center">
+        <Typography variant="h3" textAlign="center" fontWeight={800}>
           Select Region
         </Typography>
         <Typography variant="subtitle1" textAlign="center">

@@ -30,12 +30,12 @@ export default function Visualize({
       </Head>
       <Layout gameCode={user.gameCode} region={user.region}>
         {game.status == GameStatus.questions && (
-          <Typography variant="h3" textAlign="center">
+          <Typography variant="h3" textAlign="center" fontWeight={800}>
             Everyone hasn't finished their questions.
           </Typography>
         )}
         {game.status == GameStatus.visualize && (
-          <Typography variant="h3" textAlign="center">
+          <Typography variant="h3" textAlign="center" fontWeight={800}>
             Visualize Data: {game.ssp}
           </Typography>
         )}

@@ -55,7 +55,7 @@ export default function Home({
 
   return (
     <Layout img="/images/eberhard-grossgasteiger-jCL98LGaeoE-unsplash.jpg">
-      <Typography variant="h3" textAlign="center">
+      <Typography variant="h3" textAlign="center" fontWeight={800}>
         Climate Change Simulation
       </Typography>
       <Typography variant="subtitle1" textAlign="center">

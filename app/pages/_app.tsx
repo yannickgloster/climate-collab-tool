@@ -142,13 +142,11 @@ export default function App({ Component, pageProps }: AppProps) {
     });
   }, []);
 
-  // TODO: Change this to only check for game code if it's one of the game URLs
-  // TODO: Handle 404
   useEffect(() => {
     if (
-      router.pathname !== "/" &&
-      router.pathname !== "/sources" &&
-      !router.pathname.startsWith("/test") &&
+      (router.pathname === "/lobby" ||
+        router.pathname === "/questions" ||
+        router.pathname === "/visualize") &&
       !user?.gameCode
     ) {
       setSnackbar({
@@ -161,9 +159,9 @@ export default function App({ Component, pageProps }: AppProps) {
   }, []);
 
   if (
-    router.pathname !== "/" &&
-    router.pathname !== "/sources" &&
-    !router.pathname.startsWith("/test") &&
+    (router.pathname === "/lobby" ||
+      router.pathname === "/questions" ||
+      router.pathname === "/visualize") &&
     !user?.gameCode
   ) {
     return (
@@ -198,7 +196,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>Climate Change Game</title>
+        <title>Climate Change Simulation</title>
         <meta name="description" content="TODO: Write Description" />
         <meta name="theme-color" content="#005EB8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
