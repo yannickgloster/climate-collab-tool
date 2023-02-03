@@ -11,7 +11,7 @@ export enum Regions {
 
 export const DescriptiveTooltips = {
   [Regions.SA]:
-    "Brazil, Columbia, Bolivia, Peru, Ecuador, Venezuela, Suriname, Guyana",
+    "Brazil, Columbia, Bolivia, Peru, Ecuador, Venezuela, Suriname, and Guyana",
   [Regions.Island]:
     "Alliance of Small Island States (AOSIS) is an intergovernmental organization of 39 low-lying coastal and small island countries.",
   IPCC: "The Intergovernmental Panel on Climate Change (IPCC) is an intergovernmental body of the United Nations who's job is to advance scientific knowledge about climate change caused by human activities.",
