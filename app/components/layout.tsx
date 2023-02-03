@@ -4,6 +4,7 @@ import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
+import { default as NextLink } from "next/link";
 import Box from "@mui/material/Box";
 import { Regions } from "../utils/types/game";
 import Paper from "@mui/material/Paper";
@@ -112,6 +113,34 @@ export default function Layout(props: LayoutProps) {
           })}
         </Grid>
       </Grid>
+      <Box position="fixed" left={0} bottom={0} width="100%">
+        <Typography
+          variant="overline"
+          textAlign="center"
+          fontSize={15}
+          display="block"
+        >
+          Built by{" "}
+          <Link
+            href="https://yannickgloster.com"
+            target="_blank"
+            rel="noopener noreffer"
+          >
+            Yannick Gloster
+          </Link>
+        </Typography>
+        <Typography
+          variant="overline"
+          textAlign="center"
+          fontSize={15}
+          display="block"
+          component={NextLink}
+          href="/sources"
+          rel="noopener noreffer"
+        >
+          Sources
+        </Typography>
+      </Box>
     </>
   );
 }
