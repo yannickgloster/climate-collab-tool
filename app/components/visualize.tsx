@@ -63,7 +63,7 @@ export default function Visualize(props: VisualizeProps) {
         Descriptive paragraph on the visualization.
       </Typography>
       <div onWheel={(e) => console.log(e)}>
-        <ResponsiveContainer width={1200} height={300}>
+        <ResponsiveContainer width={theme.breakpoints.values.md} height={300}>
           <LineChart
             data={props.data.line}
             margin={{

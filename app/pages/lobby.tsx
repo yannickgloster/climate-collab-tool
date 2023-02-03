@@ -113,10 +113,10 @@ export default function Join({
           onClick={startGame}
           disabled={game && game?.availableRegions.length > 0}
         >
-          Start Game
+          Start Simulation
         </Button>
         <Button variant="contained" size="large" onClick={leaveRoom}>
-          Leave Game
+          Leave Simulation
         </Button>
       </Layout>
     </>

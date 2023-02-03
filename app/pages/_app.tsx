@@ -142,9 +142,12 @@ export default function App({ Component, pageProps }: AppProps) {
     });
   }, []);
 
+  // TODO: Change this to only check for game code if it's one of the game URLs
+  // TODO: Handle 404
   useEffect(() => {
     if (
       router.pathname !== "/" &&
+      router.pathname !== "/sources" &&
       !router.pathname.startsWith("/test") &&
       !user?.gameCode
     ) {
@@ -159,6 +162,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   if (
     router.pathname !== "/" &&
+    router.pathname !== "/sources" &&
     !router.pathname.startsWith("/test") &&
     !user?.gameCode
   ) {

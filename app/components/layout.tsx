@@ -6,12 +6,12 @@ import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import { Regions } from "../utils/types/game";
+import Paper from "@mui/material/Paper";
 
 export interface LayoutProps {
   children: ReactNode;
   region?: Regions;
   gameCode?: string;
-  // TODO: add image to background
   img?: string;
 }
 
@@ -71,7 +71,12 @@ export default function Layout(props: LayoutProps) {
           position: "absolute",
           height: "100%",
           width: "100%",
-          backgroundImage: `url(${props.img})`,
+          backgroundImage: `url(${
+            props.img
+              ? props.img
+              : // Fallback image
+                "/images/eberhard-grossgasteiger-jCL98LGaeoE-unsplash.jpg"
+          })`,
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
@@ -82,21 +87,30 @@ export default function Layout(props: LayoutProps) {
       />
       <Grid
         container
-        spacing={0}
-        direction="column"
-        alignItems="center"
-        justifyContent="center"
         style={{ minHeight: "95vh" }}
         component={Container}
         maxWidth="lg"
+        alignItems="center"
+        justifyContent="center"
       >
-        {Children.map(props.children, (child) => {
-          return (
-            <Grid item p={1}>
-              {child}
-            </Grid>
-          );
-        })}
+        <Grid
+          container
+          spacing={0}
+          direction="column"
+          alignItems="center"
+          justifyContent="center"
+          component={Paper}
+          sx={{ p: 2 }}
+          elevation={3}
+        >
+          {Children.map(props.children, (child) => {
+            return (
+              <Grid item p={1}>
+                {child}
+              </Grid>
+            );
+          })}
+        </Grid>
       </Grid>
     </>
   );

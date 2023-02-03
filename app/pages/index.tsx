@@ -53,9 +53,9 @@ export default function Home({
   }, [router.query, socket]);
 
   return (
-    <Layout>
+    <Layout img="/images/eberhard-grossgasteiger-jCL98LGaeoE-unsplash.jpg">
       <Typography variant="h3" textAlign="center">
-        Climate Change Game
+        Climate Change Simulation
       </Typography>
       <Typography variant="subtitle1" textAlign="center">
         Built using the IPCC Dataset. This is the description.
@@ -66,7 +66,7 @@ export default function Home({
         onClick={generateGameCode}
         data-cy="newGameButton"
       >
-        New Game
+        New Simulation
       </Button>
       <TextField
         id="gameCodeTextField"
@@ -81,7 +81,7 @@ export default function Home({
         onClick={() => joinRoom(gameCode)}
         data-cy="joinGameButton"
       >
-        Join Game
+        Join Simulation
       </Button>
     </Layout>
   );
