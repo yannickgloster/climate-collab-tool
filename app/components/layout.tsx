@@ -127,18 +127,11 @@ export default function Layout(props: LayoutProps) {
             rel="noopener noreffer"
           >
             Yannick Gloster
+          </Link>{" "}
+          |{" "}
+          <Link component={NextLink} href="/sources">
+            Sources
           </Link>
-        </Typography>
-        <Typography
-          variant="overline"
-          textAlign="center"
-          fontSize={15}
-          display="block"
-          component={NextLink}
-          href="/sources"
-          rel="noopener noreffer"
-        >
-          Sources
         </Typography>
       </Box>
     </>
