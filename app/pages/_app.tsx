@@ -202,16 +202,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta name="description" content="TODO: Write Description" />
         <meta name="theme-color" content="#005EB8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link
-          rel="icon"
-          href="/favicon-light.png"
-          media="(prefers-color-scheme: light)"
-        />
-        <link
-          rel="icon"
-          href="/favicon-dark.png"
-          media="(prefers-color-scheme: dark)"
-        />
+        <link rel="icon" href="/favicon.svg" />
 
         <meta property="og:type" content="website" />
         <meta property="og:url" content="/" />
