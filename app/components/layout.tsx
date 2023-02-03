@@ -35,7 +35,6 @@ export default function Layout(props: LayoutProps) {
             left={0}
             fontSize={15}
           >
-            {/* TODO: Add Region Icon */}
             Region: <strong>{props.region}</strong>
           </Typography>
         )}
