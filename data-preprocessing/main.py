@@ -1,3 +1,5 @@
+# https://prisma-client-py.readthedocs.io/en/stable/reference/config/#config-options
+
 import numpy as np
 import pandas as pd
 import xarray as xr
@@ -10,6 +12,9 @@ import cftime
 from shapely.geometry import Point, Polygon
 
 import constants
+
+import asyncio
+from prisma import Prisma
 
 downloaded_ssps = ["ssp126", "ssp245", "ssp370", "ssp585"]
 
