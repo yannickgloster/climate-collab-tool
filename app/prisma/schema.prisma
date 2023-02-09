@@ -1,7 +1,11 @@
-// WHEN UPDATING, MAKE SURE PYTHON VERSION IS THE SAME
-
 generator client {
-  provider = "prisma-client-js"
+  // Uncomment when generating for JavaScript
+  // provider = "prisma-client-js"
+
+  // Uncomment when generating for Python
+  provider                    = "prisma-client-py"
+  enable_experimental_decimal = true
+  recursive_type_depth        = -1
 }
 
 datasource db {
