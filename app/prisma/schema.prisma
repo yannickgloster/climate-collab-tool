@@ -1,11 +1,12 @@
+// Visualized: https://prismaliser.app?code=Z2VuZXJhdG9yIGNsaWVudCB7CiAgLy8gVW5jb21tZW50IHdoZW4gZ2VuZXJhdGluZyBmb3IgSmF2YVNjcmlwdAogIHByb3ZpZGVyID0gInByaXNtYS1jbGllbnQtanMiCgogIC8vIFVuY29tbWVudCB3aGVuIGdlbmVyYXRpbmcgZm9yIFB5dGhvbgogIC8vIHByb3ZpZGVyICAgICAgICAgICAgICAgICAgICA9ICJwcmlzbWEtY2xpZW50LXB5IgogIC8vIGVuYWJsZV9leHBlcmltZW50YWxfZGVjaW1hbCA9IHRydWUKICAvLyByZWN1cnNpdmVfdHlwZV9kZXB0aCAgICAgICAgPSAtMQp9CgpkYXRhc291cmNlIGRiIHsKICBwcm92aWRlciA9ICJwb3N0Z3Jlc3FsIgogIHVybCAgICAgID0gZW52KCJEQVRBQkFTRV9VUkwiKQp9CgplbnVtIFNTUCB7CiAgU1NQMTE5CiAgU1NQMTI2CiAgU1NQMjQ1CiAgU1NQMzcwCiAgU1NQNDM0CiAgU1NQNDYwCiAgU1NQNTM0T1MKICBTU1A1ODUKfQoKZW51bSBSZWdpb24gewogIEVVCiAgVVMKICBDaGluYQogIFNBCiAgSW5kaWEKICBJc2xhbmQKfQoKZW51bSBRdWVzdGlvblRvcGljIHsKICBMYW5kVXNlQ2hhbmdlCiAgRW5lcmd5UHJvZHVjdGlvbgp9CgplbnVtIE1vZGVsIHsKICBDTlJNX0NNNl8xCn0KCm1vZGVsIFF1ZXN0aW9uIHsKICBpZCAgICAgICAgICAgIEludCAgICAgICAgICAgIEBpZCBAZGVmYXVsdChhdXRvaW5jcmVtZW50KCkpCiAgaW1nVXJsICAgICAgICBTdHJpbmc_CiAgdG9waWMgICAgICAgICBRdWVzdGlvblRvcGljCiAgdGV4dCAgICAgICAgICBTdHJpbmcKICBhbnN3ZXJzICAgICAgIEFuc3dlcltdCiAgLy8gVE9ETzogbG9vayBpbnRvIGVuZm9yY2luZyB0aGF0IHlvdSBoYXZlIHRvIGhhdmUgYWxsIDYgcmVnaW9uIGVudW1zCiAgcmVnaW9uV2VpZ2h0cyBSZWdpb25XZWlnaHRbXQp9Cgptb2RlbCBSZWdpb25XZWlnaHQgewogIHJlZ2lvbiAgICAgUmVnaW9uCiAgcXVlc3Rpb25JZCBJbnQKICBRdWVzdGlvbiAgIFF1ZXN0aW9uPyBAcmVsYXRpb24oZmllbGRzOiBbcXVlc3Rpb25JZF0sIHJlZmVyZW5jZXM6IFtpZF0pCgogIEBAdW5pcXVlKFtyZWdpb24sIHF1ZXN0aW9uSWRdKQp9Cgptb2RlbCBBbnN3ZXIgewogIGlkICAgICAgICAgSW50ICAgICAgIEBpZCBAZGVmYXVsdChhdXRvaW5jcmVtZW50KCkpCiAgdGV4dCAgICAgICBTdHJpbmcKICB3ZWlnaHQgICAgIEludAogIGNvc3QgICAgICAgSW50CiAgUXVlc3Rpb24gICBRdWVzdGlvbj8gQHJlbGF0aW9uKGZpZWxkczogW3F1ZXN0aW9uSWRdLCByZWZlcmVuY2VzOiBbaWRdKQogIHF1ZXN0aW9uSWQgSW50Pwp9Cgptb2RlbCBEYXRhIHsKICBzc3AgICAgICAgICAgIFNTUAogIG1vZGVsICAgICAgICAgTW9kZWwKICB0ZW1wX21heF9yb3dzIFRlbXBNYXhSb3dbXQoKICBAQHVuaXF1ZShbc3NwLCBtb2RlbF0pCn0KCm1vZGVsIFRlbXBNYXhSb3cgewogIGlkICAgICAgICBJbnQgICAgICBAaWQgQGRlZmF1bHQoYXV0b2luY3JlbWVudCgpKQogIHllYXIgICAgICBEYXRlVGltZQogIHRhc21heCAgICBGbG9hdAogIGRhdGFTc3AgICBTU1AKICBkYXRhTW9kZWwgTW9kZWwKICBEYXRhICAgICAgRGF0YT8gICAgQHJlbGF0aW9uKGZpZWxkczogW2RhdGFTc3AsIGRhdGFNb2RlbF0sIHJlZmVyZW5jZXM6IFtzc3AsIG1vZGVsXSkKfQo%3D
+
 generator client {
   // Uncomment when generating for JavaScript
-  // provider = "prisma-client-js"
+  provider = "prisma-client-js"
 
   // Uncomment when generating for Python
-  provider                    = "prisma-client-py"
-  enable_experimental_decimal = true
-  recursive_type_depth        = -1
+  // provider             = "prisma-client-py"
+  // recursive_type_depth = -1
 }
 
 datasource db {
@@ -14,19 +15,64 @@ datasource db {
 }
 
 enum SSP {
+  SSP119
   SSP126
   SSP245
   SSP370
+  SSP434
+  SSP460
+  SSP534OS
   SSP585
 }
 
-enum MODEL {
+enum Region {
+  EU
+  US
+  China
+  SA
+  India
+  Island
+}
+
+enum QuestionTopic {
+  LandUseChange
+  EnergyProduction
+}
+
+enum Model {
   CNRM_CM6_1
+}
+
+model Question {
+  id            Int            @id @default(autoincrement())
+  imgUrl        String?
+  topic         QuestionTopic
+  text          String
+  answers       Answer[]
+  // TODO: look into enforcing that you have to have all 6 region enums
+  regionWeights RegionWeight[]
+}
+
+model RegionWeight {
+  region     Region
+  questionId Int
+  Question   Question? @relation(fields: [questionId], references: [id])
+
+  @@unique([region, questionId])
+}
+
+model Answer {
+  id         Int       @id @default(autoincrement())
+  text       String
+  weight     Int
+  cost       Int
+  Question   Question? @relation(fields: [questionId], references: [id])
+  questionId Int?
 }
 
 model Data {
   ssp           SSP
-  model         MODEL
+  model         Model
   temp_max_rows TempMaxRow[]
 
   @@unique([ssp, model])
@@ -37,6 +83,6 @@ model TempMaxRow {
   year      DateTime
   tasmax    Float
   dataSsp   SSP
-  dataModel MODEL
+  dataModel Model
   Data      Data?    @relation(fields: [dataSsp, dataModel], references: [ssp, model])
 }

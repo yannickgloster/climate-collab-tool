@@ -6,6 +6,7 @@ import xarray as xr
 
 import matplotlib.path as mpath
 import matplotlib.pyplot as plt
+
 # import cartopy.crs as ccrs
 import cftime
 
@@ -17,7 +18,7 @@ import asyncio
 from prisma import Prisma
 from enum import Enum
 from datetime import datetime
-from prisma.enums import SSP, MODEL
+from prisma.enums import SSP, Model
 
 # prisma generate --schema="../app/prisma/schema.prisma"
 
@@ -61,7 +62,7 @@ async def main() -> None:
                 all_in_region.append(in_region[ds_var_name])
 
             if len(all_in_region) > 0:
-                whole_region: xr.DataArray = xr.merge(all_in_region)
+                whole_region: xr.Dataset = xr.merge(all_in_region)
 
                 # FIXME: there's something broken here the numbers don't seem right, I think it's the region boundaries for the US
                 # TODO: consider using median or mean
@@ -83,7 +84,7 @@ async def main() -> None:
                 # print(ssp)
 
                 ssp_enum = SSP[ssp.upper()]
-                model_enum = MODEL[model.upper().replace("-", "_")]
+                model_enum = Model[model.upper().replace("-", "_")]
 
                 # await db.data.create(
                 #     data={"ssp": ssp_enum, "model": model_enum}
@@ -96,13 +97,8 @@ async def main() -> None:
                         data={
                             "year": datetime(index, 1, 1),
                             "tasmax": float(row["tasmax"]),
-                            # "dataSsp": ssp_enum, 
-                            # "dataModel": model_enum,
-                            "data": {
-                                "connect": {
-                                    "ssp_model": {"ssp": ssp_enum, "model": model_enum}
-                                }
-                            }
+                            "dataSsp": ssp_enum,
+                            "dataModel": model_enum,
                         }
                     )
 
