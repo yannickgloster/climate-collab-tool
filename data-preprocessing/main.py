@@ -6,7 +6,7 @@ import xarray as xr
 
 import matplotlib.path as mpath
 import matplotlib.pyplot as plt
-import cartopy.crs as ccrs
+# import cartopy.crs as ccrs
 import cftime
 
 from shapely.geometry import Point, Polygon
@@ -15,7 +15,6 @@ import constants
 
 import asyncio
 from prisma import Prisma
-from decimal import Decimal
 from enum import Enum
 from datetime import datetime
 from prisma.enums import SSP, MODEL
@@ -86,22 +85,24 @@ async def main() -> None:
                 ssp_enum = SSP[ssp.upper()]
                 model_enum = MODEL[model.upper().replace("-", "_")]
 
-                await db.data.upsert(
-                    where={"ssp_model": {"ssp": ssp, "model": model}},
-                    data={
-                        "create": {},
-                        "update": {},
-                    },
-                )
+                # await db.data.create(
+                #     data={"ssp": ssp_enum, "model": model_enum}
+                # )
 
+                df = monthly_max_mean_region.to_dataframe()
                 # TODO: switch to create many
-                for index, row in monthly_max_mean_region.to_dataframe().iterrows():
+                for index, row in df.iterrows():
                     await db.tempmaxrow.create(
                         data={
-                            "year": datetime(index),
-                            "tasmax": Decimal(row["tasmax"]),
-                            "dataSsp": ssp_enum,
-                            "dataModel": model_enum,
+                            "year": datetime(index, 1, 1),
+                            "tasmax": float(row["tasmax"]),
+                            # "dataSsp": ssp_enum, 
+                            # "dataModel": model_enum,
+                            "data": {
+                                "connect": {
+                                    "ssp_model": {"ssp": ssp_enum, "model": model_enum}
+                                }
+                            }
                         }
                     )
 

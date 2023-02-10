@@ -35,7 +35,7 @@ model Data {
 model TempMaxRow {
   id        Int      @id @default(autoincrement())
   year      DateTime
-  tasmax    Decimal
+  tasmax    Float
   dataSsp   SSP
   dataModel MODEL
   Data      Data?    @relation(fields: [dataSsp, dataModel], references: [ssp, model])
