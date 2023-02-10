@@ -56,6 +56,7 @@ model Question {
 model RegionWeight {
   region     Region
   questionId Int
+  weight     Int
   Question   Question? @relation(fields: [questionId], references: [id])
 
   @@unique([region, questionId])
