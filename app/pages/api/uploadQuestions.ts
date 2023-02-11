@@ -29,9 +29,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       topic = QuestionTopic.EnergyProduction;
     }
 
+    const id = Number(row[0]);
+
     await prisma.question.create({
       data: {
-        id: row[0],
+        id: id,
         imgUrl: row[1],
         topic: topic,
         text: row[3],
@@ -42,33 +44,33 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       data: [
         {
           region: Region.China,
-          questionId: row[0],
-          weight: row[4],
+          questionId: id,
+          weight: Number(row[4]),
         },
         {
           region: Region.US,
-          questionId: row[0],
-          weight: row[5],
+          questionId: id,
+          weight: Number(row[5]),
         },
         {
           region: Region.India,
-          questionId: row[0],
-          weight: row[6],
+          questionId: id,
+          weight: Number(row[6]),
         },
         {
           region: Region.EU,
-          questionId: row[0],
-          weight: row[7],
+          questionId: id,
+          weight: Number(row[7]),
         },
         {
           region: Region.SA,
-          questionId: row[0],
-          weight: row[8],
+          questionId: id,
+          weight: Number(row[8]),
         },
         {
           region: Region.Island,
-          questionId: row[0],
-          weight: row[9],
+          questionId: id,
+          weight: Number(row[9]),
         },
       ],
     });
@@ -78,21 +80,21 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       data: [
         {
           text: row[10],
-          weight: row[11],
-          cost: row[12],
-          questionId: row[0],
+          weight: Number(row[11]),
+          cost: Number(row[12]),
+          questionId: id,
         },
         {
           text: row[13],
-          weight: row[14],
-          cost: row[15],
-          questionId: row[0],
+          weight: Number(row[14]),
+          cost: Number(row[15]),
+          questionId: id,
         },
         {
           text: row[16],
-          weight: row[17],
-          cost: row[18],
-          questionId: row[0],
+          weight: Number(row[17]),
+          cost: Number(row[18]),
+          questionId: id,
         },
       ],
     });
@@ -101,9 +103,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       await prisma.answer.create({
         data: {
           text: row[19],
-          weight: row[20],
-          cost: row[21],
-          questionId: row[0],
+          weight: Number(row[20]),
+          cost: Number(row[21]),
+          questionId: id,
         },
       });
     }
