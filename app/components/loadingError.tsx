@@ -7,6 +7,7 @@ interface loadingErrorProps {
   href: string;
 }
 
+// TODO: add force rerender by having an element that is passed up the tree
 export default function LoadingError({ href }: loadingErrorProps) {
   return (
     <Layout>

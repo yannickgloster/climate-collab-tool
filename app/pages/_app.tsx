@@ -7,7 +7,12 @@ import type { Dispatch, SetStateAction } from "react";
 import io, { Socket } from "socket.io-client";
 import { socketEvent } from "../utils/socketServerHandler";
 import { v4 as uuidv4 } from "uuid";
-import { Game, Regions, user as userType } from "../utils/types/game";
+import {
+  EmisionUnits,
+  Game,
+  Regions,
+  user as userType,
+} from "../utils/types/game";
 
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Snackbar from "@mui/material/Snackbar";
@@ -37,6 +42,7 @@ export interface snackbarProps {
 const theme = createTheme();
 
 export default function App({ Component, pageProps }: AppProps) {
+  // TODO: consider saving to cookies to refresh?
   const [user, setUser] = useState<userType>({ userId: uuidv4(), power: 100 });
   const [game, setGame] = useState<Game>();
   const [snackbar, setSnackbar] = useState<snackbarType>({
@@ -85,13 +91,18 @@ export default function App({ Component, pageProps }: AppProps) {
       });
 
       socket.on(socketEvent.joined_room, (code: string, region: string) => {
-        setUser({ ...user, gameCode: code, region: Regions[region] });
+        setUser({
+          ...user,
+          gameCode: code,
+          region: Regions[region],
+          emission: EmisionUnits[Regions[region]],
+        });
         router.push("/lobby");
       });
 
       socket.on(socketEvent.left_room, () => {
         router.push("/");
-        setUser({ ...user, gameCode: null });
+        setUser({ ...user, gameCode: null, region: null, emission: null });
         setGame(null);
       });
 

@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import { Fragment } from "react";
 import Head from "next/head";
 
 import Layout from "../components/layout";
@@ -98,7 +99,7 @@ export default function Join({
             const regionToolTip = DescriptiveTooltips[region];
 
             return (
-              <>
+              <Fragment key={region}>
                 <Grid item xs={6}>
                   <Tooltip title={regionToolTip} placement="bottom-end">
                     <Typography
@@ -126,7 +127,7 @@ export default function Join({
                     disabled={takenRegion}
                   />
                 </Grid>
-              </>
+              </Fragment>
             );
           })}
         </Grid>
