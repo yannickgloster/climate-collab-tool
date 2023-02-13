@@ -9,12 +9,11 @@ import { socketEvent } from "../utils/socketServerHandler";
 import { v4 as uuidv4 } from "uuid";
 import { Game, Regions, user as userType } from "../utils/types/game";
 
-import Layout from "../components/layout";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import LoopIcon from "@mui/icons-material/Loop";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
-import { motion } from "framer-motion";
+
+import Loading from "../components/loading";
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -164,22 +163,7 @@ export default function App({ Component, pageProps }: AppProps) {
       router.pathname === "/visualize") &&
     !user?.gameCode
   ) {
-    return (
-      <Layout>
-        <motion.div
-          animate={{
-            rotate: -360,
-          }}
-          transition={{
-            repeat: Infinity,
-            duration: 1.5,
-            ease: "easeInOut",
-          }}
-        >
-          <LoopIcon fontSize="large" />
-        </motion.div>
-      </Layout>
-    );
+    return <Loading />;
   }
 
   const handleSnackbarClose = (

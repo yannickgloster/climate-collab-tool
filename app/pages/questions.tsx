@@ -1,5 +1,4 @@
-import { useRouter } from "next/router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Head from "next/head";
 
 import Layout from "../components/layout";
@@ -7,9 +6,13 @@ import Question from "../components/question";
 
 import { snackbarProps, socket } from "./_app";
 import { socketEvent } from "../utils/socketServerHandler";
-import { answer, userState, gameState, GameStatus } from "../utils/types/game";
-
-import { sampleQuestions } from "../data/questions";
+import {
+  question,
+  answer,
+  userState,
+  gameState,
+  GameStatus,
+} from "../utils/types/game";
 
 export default function Questions({
   user,
@@ -19,20 +22,32 @@ export default function Questions({
   snackbar,
   setSnackbar,
 }: userState & gameState & snackbarProps) {
-  const router = useRouter();
-
   const [questionIndex, setQuestionIndex] = useState(0);
+  const [questions, setQuestions] = useState<question[]>();
+  const [isLoading, setLoading] = useState(true);
 
   const answerCallback = (answer: answer, index: number) => {
     // TODO: Store answer
     console.log(answer);
-    // TODO: Switch this to real questions
-    if (questionIndex < sampleQuestions.length - 1) {
+    if (questionIndex < questions.length - 1) {
       setQuestionIndex(questionIndex + 1);
     } else {
       socket.emit(socketEvent.completed_questions, user, user.gameCode);
     }
   };
+
+  useEffect(() => {
+    setLoading(true);
+    fetch("/api/questions")
+      .then((res) => res.json())
+      .then((data) => {
+        setQuestions(data.question);
+        setLoading(false);
+      });
+  }, []);
+
+  if (isLoading) return <p>Loading...</p>;
+  if (!questions) return <p>No data</p>;
 
   return (
     <>
@@ -42,10 +57,10 @@ export default function Questions({
       <Layout
         gameCode={user.gameCode}
         region={user.region}
-        img={sampleQuestions[questionIndex].img}
+        img={questions[questionIndex].imgUrl}
       >
         <Question
-          question={sampleQuestions[questionIndex]}
+          question={questions[questionIndex]}
           answerCallback={(answer) => answerCallback(answer, questionIndex)}
         />
       </Layout>

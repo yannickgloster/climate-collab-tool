@@ -1,3 +1,4 @@
+import { Region } from "@prisma/client";
 import type { Dispatch, SetStateAction } from "react";
 
 export enum Regions {
@@ -164,18 +165,28 @@ export interface questionProps {
   answerCallback: (answer: answer) => void;
 }
 
+// TODO: is there a way to get this directly from Prisma
 export interface question {
-  title: string;
+  id: number;
+  imgUrl?: string;
+  topic: string;
   text: string;
-  img: string;
   answers: answer[];
+  regionWeights: regionWeights[];
 }
 
 export interface answer {
+  id: number;
   text: string;
+  weight: number;
   cost: number;
-  // TODO: Update when impact has been determined
-  impact?: { ssp: SSP; weighting: number }[];
+  questionId: number;
+}
+
+export interface regionWeights {
+  region: Region;
+  questionId: number;
+  weight: number;
 }
 
 export enum SSP {

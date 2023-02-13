@@ -2,7 +2,9 @@
 
 generator client {
   // Uncomment when generating for JavaScript
-  provider = "prisma-client-js"
+  provider   = "prisma-client-js"
+  // Fix for SSL segfault on Ubuntu
+  engineType = "binary"
 
   // Uncomment when generating for Python
   // provider             = "prisma-client-py"

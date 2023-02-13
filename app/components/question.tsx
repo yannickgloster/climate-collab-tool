@@ -9,7 +9,7 @@ export default function Question(props: questionProps) {
   return (
     <>
       <Typography variant="h3" textAlign="center">
-        {props.question.title}
+        {props.question.topic}
       </Typography>
       <Typography variant="h4" textAlign="center">
         {props.question.text}
