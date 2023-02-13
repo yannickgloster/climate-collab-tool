@@ -6,7 +6,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   let questions = await prisma.question.findMany({
     include: { answers: true, regionWeights: true },
   });
-  res.json({ questions: questions });
+  res.json({ questions: questions.sort((a, b) => a.id - b.id) });
 };
 
 export default handler;
