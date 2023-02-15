@@ -7,13 +7,18 @@ import type { Dispatch, SetStateAction } from "react";
 import io, { Socket } from "socket.io-client";
 import { socketEvent } from "../utils/socketServerHandler";
 import { v4 as uuidv4 } from "uuid";
-import { Game, Regions, user as userType } from "../utils/types/game";
+import {
+  EmisionUnits,
+  Game,
+  Regions,
+  user as userType,
+} from "../utils/types/game";
 
-import Layout from "../components/layout";
-import LoopIcon from "@mui/icons-material/Loop";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
-import { motion } from "framer-motion";
+
+import Loading from "../components/loading";
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -33,7 +38,11 @@ export interface snackbarProps {
   setSnackbar: Dispatch<SetStateAction<snackbarType>>;
 }
 
+// TODO: create custom theme and move location
+const theme = createTheme();
+
 export default function App({ Component, pageProps }: AppProps) {
+  // TODO: consider saving to cookies to refresh?
   const [user, setUser] = useState<userType>({ userId: uuidv4(), power: 100 });
   const [game, setGame] = useState<Game>();
   const [snackbar, setSnackbar] = useState<snackbarType>({
@@ -43,7 +52,6 @@ export default function App({ Component, pageProps }: AppProps) {
   });
   const router = useRouter();
 
-  // TODO: Move to a different file
   useEffect(() => {
     fetch("/api/socket").finally(() => {
       socket = io();
@@ -83,13 +91,18 @@ export default function App({ Component, pageProps }: AppProps) {
       });
 
       socket.on(socketEvent.joined_room, (code: string, region: string) => {
-        setUser({ ...user, gameCode: code, region: Regions[region] });
+        setUser({
+          ...user,
+          gameCode: code,
+          region: Regions[region],
+          emission: EmisionUnits[Regions[region]],
+        });
         router.push("/lobby");
       });
 
       socket.on(socketEvent.left_room, () => {
         router.push("/");
-        setUser({ ...user, gameCode: null });
+        setUser({ ...user, gameCode: null, region: null, emission: null });
         setGame(null);
       });
 
@@ -140,7 +153,12 @@ export default function App({ Component, pageProps }: AppProps) {
   }, []);
 
   useEffect(() => {
-    if (router.pathname !== "/" && !user?.gameCode) {
+    if (
+      (router.pathname === "/lobby" ||
+        router.pathname === "/questions" ||
+        router.pathname === "/visualize") &&
+      !user?.gameCode
+    ) {
       setSnackbar({
         text: "You aren't in a lobby.",
         enabled: true,
@@ -150,23 +168,13 @@ export default function App({ Component, pageProps }: AppProps) {
     }
   }, []);
 
-  if (router.pathname !== "/" && !user?.gameCode) {
-    return (
-      <Layout>
-        <motion.div
-          animate={{
-            rotate: -360,
-          }}
-          transition={{
-            repeat: Infinity,
-            duration: 1.5,
-            ease: "easeInOut",
-          }}
-        >
-          <LoopIcon fontSize="large" />
-        </motion.div>
-      </Layout>
-    );
+  if (
+    (router.pathname === "/lobby" ||
+      router.pathname === "/questions" ||
+      router.pathname === "/visualize") &&
+    !user?.gameCode
+  ) {
+    return <Loading />;
   }
 
   const handleSnackbarClose = (
@@ -183,20 +191,11 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>Climate Change Game</title>
+        <title>Climate Change Simulation</title>
         <meta name="description" content="TODO: Write Description" />
         <meta name="theme-color" content="#005EB8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link
-          rel="icon"
-          href="/favicon-light.png"
-          media="(prefers-color-scheme: light)"
-        />
-        <link
-          rel="icon"
-          href="/favicon-dark.png"
-          media="(prefers-color-scheme: dark)"
-        />
+        <link rel="icon" href="/favicon.svg" />
 
         <meta property="og:type" content="website" />
         <meta property="og:url" content="/" />
@@ -213,28 +212,30 @@ export default function App({ Component, pageProps }: AppProps) {
         />
         <meta property="twitter:image" content="/social-image.png" />
       </Head>
-      <Component
-        {...pageProps}
-        user={user}
-        setUser={setUser}
-        game={game}
-        setGame={setGame}
-        snackbar={snackbar}
-        setSnackbar={setSnackbar}
-      />
-      <Snackbar
-        open={snackbar.enabled}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-      >
-        <MuiAlert
+      <ThemeProvider theme={theme}>
+        <Component
+          {...pageProps}
+          user={user}
+          setUser={setUser}
+          game={game}
+          setGame={setGame}
+          snackbar={snackbar}
+          setSnackbar={setSnackbar}
+        />
+        <Snackbar
+          open={snackbar.enabled}
+          autoHideDuration={6000}
           onClose={handleSnackbarClose}
-          severity={snackbar.severity}
-          sx={{ width: "100%" }}
         >
-          {snackbar.text}
-        </MuiAlert>
-      </Snackbar>
+          <MuiAlert
+            onClose={handleSnackbarClose}
+            severity={snackbar.severity}
+            sx={{ width: "100%" }}
+          >
+            {snackbar.text}
+          </MuiAlert>
+        </Snackbar>
+      </ThemeProvider>
     </>
   );
 }

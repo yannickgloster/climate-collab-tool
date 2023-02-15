@@ -1,17 +1,25 @@
 import { useRouter } from "next/router";
+import { Fragment } from "react";
 import Head from "next/head";
 
 import Layout from "../components/layout";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
+import Chip from "@mui/material/Chip";
+import Grid from "@mui/material/Grid";
 import LoopIcon from "@mui/icons-material/Loop";
 import { motion } from "framer-motion";
+import Tooltip from "@mui/material/Tooltip";
 
 import { snackbarProps, socket } from "./_app";
 import { socketEvent } from "../utils/socketServerHandler";
-import { userState, gameState, GameStatus } from "../utils/types/game";
-import { Regions } from "../utils/types/game";
+import {
+  userState,
+  gameState,
+  GameStatus,
+  DescriptiveTooltips,
+  Regions,
+} from "../utils/types/game";
 
 export default function Join({
   user,
@@ -70,14 +78,13 @@ export default function Join({
         </title>
       </Head>
       <Layout gameCode={user.gameCode} region={user.region}>
-        <Typography variant="h3" textAlign="center">
+        <Typography variant="h3" textAlign="center" fontWeight={800}>
           Select Region
         </Typography>
         <Typography variant="subtitle1" textAlign="center">
           This is the description.
         </Typography>
-        <Stack spacing={2}>
-          {/* TODO: This isn't very efficient, fix this. Loopings over all the users for every region.*/}
+        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           {Object.keys(Regions).map((r) => {
             const region: Regions = Regions[r];
             const selfRegion =
@@ -88,35 +95,52 @@ export default function Join({
             const takenRegion =
               !selfRegion &&
               game?.users.filter((u) => u.region === region).length > 0;
+
+            const regionToolTip = DescriptiveTooltips[region];
+
             return (
-              <Stack direction="row" spacing={2} key={r}>
-                <Typography variant="h6" textAlign="center">
-                  {region}
-                </Typography>
-                <Button
-                  variant="contained"
-                  size="small"
-                  color={selfRegion ? "success" : "primary"}
-                  disabled={takenRegion}
-                >
-                  {selfRegion && "Your"}
-                  {takenRegion && "Taken"}
-                  {!takenRegion && !selfRegion && "Unselected"} Region
-                </Button>
-              </Stack>
+              <Fragment key={region}>
+                <Grid item xs={6}>
+                  <Tooltip title={regionToolTip} placement="bottom-end">
+                    <Typography
+                      variant="h6"
+                      textAlign="right"
+                      sx={{
+                        textDecoration: `${
+                          regionToolTip ? "dotted underline" : ""
+                        }`,
+                      }}
+                    >
+                      {region}
+                    </Typography>
+                  </Tooltip>
+                </Grid>
+
+                <Grid item xs={6}>
+                  <Chip
+                    label={`${
+                      selfRegion
+                        ? "Your"
+                        : `${takenRegion ? "Taken" : "Unassigned"}`
+                    } Region`}
+                    color={selfRegion ? "success" : "primary"}
+                    disabled={takenRegion}
+                  />
+                </Grid>
+              </Fragment>
             );
           })}
-        </Stack>
+        </Grid>
         <Button
           variant="contained"
           size="large"
           onClick={startGame}
           disabled={game && game?.availableRegions.length > 0}
         >
-          Start Game
+          Start Simulation
         </Button>
         <Button variant="contained" size="large" onClick={leaveRoom}>
-          Leave Game
+          Leave Simulation
         </Button>
       </Layout>
     </>

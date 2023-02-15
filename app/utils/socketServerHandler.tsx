@@ -1,6 +1,12 @@
 import { getMaxAge } from "next/dist/server/image-optimizer";
 import type { Server, Socket } from "socket.io";
-import { user as userType, Game, GameStatus, SSP } from "./types/game";
+import {
+  user as userType,
+  Game,
+  GameStatus,
+  SSP,
+  SPP_Emissions,
+} from "./types/game";
 import { gameCodeLength } from "./constants";
 
 export enum socketEvent {
@@ -32,6 +38,7 @@ export enum socketEvent {
 }
 
 export default (io: Server, socket: Socket, rooms: Map<string, Game>) => {
+  // TODO: add types for each function
   // Room Logic
   const createRoom = (user: userType, code: string) => {
     if (!rooms.has(code)) {
@@ -98,16 +105,29 @@ export default (io: Server, socket: Socket, rooms: Map<string, Game>) => {
   socket.on(socketEvent.user_request_start_game, startGame);
 
   // Game Logic
-  const userCompletedQuestions = (user: userType, code: string) => {
+  const userCompletedQuestions = (
+    user: userType,
+    code: string,
+    emission: number
+  ) => {
     if (rooms.has(code)) {
       const game = rooms.get(code);
       game.userCompletedQuestion(user);
+      game.addEmission(emission);
       io.to(code).emit(socketEvent.game_update, game);
       io.to(socket.id).emit(socketEvent.recieved_questions);
       if (game.allUsersCompletedQuestion()) {
         game.status = GameStatus.visualize;
-        // TODO: process weights from users
-        game.ssp = SSP["1-2.6"];
+        const finalSSP = SPP_Emissions.reduce((a, b) => {
+          return Math.abs(b.emission - game.emission) <
+            Math.abs(a.emission - game.emission)
+            ? b
+            : a;
+        });
+        // TODO: Remove after debugging
+        console.log("Emmission: " + game.emission);
+        console.log("Closest SSP: " + finalSSP.ssp + " " + finalSSP.emission);
+        game.ssp = finalSSP.ssp;
         io.to(code).emit(socketEvent.game_update, game);
       }
     } else {

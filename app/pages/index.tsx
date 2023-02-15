@@ -5,10 +5,11 @@ import Layout from "../components/layout";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import Tooltip from "@mui/material/Tooltip";
 
 import { socket, snackbarProps } from "./_app";
 import { socketEvent } from "../utils/socketServerHandler";
-import { userState } from "../utils/types/game";
+import { DescriptiveTooltips, userState } from "../utils/types/game";
 import { gameCodeLength } from "../utils/constants";
 
 import styles from "../styles/Home.module.css";
@@ -53,12 +54,21 @@ export default function Home({
   }, [router.query, socket]);
 
   return (
-    <Layout>
-      <Typography variant="h3" textAlign="center">
-        Climate Change Game
+    <Layout img="/images/eberhard-grossgasteiger-jCL98LGaeoE-unsplash.jpg">
+      <Typography variant="h3" textAlign="center" fontWeight={800}>
+        Climate Change Simulation
       </Typography>
       <Typography variant="subtitle1" textAlign="center">
-        Built using the IPCC Dataset. This is the description.
+        Built using the{" "}
+        <Tooltip title={DescriptiveTooltips["IPCC"]} placement="bottom-end">
+          <Typography
+            sx={{ textDecoration: "dotted underline" }}
+            display="inline"
+          >
+            IPCC
+          </Typography>
+        </Tooltip>{" "}
+        Dataset. This is the description.
       </Typography>
       <Button
         variant="contained"
@@ -66,7 +76,7 @@ export default function Home({
         onClick={generateGameCode}
         data-cy="newGameButton"
       >
-        New Game
+        New Simulation
       </Button>
       <TextField
         id="gameCodeTextField"
@@ -81,7 +91,7 @@ export default function Home({
         onClick={() => joinRoom(gameCode)}
         data-cy="joinGameButton"
       >
-        Join Game
+        Join Simulation
       </Button>
     </Layout>
   );

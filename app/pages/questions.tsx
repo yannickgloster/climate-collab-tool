@@ -1,5 +1,4 @@
-import { useRouter } from "next/router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Head from "next/head";
 
 import Layout from "../components/layout";
@@ -7,9 +6,17 @@ import Question from "../components/question";
 
 import { snackbarProps, socket } from "./_app";
 import { socketEvent } from "../utils/socketServerHandler";
-import { answer, userState, gameState, GameStatus } from "../utils/types/game";
-
-import { sampleQuestions } from "../data/questions";
+import {
+  question,
+  answer,
+  userState,
+  gameState,
+  GameStatus,
+  RegionsToPrisma,
+} from "../utils/types/game";
+import Loading from "../components/loading";
+import LoadingError from "../components/loadingError";
+import Typography from "@mui/material/Typography";
 
 export default function Questions({
   user,
@@ -19,29 +26,63 @@ export default function Questions({
   snackbar,
   setSnackbar,
 }: userState & gameState & snackbarProps) {
-  const router = useRouter();
-
   const [questionIndex, setQuestionIndex] = useState(0);
+  const [questions, setQuestions] = useState<question[]>();
+  const [isLoading, setLoading] = useState(true);
 
   const answerCallback = (answer: answer, index: number) => {
-    // TODO: Store answer
-    console.log(answer);
-    // TODO: Switch this to real questions
-    if (questionIndex < sampleQuestions.length - 1) {
+    const question = questions[questionIndex];
+    const newUser = {
+      ...user,
+      power: user.power - answer.cost,
+      // TODO: add question importance
+      emission:
+        user.emission - question.regionWeights[0].weight * answer.weight,
+    };
+    setUser(newUser);
+    if (questionIndex < questions.length - 1) {
       setQuestionIndex(questionIndex + 1);
     } else {
-      socket.emit(socketEvent.completed_questions, user, user.gameCode);
+      socket.emit(
+        socketEvent.completed_questions,
+        user,
+        user.gameCode,
+        newUser.emission
+      );
     }
   };
+
+  useEffect(() => {
+    setLoading(true);
+    fetch(`/api/questions/${RegionsToPrisma[user.region]}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setQuestions(data.questions);
+        setLoading(false);
+      })
+      .catch((_error) => {
+        // TODO: add snackbar error
+        setLoading(false);
+        console.log(_error);
+      });
+  }, []);
+
+  if (isLoading) return <Loading />;
+  if (!questions) return <LoadingError href="/questions" />;
 
   return (
     <>
       <Head>
         <title>Answer Questions</title>
       </Head>
-      <Layout gameCode={user.gameCode} region={user.region}>
+      <Layout
+        gameCode={user.gameCode}
+        region={user.region}
+        img={questions[questionIndex].imgUrl}
+      >
+        <Typography variant="h6">Power: {user.power}</Typography>
         <Question
-          question={sampleQuestions[questionIndex]}
+          question={questions[questionIndex]}
           answerCallback={(answer) => answerCallback(answer, questionIndex)}
         />
       </Layout>

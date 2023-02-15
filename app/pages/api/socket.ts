@@ -9,7 +9,7 @@ import { Game, GameStatus } from "../../utils/types/game";
 import { cronjobLengthHours } from "../../utils/constants";
 
 const socketHandler = function handler(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponseWithSocket
 ) {
   if (!res.socket.server.io) {
@@ -36,7 +36,6 @@ const socketHandler = function handler(
       },
     });
 
-    // TODO: Investigate if this is the best way to run a cron job
     cron.schedule(`0 0 */${cronjobLengthHours} * * *`, function () {
       console.log("Checking for hanging rooms");
       rooms.forEach((game, code) => {

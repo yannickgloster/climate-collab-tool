@@ -7,28 +7,29 @@ import { questionProps } from "../utils/types/game";
 
 export default function Question(props: questionProps) {
   return (
-    <Paper>
-      <Image
-        src={props.question.img}
-        alt="Question Image"
-        width={500}
-        height={500}
-      />
+    <>
       <Typography variant="h3" textAlign="center">
-        {props.question.title}
+        {props.question.topic}
       </Typography>
       <Typography variant="h4" textAlign="center">
         {props.question.text}
       </Typography>
       {props.question.answers.map((answer, i) => {
         return (
-          <Box key={i} onClick={() => props.answerCallback(answer)}>
+          <Button
+            fullWidth
+            variant="contained"
+            size="large"
+            key={i}
+            onClick={() => props.answerCallback(answer)}
+            sx={{ mt: 2 }}
+          >
             <Typography variant="body1" textAlign="center">
               {answer.text} - {answer.cost}
             </Typography>
-          </Box>
+          </Button>
         );
       })}
-    </Paper>
+    </>
   );
 }

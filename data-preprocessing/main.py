@@ -1,59 +1,132 @@
+# https://prisma-client-py.readthedocs.io/en/stable/reference/config/#config-options
+
 import numpy as np
 import pandas as pd
 import xarray as xr
 
 import matplotlib.path as mpath
 import matplotlib.pyplot as plt
-import cartopy.crs as ccrs
+
+# import cartopy.crs as ccrs
 import cftime
 
 from shapely.geometry import Point, Polygon
 
 import constants
 
+import asyncio
+from prisma import Prisma
+from enum import Enum
+from datetime import datetime
+from prisma.enums import SSP, Model, Region
+
+import geopandas as gpd
+
+# prisma generate --schema="../app/prisma/schema.prisma"
 datasets_root = "data"
 
-monthly_near_surface_air_temperature_2015_to_2099_netCDF = (
-    "tasmax_Amon_EC-Earth3_ssp119_r4i1p1f1_gr_20150116-20991216_v20200425.nc"
-)
 
-ds = xr.open_dataset(
-    f"{datasets_root}/{monthly_near_surface_air_temperature_2015_to_2099_netCDF}",
-    decode_times=True,
-    use_cftime=True,
-)
+async def main() -> None:
+    downloaded_ssps = ["119", "126", "245", "370", "434", "460", "534OS", "585"]
 
-ds_var_name = "tasmax"
-ssp = "ssp_119"
+    ds_var_name = "tasmax"
 
-for region in constants.regions.keys():
-    # Generate Polygons
-    polygons = []
+    model = "CNRM-ESM2-1"  # (FRANCE)
 
-    for coords in constants.regions[region]["points"]:
-        r = Polygon(coords)
-        polygons.append(r)
+    # https://thematicmapping.org/downloads/world_borders.php
+    # https://larmarange.github.io/prevR/reference/TMWorldBorders.html
+    world_shape = gpd.read_file(f"{datasets_root}/TM_WORLD_BORDERS-0.3.shp")
+    db = Prisma()
 
-    all_means = []
-
-    for polygon in polygons:
-        in_region = ds.where(
-            (ds.lat >= polygon.bounds[0])
-            & (ds.lat <= polygon.bounds[2])
-            & (ds.lon >= polygon.bounds[1])
-            & (ds.lon <= polygon.bounds[3]),
-            drop=True,
+    for ssp in downloaded_ssps:
+        # Dataset renamed to follow the following format
+        ds = xr.open_dataset(
+            f"{datasets_root}/{ds_var_name}_Amon_{model}_ssp{ssp}.nc",
+            decode_times=True,
+            use_cftime=True,
         )
-        # Get Mean across time
-        # TODO: consider getting median
-        mean_data = in_region[ds_var_name].mean(dim=["lat", "lon"]).drop_vars("height")
-        all_means.append(mean_data)
 
-    if len(all_means) > 0:
-        combinded_means: xr.DataArray = xr.merge(all_means)
+        for region in constants.regions.keys():
+            if "points" in constants.regions[region]:
+                polygon = Polygon(constants.regions[region]["points"])
+            else:
+                if "country_names" in constants.regions[region]:
+                    polygon = []
+                    for country_name in constants.regions[region]["country_names"]:
+                        polygon.append(
+                            world_shape[world_shape.NAME == country_name]
+                            .iloc[0]
+                            .geometry
+                        )
+                else:
+                    polygon = (
+                        world_shape[
+                            world_shape.NAME == constants.regions[region]["full_name"]
+                        ]
+                        .iloc[0]
+                        .geometry
+                    )
 
-        # TODO: Upload to DB
-        # FIXME: Temporarily saving to CSV
-        combinded_means.to_dataframe().to_csv(
-            f"{datasets_root}/{ssp}_{ds_var_name}_{region}.csv"
-        )
+            if "country_names" in constants.regions[region]:
+                all_in_region = []
+                for p in polygon:
+                    bounds = p.bounds
+                    in_region_temp = ds.where(
+                        (ds.lat >= bounds[0])
+                        & (ds.lat <= bounds[2])
+                        & (ds.lon >= bounds[1])
+                        & (ds.lon <= bounds[3])
+                    )
+                    all_in_region.append(in_region_temp[ds_var_name])
+                in_region: xr.Dataset = xr.merge(all_in_region)
+            else:
+                in_region = ds.where(
+                    (ds.lat >= polygon.bounds[0])
+                    & (ds.lat <= polygon.bounds[2])
+                    & (ds.lon >= polygon.bounds[1])
+                    & (ds.lon <= polygon.bounds[3]),
+                    drop=True,
+                )[ds_var_name]
+
+            # FIXME: there's something broken here the numbers don't seem right, I think it's the region boundaries for the US
+            # TODO: consider using median or mean
+            mean_whole_region = in_region.max(dim=["lat", "lon"]).drop_vars("height")
+
+            # Get the max of the max temperatures per year
+            monthly_max_mean_region = mean_whole_region.groupby("time.year").max()
+
+            # monthly_max_mean_region.to_dataframe().to_csv(
+            #     f"{datasets_root}/ssp{ssp}_{ds_var_name}_{region}.csv"
+            # )
+
+            ssp_enum = SSP["SSP" + ssp.upper()]
+            model_enum = Model[model.upper().replace("-", "_")]
+            region_enum = Region[region]
+            df = monthly_max_mean_region.to_dataframe()
+
+            await db.connect()
+
+            try:
+                await db.data.create(
+                    data={"ssp": ssp_enum, "model": model_enum, "region": region_enum}
+                )
+            except:
+                print("Data row already exists")
+
+            # TODO: switch to create many
+            for index, row in df.iterrows():
+                await db.tempmaxrow.create(
+                    data={
+                        "year": datetime(index, 1, 1),
+                        "tasmax": float(row["tasmax"]),
+                        "dataSsp": ssp_enum,
+                        "dataModel": model_enum,
+                        "dataRegion": region_enum,
+                    }
+                )
+
+            await db.disconnect()
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
