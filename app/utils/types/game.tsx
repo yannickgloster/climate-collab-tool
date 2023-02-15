@@ -1,4 +1,4 @@
-import { Region } from "@prisma/client";
+import { Region, SSP as PrismaSSP } from "@prisma/client";
 import type { Dispatch, SetStateAction } from "react";
 
 export enum Regions {
@@ -232,6 +232,17 @@ export enum SSP {
   "5-3.4OS" = "SSP 5-3.4OS",
   "5-8.5" = "SSP 5-8.5",
 }
+
+export const SSPToPrisma = {
+  [SSP["1-1.9"]]: PrismaSSP.SSP119,
+  [SSP["1-2.6"]]: PrismaSSP.SSP126,
+  [SSP["2-4.5"]]: PrismaSSP.SSP245,
+  [SSP["3-7.0"]]: PrismaSSP.SSP370,
+  [SSP["4-3.4"]]: PrismaSSP.SSP434,
+  [SSP["4-6.0"]]: PrismaSSP.SSP460,
+  [SSP["5-3.4OS"]]: PrismaSSP.SSP534OS,
+  [SSP["5-8.5"]]: PrismaSSP.SSP585,
+};
 
 export interface SSP_Emission {
   ssp: SSP;

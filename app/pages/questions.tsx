@@ -61,6 +61,7 @@ export default function Questions({
         setLoading(false);
       })
       .catch((_error) => {
+        // TODO: add snackbar error
         setLoading(false);
         console.log(_error);
       });
