@@ -1,11 +1,11 @@
-import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import Head from "next/head";
 
 import Layout from "../components/layout";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 
-import { snackbarProps, socket } from "./_app";
+import { snackbarProps } from "./_app";
 import {
   userState,
   gameState,
@@ -13,7 +13,9 @@ import {
   AtlasMeanTemperatureLinks,
 } from "../utils/types/game";
 
-export default function Visualize({
+import Visualize, { VisualizeProps } from "../components/visualize";
+
+export default function VisualizePage({
   user,
   setUser,
   game,
@@ -21,7 +23,13 @@ export default function Visualize({
   snackbar,
   setSnackbar,
 }: userState & gameState & snackbarProps) {
-  const router = useRouter();
+  const [data, setData] = useState<VisualizeProps["data"]>();
+
+  useEffect(() => {
+    if (game.ssp) {
+      // TODO: add query for data
+    }
+  }, [game.ssp]);
 
   return (
     <>
@@ -44,7 +52,7 @@ export default function Visualize({
             SSP Description
           </Typography>
         )}
-        {game.status == GameStatus.visualize && (
+        {/* {game.status == GameStatus.visualize && (
           <Button
             variant="contained"
             size="large"
@@ -54,7 +62,7 @@ export default function Visualize({
           >
             View Interactive Atlas
           </Button>
-        )}
+        )} */}
       </Layout>
     </>
   );

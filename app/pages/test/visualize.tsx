@@ -7,11 +7,11 @@ import useSWR from "swr";
 import { fetcher } from "../../utils/fetcher";
 
 const ssp = 126;
-const region = "EU";
+const region = "US";
 
 export default function VisualizeTest({ user, setUser }: userState) {
   const { data, error } = useSWR<VisualizeProps["data"]>(
-    `/api/data?ssp=${ssp}&region=${region}`,
+    `/api/data?ssp=SSP${ssp}&region=${region}`,
     fetcher
   );
 

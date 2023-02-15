@@ -15,7 +15,6 @@ import { DateTime } from "luxon";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import { useTheme } from "@mui/material/styles";
-import { useState } from "react";
 
 export interface VisualizeProps {
   data: {
@@ -89,14 +88,7 @@ export default function Visualize(props: VisualizeProps) {
               name="Max Temperature (°C)"
             />
             <CartesianGrid stroke="#ccc" />
-            <XAxis
-              dataKey="date"
-              tickFormatter={(unixTime) =>
-                DateTime.fromMillis(unixTime).toLocaleString({
-                  year: "numeric",
-                })
-              }
-            />
+            <XAxis dataKey="date" />
             <Tooltip content={<CustomTooltip />} />
             <Legend iconType="plainline" />
             <YAxis domain={[minDomainTemp, maxDomainTemp]} unit="°C" />

@@ -26,19 +26,12 @@ import geopandas as gpd
 datasets_root = "data"
 
 
-def test(): 
-    # https://thematicmapping.org/downloads/world_borders.php
-    # https://larmarange.github.io/prevR/reference/TMWorldBorders.html
-    shapefile = gpd.read_file(f"{datasets_root}/TM_WORLD_BORDERS-0.3.shp")
-    print(shapefile[shapefile.NAME=="Guyana"])
-
-
 async def main() -> None:
     downloaded_ssps = ["119", "126", "245", "370", "434", "460", "534OS", "585"]
 
     ds_var_name = "tasmax"
 
-    model = "CNRM-ESM2-1" # (FRANCE)
+    model = "CNRM-ESM2-1"  # (FRANCE)
 
     # https://thematicmapping.org/downloads/world_borders.php
     # https://larmarange.github.io/prevR/reference/TMWorldBorders.html
@@ -60,32 +53,44 @@ async def main() -> None:
                 if "country_names" in constants.regions[region]:
                     polygon = []
                     for country_name in constants.regions[region]["country_names"]:
-                        polygon.append(world_shape[world_shape.NAME==country_name].iloc[0].geometry)
-                else: 
-                    polygon = world_shape[world_shape.NAME==constants.regions[region]["full_name"]].iloc[0].geometry
+                        polygon.append(
+                            world_shape[world_shape.NAME == country_name]
+                            .iloc[0]
+                            .geometry
+                        )
+                else:
+                    polygon = (
+                        world_shape[
+                            world_shape.NAME == constants.regions[region]["full_name"]
+                        ]
+                        .iloc[0]
+                        .geometry
+                    )
 
             if "country_names" in constants.regions[region]:
                 all_in_region = []
                 for p in polygon:
                     bounds = p.bounds
-                    in_region_temp = ds.where((ds.lat >= bounds[0])
-                                                & (ds.lat <= bounds[2])
-                                                & (ds.lon >= bounds[1])
-                                                & (ds.lon <= bounds[3]))
+                    in_region_temp = ds.where(
+                        (ds.lat >= bounds[0])
+                        & (ds.lat <= bounds[2])
+                        & (ds.lon >= bounds[1])
+                        & (ds.lon <= bounds[3])
+                    )
                     all_in_region.append(in_region_temp[ds_var_name])
                 in_region: xr.Dataset = xr.merge(all_in_region)
-            else: 
-                in_region = ds.where((ds.lat >= polygon.bounds[0])
-                                        & (ds.lat <= polygon.bounds[2])
-                                        & (ds.lon >= polygon.bounds[1])
-                                        & (ds.lon <= polygon.bounds[3]),
-                                        drop=True)[ds_var_name]
+            else:
+                in_region = ds.where(
+                    (ds.lat >= polygon.bounds[0])
+                    & (ds.lat <= polygon.bounds[2])
+                    & (ds.lon >= polygon.bounds[1])
+                    & (ds.lon <= polygon.bounds[3]),
+                    drop=True,
+                )[ds_var_name]
 
             # FIXME: there's something broken here the numbers don't seem right, I think it's the region boundaries for the US
             # TODO: consider using median or mean
-            mean_whole_region = in_region.max(dim=["lat", "lon"]).drop_vars(
-                "height"
-            )
+            mean_whole_region = in_region.max(dim=["lat", "lon"]).drop_vars("height")
 
             # Get the max of the max temperatures per year
             monthly_max_mean_region = mean_whole_region.groupby("time.year").max()
@@ -116,7 +121,7 @@ async def main() -> None:
                         "tasmax": float(row["tasmax"]),
                         "dataSsp": ssp_enum,
                         "dataModel": model_enum,
-                        "dataRegion": region_enum
+                        "dataRegion": region_enum,
                     }
                 )
 
@@ -125,4 +130,3 @@ async def main() -> None:
 
 if __name__ == "__main__":
     asyncio.run(main())
-    # test()
