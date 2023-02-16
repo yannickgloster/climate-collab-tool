@@ -6,14 +6,9 @@ import Question from "../components/question";
 
 import { snackbarProps, socket } from "./_app";
 import { socketEvent } from "../utils/socketServerHandler";
-import {
-  question,
-  answer,
-  userState,
-  gameState,
-  GameStatus,
-  RegionsToPrisma,
-} from "../utils/types/game";
+import { question } from "../utils/types/question";
+import { Answer } from "@prisma/client";
+import { userState, gameState } from "../utils/game";
 import Loading from "../components/loading";
 import LoadingError from "../components/loadingError";
 import Typography from "@mui/material/Typography";
@@ -30,7 +25,7 @@ export default function Questions({
   const [questions, setQuestions] = useState<question[]>();
   const [isLoading, setLoading] = useState(true);
 
-  const answerCallback = (answer: answer, index: number) => {
+  const answerCallback = (answer: Answer, index: number) => {
     const question = questions[questionIndex];
     const newUser = {
       ...user,
@@ -40,9 +35,9 @@ export default function Questions({
         user.emission - question.regionWeights[0].weight * answer.weight,
     };
     setUser(newUser);
-    if (questionIndex < questions.length - 1) {
-      setQuestionIndex(questionIndex + 1);
-    } else {
+    setQuestionIndex(questionIndex + 1);
+
+    if (questionIndex == questions.length - 1) {
       socket.emit(
         socketEvent.completed_questions,
         user,
@@ -54,16 +49,19 @@ export default function Questions({
 
   useEffect(() => {
     setLoading(true);
-    fetch(`/api/questions/${RegionsToPrisma[user.region]}`)
+    fetch(`/api/questions/${user.region}`)
       .then((res) => res.json())
       .then((data) => {
         setQuestions(data.questions);
         setLoading(false);
       })
       .catch((_error) => {
-        // TODO: add snackbar error
         setLoading(false);
-        console.log(_error);
+        setSnackbar({
+          text: "Could not load questions.",
+          enabled: true,
+          severity: "error",
+        });
       });
   }, []);
 
@@ -78,13 +76,19 @@ export default function Questions({
       <Layout
         gameCode={user.gameCode}
         region={user.region}
-        img={questions[questionIndex].imgUrl}
+        img={questions[questionIndex]?.imgUrl}
       >
         <Typography variant="h6">Power: {user.power}</Typography>
-        <Question
-          question={questions[questionIndex]}
-          answerCallback={(answer) => answerCallback(answer, questionIndex)}
-        />
+        {questionIndex < questions.length ? (
+          <Question
+            question={questions[questionIndex]}
+            answerCallback={(answer) => answerCallback(answer, questionIndex)}
+          />
+        ) : (
+          <Typography variant="h6">
+            Thank you for answering all the questions!
+          </Typography>
+        )}
       </Layout>
     </>
   );

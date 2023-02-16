@@ -1,4 +1,4 @@
-import { Game, user as userType } from "../../utils/types/game";
+import { Game, user as userType } from "../../utils/game";
 
 describe("Game Class", () => {
   it("successfully creates a new game", () => {

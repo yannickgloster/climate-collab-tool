@@ -1,24 +1,21 @@
 import Layout from "../../components/layout";
-import {
-  Regions,
-  userState,
-  question,
-  answer,
-  EmisionUnits,
-  RegionsToPrisma,
-} from "../../utils/types/game";
+import { question } from "../../utils/types/question";
+import { userState } from "../../utils/game";
+import { Answer } from "@prisma/client";
 import Question from "../../components/question";
 import { useEffect, useState } from "react";
 import Loading from "../../components/loading";
 import LoadingError from "../../components/loadingError";
 import Typography from "@mui/material/Typography";
+import { Region } from "@prisma/client";
+import { RegionDetails } from "../../utils/details";
 
 export default function QuestionTest({ user, setUser }: userState) {
   const [questions, setQuestions] = useState<question[]>();
   const [isLoading, setLoading] = useState(true);
   const [questionIndex, setQuestionIndex] = useState(0);
 
-  const answerCallback = (answer: answer, index: number) => {
+  const answerCallback = (answer: Answer, index: number) => {
     const question = questions[questionIndex];
     setUser({
       ...user,
@@ -30,20 +27,21 @@ export default function QuestionTest({ user, setUser }: userState) {
     if (questionIndex < questions.length - 1) {
       setQuestionIndex(questionIndex + 1);
     } else {
-      alert("DONE");
+      alert("(not) Alerting server of completion");
     }
   };
 
   useEffect(() => {
+    const region = Region.EU;
     setLoading(true);
     setUser({
       userId: "TEST",
       power: 100,
       gameCode: "TEST",
-      region: Regions.EU,
-      emission: EmisionUnits[Regions.EU],
+      region: region,
+      emission: RegionDetails[region].emissionUnits,
     });
-    fetch(`/api/questions/${RegionsToPrisma[Regions.EU]}`)
+    fetch(`/api/questions/${region}`)
       .then((res) => res.json())
       .then((data) => {
         setQuestions(data.questions);
@@ -65,10 +63,16 @@ export default function QuestionTest({ user, setUser }: userState) {
     >
       <Typography variant="h6">Emission: {user.emission}</Typography>
       <Typography variant="h6">Power: {user.power}</Typography>
-      <Question
-        question={questions[questionIndex]}
-        answerCallback={(answer) => answerCallback(answer, questionIndex)}
-      />
+      {questionIndex < questions.length - 1 ? (
+        <Question
+          question={questions[questionIndex]}
+          answerCallback={(answer) => answerCallback(answer, questionIndex)}
+        />
+      ) : (
+        <Typography variant="h6">
+          Thank you for answering all the questions!
+        </Typography>
+      )}
     </Layout>
   );
 }

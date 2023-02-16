@@ -5,7 +5,7 @@ import { instrument } from "@socket.io/admin-ui";
 import cron from "node-cron";
 
 import sockets, { socketEvent } from "../../utils/socketServerHandler";
-import { Game, GameStatus } from "../../utils/types/game";
+import { Game, GameStatus } from "../../utils/game";
 import { cronjobLengthHours } from "../../utils/constants";
 
 const socketHandler = function handler(

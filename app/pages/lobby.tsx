@@ -13,13 +13,9 @@ import Tooltip from "@mui/material/Tooltip";
 
 import { snackbarProps, socket } from "./_app";
 import { socketEvent } from "../utils/socketServerHandler";
-import {
-  userState,
-  gameState,
-  GameStatus,
-  DescriptiveTooltips,
-  Regions,
-} from "../utils/types/game";
+import { userState, gameState, GameStatus } from "../utils/game";
+import { DescriptiveTooltips, RegionDetails } from "../utils/details";
+import { Region } from "@prisma/client";
 
 export default function Join({
   user,
@@ -29,8 +25,6 @@ export default function Join({
   snackbar,
   setSnackbar,
 }: userState & gameState & snackbarProps) {
-  const router = useRouter();
-
   const leaveRoom = () => {
     socket.emit(socketEvent.leave_room, user, user.gameCode);
   };
@@ -85,8 +79,8 @@ export default function Join({
           This is the description.
         </Typography>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-          {Object.keys(Regions).map((r) => {
-            const region: Regions = Regions[r];
+          {Object.keys(Region).map((region) => {
+            // const region: Regions = Regions[r];
             const selfRegion =
               game?.users.filter(
                 (u) => u.userId === user.userId && u.region === region
@@ -111,11 +105,10 @@ export default function Join({
                         }`,
                       }}
                     >
-                      {region}
+                      {RegionDetails[region].name}
                     </Typography>
                   </Tooltip>
                 </Grid>
-
                 <Grid item xs={6}>
                   <Chip
                     label={`${

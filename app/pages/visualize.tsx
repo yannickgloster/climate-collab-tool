@@ -6,14 +6,8 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 
 import { snackbarProps } from "./_app";
-import {
-  userState,
-  gameState,
-  GameStatus,
-  AtlasMeanTemperatureLinks,
-  RegionsToPrisma,
-  SSPToPrisma,
-} from "../utils/types/game";
+import { userState, gameState, GameStatus } from "../utils/game";
+import { SSPDetails } from "../utils/details";
 
 import Visualize, { VisualizeProps } from "../components/visualize";
 
@@ -29,17 +23,17 @@ export default function VisualizePage({
 
   useEffect(() => {
     if (game.ssp) {
-      fetch(
-        `/api/data?ssp=${SSPToPrisma[game.ssp]}&region=${
-          RegionsToPrisma[user.region]
-        }`
-      )
+      fetch(`/api/data?ssp=${game.ssp}&region=${user.region}`)
         .then((res) => res.json())
         .then((data) => {
           setData(data);
         })
         .catch((_error) => {
-          // TODO: add snackbar error
+          setSnackbar({
+            text: "Could not load data.",
+            enabled: true,
+            severity: "error",
+          });
         });
     }
   }, [game.ssp]);
@@ -57,26 +51,28 @@ export default function VisualizePage({
         )}
         {game.status == GameStatus.visualize && (
           <Typography variant="h3" textAlign="center" fontWeight={800}>
-            Visualize Data: {game.ssp}
+            Visualize Data: {SSPDetails[game.ssp].name}
           </Typography>
         )}
         {game.status == GameStatus.visualize && (
           <Typography variant="body1" textAlign="center">
-            SSP Description
+            {SSPDetails[game.ssp].description}
           </Typography>
         )}
         {game.status == GameStatus.visualize && data && (
           <>
             <Visualize data={data} />
-            {/* <Button
-              variant="contained"
-              size="large"
-              href={AtlasMeanTemperatureLinks[game.ssp]}
-              target="_blank"
-              rel="noopener noreffer"
-            >
-              View Interactive Atlas
-            </Button> */}
+            {SSPDetails[game.ssp]?.atlasLink && (
+              <Button
+                variant="contained"
+                size="large"
+                href={SSPDetails[game.ssp]?.atlasLink}
+                target="_blank"
+                rel="noopener noreffer"
+              >
+                View Interactive Atlas
+              </Button>
+            )}
           </>
         )}
       </Layout>

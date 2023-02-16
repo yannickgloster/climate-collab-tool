@@ -5,7 +5,8 @@ import LoopIcon from "@mui/icons-material/Loop";
 export default function Loading() {
   return (
     <Layout>
-      <motion.div
+      <LoopIcon
+        component={motion.svg}
         animate={{
           rotate: -360,
         }}
@@ -14,9 +15,8 @@ export default function Loading() {
           duration: 1.5,
           ease: "easeInOut",
         }}
-      >
-        <LoopIcon fontSize="large" />
-      </motion.div>
+        fontSize="large"
+      />
     </Layout>
   );
 }

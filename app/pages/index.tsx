@@ -9,10 +9,9 @@ import Tooltip from "@mui/material/Tooltip";
 
 import { socket, snackbarProps } from "./_app";
 import { socketEvent } from "../utils/socketServerHandler";
-import { DescriptiveTooltips, userState } from "../utils/types/game";
+import { DescriptiveTooltips } from "../utils/details";
+import { userState } from "../utils/game";
 import { gameCodeLength } from "../utils/constants";
-
-import styles from "../styles/Home.module.css";
 
 export default function Home({
   user,

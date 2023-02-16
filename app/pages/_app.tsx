@@ -7,12 +7,9 @@ import type { Dispatch, SetStateAction } from "react";
 import io, { Socket } from "socket.io-client";
 import { socketEvent } from "../utils/socketServerHandler";
 import { v4 as uuidv4 } from "uuid";
-import {
-  EmisionUnits,
-  Game,
-  Regions,
-  user as userType,
-} from "../utils/types/game";
+import { Game, user as userType } from "../utils/game";
+import { RegionDetails } from "../utils/details";
+import { Region } from "@prisma/client";
 
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Snackbar from "@mui/material/Snackbar";
@@ -90,12 +87,12 @@ export default function App({ Component, pageProps }: AppProps) {
         router.push("/visualize");
       });
 
-      socket.on(socketEvent.joined_room, (code: string, region: string) => {
+      socket.on(socketEvent.joined_room, (code: string, region: Region) => {
         setUser({
           ...user,
           gameCode: code,
-          region: Regions[region],
-          emission: EmisionUnits[Regions[region]],
+          region: region,
+          emission: RegionDetails[region].emissionUnits,
         });
         router.push("/lobby");
       });
