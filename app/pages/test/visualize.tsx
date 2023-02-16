@@ -1,17 +1,24 @@
 import Layout from "../../components/layout";
 import Visualize, { VisualizeProps } from "../../components/visualize";
 
-import { userState } from "../../utils/types/game";
+import {
+  userState,
+  Regions,
+  SSP,
+  SSPToPrisma,
+  RegionsToPrisma,
+} from "../../utils/types/game";
 import useSWR from "swr";
+import Typography from "@mui/material/Typography";
 
 import { fetcher } from "../../utils/fetcher";
 
-const ssp = 126;
-const region = "US";
+const ssp = SSP["1-1.9"];
+const region = Regions.EU;
 
 export default function VisualizeTest({ user, setUser }: userState) {
   const { data, error } = useSWR<VisualizeProps["data"]>(
-    `/api/data?ssp=SSP${ssp}&region=${region}`,
+    `/api/data?ssp=${SSPToPrisma[ssp]}&region=${RegionsToPrisma[region]}`,
     fetcher
   );
 
@@ -19,9 +26,13 @@ export default function VisualizeTest({ user, setUser }: userState) {
   if (!data) return "Loading...";
 
   return (
-    <Layout>
-      <p>SSP: {ssp}</p>
-      <p>Region: {region}</p>
+    <Layout gameCode={"TEST"} region={region}>
+      <Typography variant="h3" textAlign="center" fontWeight={800}>
+        Visualize Data: {ssp}
+      </Typography>
+      <Typography variant="body1" textAlign="center">
+        SSP Description
+      </Typography>
       <Visualize data={data} />
     </Layout>
   );
