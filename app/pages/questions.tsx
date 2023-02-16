@@ -45,7 +45,7 @@ export default function Questions({
     } else {
       socket.emit(
         socketEvent.completed_questions,
-        user,
+        newUser,
         user.gameCode,
         newUser.emission
       );
@@ -81,10 +81,16 @@ export default function Questions({
         img={questions[questionIndex].imgUrl}
       >
         <Typography variant="h6">Power: {user.power}</Typography>
-        <Question
-          question={questions[questionIndex]}
-          answerCallback={(answer) => answerCallback(answer, questionIndex)}
-        />
+        {questionIndex < questions.length - 1 ? (
+          <Question
+            question={questions[questionIndex]}
+            answerCallback={(answer) => answerCallback(answer, questionIndex)}
+          />
+        ) : (
+          <Typography variant="h6">
+            Thank you for answering all the questions!
+          </Typography>
+        )}
       </Layout>
     </>
   );

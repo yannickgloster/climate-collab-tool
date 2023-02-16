@@ -30,7 +30,7 @@ export default function QuestionTest({ user, setUser }: userState) {
     if (questionIndex < questions.length - 1) {
       setQuestionIndex(questionIndex + 1);
     } else {
-      alert("DONE");
+      alert("(not) Alerting server of completion");
     }
   };
 
@@ -65,10 +65,16 @@ export default function QuestionTest({ user, setUser }: userState) {
     >
       <Typography variant="h6">Emission: {user.emission}</Typography>
       <Typography variant="h6">Power: {user.power}</Typography>
-      <Question
-        question={questions[questionIndex]}
-        answerCallback={(answer) => answerCallback(answer, questionIndex)}
-      />
+      {questionIndex < questions.length - 1 ? (
+        <Question
+          question={questions[questionIndex]}
+          answerCallback={(answer) => answerCallback(answer, questionIndex)}
+        />
+      ) : (
+        <Typography variant="h6">
+          Thank you for answering all the questions!
+        </Typography>
+      )}
     </Layout>
   );
 }
