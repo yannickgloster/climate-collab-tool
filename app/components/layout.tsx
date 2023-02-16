@@ -8,7 +8,7 @@ import { default as NextLink } from "next/link";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import { Region } from "@prisma/client";
-import { RegionDetails } from "../utils/types/game";
+import { RegionDetails } from "../utils/details";
 
 export interface LayoutProps {
   children: ReactNode;

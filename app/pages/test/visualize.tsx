@@ -1,7 +1,8 @@
 import Layout from "../../components/layout";
 import Visualize, { VisualizeProps } from "../../components/visualize";
 
-import { userState, SSPDetails } from "../../utils/types/game";
+import { SSPDetails } from "../../utils/details";
+import { userState } from "../../utils/game";
 import useSWR from "swr";
 import Typography from "@mui/material/Typography";
 

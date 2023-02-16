@@ -1,23 +1,21 @@
 import Layout from "../../components/layout";
-import {
-  userState,
-  question,
-  answer,
-  EmisionUnits,
-} from "../../utils/types/game";
+import { question } from "../../utils/types/question";
+import { userState } from "../../utils/game";
+import { Answer } from "@prisma/client";
 import Question from "../../components/question";
 import { useEffect, useState } from "react";
 import Loading from "../../components/loading";
 import LoadingError from "../../components/loadingError";
 import Typography from "@mui/material/Typography";
-import { Region, SSP } from "@prisma/client";
+import { Region } from "@prisma/client";
+import { RegionDetails } from "../../utils/details";
 
 export default function QuestionTest({ user, setUser }: userState) {
   const [questions, setQuestions] = useState<question[]>();
   const [isLoading, setLoading] = useState(true);
   const [questionIndex, setQuestionIndex] = useState(0);
 
-  const answerCallback = (answer: answer, index: number) => {
+  const answerCallback = (answer: Answer, index: number) => {
     const question = questions[questionIndex];
     setUser({
       ...user,
@@ -41,7 +39,7 @@ export default function QuestionTest({ user, setUser }: userState) {
       power: 100,
       gameCode: "TEST",
       region: region,
-      emission: EmisionUnits[region],
+      emission: RegionDetails[region].emissionUnits,
     });
     fetch(`/api/questions/${region}`)
       .then((res) => res.json())

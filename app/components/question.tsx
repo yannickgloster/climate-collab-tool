@@ -1,9 +1,6 @@
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
-import Image from "next/image";
-import { questionProps } from "../utils/types/game";
+import { questionProps } from "../utils/types/question";
 
 export default function Question(props: questionProps) {
   return (

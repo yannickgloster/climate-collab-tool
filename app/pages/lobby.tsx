@@ -13,13 +13,8 @@ import Tooltip from "@mui/material/Tooltip";
 
 import { snackbarProps, socket } from "./_app";
 import { socketEvent } from "../utils/socketServerHandler";
-import {
-  userState,
-  gameState,
-  GameStatus,
-  DescriptiveTooltips,
-  RegionDetails,
-} from "../utils/types/game";
+import { userState, gameState, GameStatus } from "../utils/game";
+import { DescriptiveTooltips, RegionDetails } from "../utils/details";
 import { Region } from "@prisma/client";
 
 export default function Join({

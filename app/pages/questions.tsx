@@ -6,7 +6,9 @@ import Question from "../components/question";
 
 import { snackbarProps, socket } from "./_app";
 import { socketEvent } from "../utils/socketServerHandler";
-import { question, answer, userState, gameState } from "../utils/types/game";
+import { question } from "../utils/types/question";
+import { Answer } from "@prisma/client";
+import { userState, gameState } from "../utils/game";
 import Loading from "../components/loading";
 import LoadingError from "../components/loadingError";
 import Typography from "@mui/material/Typography";
@@ -23,7 +25,7 @@ export default function Questions({
   const [questions, setQuestions] = useState<question[]>();
   const [isLoading, setLoading] = useState(true);
 
-  const answerCallback = (answer: answer, index: number) => {
+  const answerCallback = (answer: Answer, index: number) => {
     const question = questions[questionIndex];
     const newUser = {
       ...user,
@@ -54,9 +56,12 @@ export default function Questions({
         setLoading(false);
       })
       .catch((_error) => {
-        // TODO: add snackbar error
         setLoading(false);
-        console.log(_error);
+        setSnackbar({
+          text: "Could not load questions.",
+          enabled: true,
+          severity: "error",
+        });
       });
   }, []);
 

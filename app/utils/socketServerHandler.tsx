@@ -1,10 +1,6 @@
 import type { Server, Socket } from "socket.io";
-import {
-  user as userType,
-  Game,
-  GameStatus,
-  SPP_Emissions,
-} from "./types/game";
+import { Game, GameStatus, user as userType } from "./game";
+import { SSPDetails } from "./details";
 import { SSP } from "@prisma/client";
 
 export enum socketEvent {
@@ -114,19 +110,20 @@ export default (io: Server, socket: Socket, rooms: Map<string, Game>) => {
       game.addEmission(emission);
       io.to(code).emit(socketEvent.game_update, game);
       io.to(socket.id).emit(socketEvent.recieved_questions);
-      console.log(game.users);
       if (game.allUsersCompletedQuestion()) {
         game.status = GameStatus.visualize;
-        const finalSSP = SPP_Emissions.reduce((a, b) => {
-          return Math.abs(b.emission - game.emission) <
-            Math.abs(a.emission - game.emission)
+        const finalSSP = Object.keys(SSP).reduce((a: SSP, b: SSP) => {
+          return Math.abs(SSPDetails[b].emission - game.emission) <
+            Math.abs(SSPDetails[a].emission - game.emission)
             ? b
             : a;
         });
         // TODO: Remove after debugging
         console.log("Emmission: " + game.emission);
-        console.log("Closest SSP: " + finalSSP.ssp + " " + finalSSP.emission);
-        game.ssp = finalSSP.ssp;
+        console.log(
+          "Closest SSP: " + finalSSP + " " + SSPDetails[finalSSP].emission
+        );
+        game.ssp = SSP[finalSSP];
         io.to(code).emit(socketEvent.game_update, game);
       }
     } else {

@@ -6,13 +6,8 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 
 import { snackbarProps } from "./_app";
-import {
-  userState,
-  gameState,
-  GameStatus,
-  AtlasMeanTemperatureLinks,
-  SSPDetails,
-} from "../utils/types/game";
+import { userState, gameState, GameStatus } from "../utils/game";
+import { SSPDetails } from "../utils/details";
 
 import Visualize, { VisualizeProps } from "../components/visualize";
 
@@ -34,7 +29,11 @@ export default function VisualizePage({
           setData(data);
         })
         .catch((_error) => {
-          // TODO: add snackbar error
+          setSnackbar({
+            text: "Could not load data.",
+            enabled: true,
+            severity: "error",
+          });
         });
     }
   }, [game.ssp]);
@@ -63,11 +62,11 @@ export default function VisualizePage({
         {game.status == GameStatus.visualize && data && (
           <>
             <Visualize data={data} />
-            {game.ssp in AtlasMeanTemperatureLinks && (
+            {SSPDetails[game.ssp]?.atlasLink && (
               <Button
                 variant="contained"
                 size="large"
-                href={AtlasMeanTemperatureLinks[game.ssp]}
+                href={SSPDetails[game.ssp]?.atlasLink}
                 target="_blank"
                 rel="noopener noreffer"
               >
