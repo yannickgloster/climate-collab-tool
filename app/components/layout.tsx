@@ -6,12 +6,13 @@ import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
 import { default as NextLink } from "next/link";
 import Box from "@mui/material/Box";
-import { Regions } from "../utils/types/game";
 import Paper from "@mui/material/Paper";
+import { Region } from "@prisma/client";
+import { RegionDetails } from "../utils/types/game";
 
 export interface LayoutProps {
   children: ReactNode;
-  region?: Regions;
+  region?: Region;
   gameCode?: string;
   img?: string;
 }
@@ -35,7 +36,7 @@ export default function Layout(props: LayoutProps) {
             left={0}
             fontSize={15}
           >
-            Region: <strong>{props.region}</strong>
+            Region: <strong>{RegionDetails[props.region].name}</strong>
           </Typography>
         )}
         {props.gameCode && (

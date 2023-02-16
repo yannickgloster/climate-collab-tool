@@ -12,8 +12,6 @@ import { socketEvent } from "../utils/socketServerHandler";
 import { DescriptiveTooltips, userState } from "../utils/types/game";
 import { gameCodeLength } from "../utils/constants";
 
-import styles from "../styles/Home.module.css";
-
 export default function Home({
   user,
   setUser,

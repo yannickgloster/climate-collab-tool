@@ -1,17 +1,16 @@
 import Layout from "../../components/layout";
 import {
-  Regions,
   userState,
   question,
   answer,
   EmisionUnits,
-  RegionsToPrisma,
 } from "../../utils/types/game";
 import Question from "../../components/question";
 import { useEffect, useState } from "react";
 import Loading from "../../components/loading";
 import LoadingError from "../../components/loadingError";
 import Typography from "@mui/material/Typography";
+import { Region, SSP } from "@prisma/client";
 
 export default function QuestionTest({ user, setUser }: userState) {
   const [questions, setQuestions] = useState<question[]>();
@@ -35,15 +34,16 @@ export default function QuestionTest({ user, setUser }: userState) {
   };
 
   useEffect(() => {
+    const region = Region.EU;
     setLoading(true);
     setUser({
       userId: "TEST",
       power: 100,
       gameCode: "TEST",
-      region: Regions.EU,
-      emission: EmisionUnits[Regions.EU],
+      region: region,
+      emission: EmisionUnits[region],
     });
-    fetch(`/api/questions/${RegionsToPrisma[Regions.EU]}`)
+    fetch(`/api/questions/${region}`)
       .then((res) => res.json())
       .then((data) => {
         setQuestions(data.questions);

@@ -6,14 +6,7 @@ import Question from "../components/question";
 
 import { snackbarProps, socket } from "./_app";
 import { socketEvent } from "../utils/socketServerHandler";
-import {
-  question,
-  answer,
-  userState,
-  gameState,
-  GameStatus,
-  RegionsToPrisma,
-} from "../utils/types/game";
+import { question, answer, userState, gameState } from "../utils/types/game";
 import Loading from "../components/loading";
 import LoadingError from "../components/loadingError";
 import Typography from "@mui/material/Typography";
@@ -40,12 +33,12 @@ export default function Questions({
         user.emission - question.regionWeights[0].weight * answer.weight,
     };
     setUser(newUser);
-    if (questionIndex < questions.length - 1) {
-      setQuestionIndex(questionIndex + 1);
-    } else {
+    setQuestionIndex(questionIndex + 1);
+
+    if (questionIndex == questions.length - 1) {
       socket.emit(
         socketEvent.completed_questions,
-        newUser,
+        user,
         user.gameCode,
         newUser.emission
       );
@@ -54,7 +47,7 @@ export default function Questions({
 
   useEffect(() => {
     setLoading(true);
-    fetch(`/api/questions/${RegionsToPrisma[user.region]}`)
+    fetch(`/api/questions/${user.region}`)
       .then((res) => res.json())
       .then((data) => {
         setQuestions(data.questions);
@@ -78,10 +71,10 @@ export default function Questions({
       <Layout
         gameCode={user.gameCode}
         region={user.region}
-        img={questions[questionIndex].imgUrl}
+        img={questions[questionIndex]?.imgUrl}
       >
         <Typography variant="h6">Power: {user.power}</Typography>
-        {questionIndex < questions.length - 1 ? (
+        {questionIndex < questions.length ? (
           <Question
             question={questions[questionIndex]}
             answerCallback={(answer) => answerCallback(answer, questionIndex)}

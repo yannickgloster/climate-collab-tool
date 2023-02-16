@@ -11,8 +11,7 @@ import {
   gameState,
   GameStatus,
   AtlasMeanTemperatureLinks,
-  RegionsToPrisma,
-  SSPToPrisma,
+  SSPDetails,
 } from "../utils/types/game";
 
 import Visualize, { VisualizeProps } from "../components/visualize";
@@ -29,11 +28,7 @@ export default function VisualizePage({
 
   useEffect(() => {
     if (game.ssp) {
-      fetch(
-        `/api/data?ssp=${SSPToPrisma[game.ssp]}&region=${
-          RegionsToPrisma[user.region]
-        }`
-      )
+      fetch(`/api/data?ssp=${game.ssp}&region=${user.region}`)
         .then((res) => res.json())
         .then((data) => {
           setData(data);
@@ -57,26 +52,28 @@ export default function VisualizePage({
         )}
         {game.status == GameStatus.visualize && (
           <Typography variant="h3" textAlign="center" fontWeight={800}>
-            Visualize Data: {game.ssp}
+            Visualize Data: {SSPDetails[game.ssp].name}
           </Typography>
         )}
         {game.status == GameStatus.visualize && (
           <Typography variant="body1" textAlign="center">
-            SSP Description
+            {SSPDetails[game.ssp].description}
           </Typography>
         )}
         {game.status == GameStatus.visualize && data && (
           <>
             <Visualize data={data} />
-            {/* <Button
-              variant="contained"
-              size="large"
-              href={AtlasMeanTemperatureLinks[game.ssp]}
-              target="_blank"
-              rel="noopener noreffer"
-            >
-              View Interactive Atlas
-            </Button> */}
+            {game.ssp in AtlasMeanTemperatureLinks && (
+              <Button
+                variant="contained"
+                size="large"
+                href={AtlasMeanTemperatureLinks[game.ssp]}
+                target="_blank"
+                rel="noopener noreffer"
+              >
+                View Interactive Atlas
+              </Button>
+            )}
           </>
         )}
       </Layout>

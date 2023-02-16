@@ -1,13 +1,11 @@
-import { getMaxAge } from "next/dist/server/image-optimizer";
 import type { Server, Socket } from "socket.io";
 import {
   user as userType,
   Game,
   GameStatus,
-  SSP,
   SPP_Emissions,
 } from "./types/game";
-import { gameCodeLength } from "./constants";
+import { SSP } from "@prisma/client";
 
 export enum socketEvent {
   // Built in
@@ -116,6 +114,7 @@ export default (io: Server, socket: Socket, rooms: Map<string, Game>) => {
       game.addEmission(emission);
       io.to(code).emit(socketEvent.game_update, game);
       io.to(socket.id).emit(socketEvent.recieved_questions);
+      console.log(game.users);
       if (game.allUsersCompletedQuestion()) {
         game.status = GameStatus.visualize;
         const finalSSP = SPP_Emissions.reduce((a, b) => {
