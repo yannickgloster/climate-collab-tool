@@ -53,13 +53,13 @@ export default function Home({
   useEffect(() => {
     console.log("useEffect outside IF");
     console.log(router.query);
-    if (router.query?.join && socket) {
+    if (router.query?.join) {
       console.log("useEffect inside IF");
       setGameCode(router.query.join.toString());
       setTimeout(() => {
         console.log("TIMEOUT CALLED");
         joinRoom(router.query.join.toString());
-      }, 1000);
+      }, 1500);
     }
   }, [router.query, socket]);
 
