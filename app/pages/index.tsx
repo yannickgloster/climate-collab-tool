@@ -12,7 +12,6 @@ import { socketEvent } from "../utils/socketServerHandler";
 import { DescriptiveTooltips } from "../utils/details";
 import { userState } from "../utils/game";
 import { gameCodeLength } from "../utils/constants";
-import { join } from "path";
 
 const disableButtonSeconds = 1;
 
