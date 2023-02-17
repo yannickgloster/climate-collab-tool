@@ -43,6 +43,7 @@ export default function Home({
   };
 
   const joinRoom = (code: string) => {
+    console.log(`Joining room ${code}`);
     setJoinEnable(false);
     const newUser = { ...user, gameCode: code };
     socket.emit(socketEvent.join_room, newUser, code);
@@ -50,9 +51,13 @@ export default function Home({
   };
 
   useEffect(() => {
+    console.log("useEffect outside IF");
+    console.log(router.query);
     if (router.query?.join && socket) {
+      console.log("useEffect inside IF");
       setGameCode(router.query.join.toString());
       setTimeout(() => {
+        console.log("TIMEOUT CALLED");
         joinRoom(router.query.join.toString());
       }, 1000);
     }
