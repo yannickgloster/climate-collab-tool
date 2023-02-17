@@ -12,6 +12,9 @@ import { socketEvent } from "../utils/socketServerHandler";
 import { DescriptiveTooltips } from "../utils/details";
 import { userState } from "../utils/game";
 import { gameCodeLength } from "../utils/constants";
+import { join } from "path";
+
+const disableButtonSeconds = 1;
 
 export default function Home({
   user,
@@ -20,6 +23,7 @@ export default function Home({
   setSnackbar,
 }: userState & snackbarProps) {
   const [gameCode, setGameCode] = useState("");
+  const [joinEnable, setJoinEnable] = useState(true);
   const router = useRouter();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,6 +44,7 @@ export default function Home({
   };
 
   const joinRoom = (code: string) => {
+    setJoinEnable(false);
     const newUser = { ...user, gameCode: code };
     socket.emit(socketEvent.join_room, newUser, code);
     setUser(newUser);
@@ -48,9 +53,19 @@ export default function Home({
   useEffect(() => {
     if (router.query?.join && socket) {
       setGameCode(router.query.join.toString());
-      joinRoom(router.query.join.toString());
+      setTimeout(() => {
+        joinRoom(router.query.join.toString());
+      }, 1000);
     }
   }, [router.query, socket]);
+
+  useEffect(() => {
+    if (!joinEnable) {
+      setTimeout(() => {
+        setJoinEnable(true);
+      }, disableButtonSeconds * 1000);
+    }
+  }, [joinEnable]);
 
   return (
     <Layout img="/images/eberhard-grossgasteiger-jCL98LGaeoE-unsplash.jpg">
@@ -89,6 +104,7 @@ export default function Home({
         size="large"
         onClick={() => joinRoom(gameCode)}
         data-cy="joinGameButton"
+        disabled={!joinEnable}
       >
         Join Simulation
       </Button>
