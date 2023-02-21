@@ -1,6 +1,9 @@
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { questionProps } from "../utils/types/question";
+import Stack from "@mui/material/Stack";
+import Divider from "@mui/material/Divider";
+import AnnotatedTypography from "./annotatedTypography";
 
 export default function Question(props: questionProps) {
   return (
@@ -9,22 +12,31 @@ export default function Question(props: questionProps) {
         {props.question.topic}
       </Typography>
       <Typography variant="h4" textAlign="center">
-        {props.question.text}
+        <AnnotatedTypography text={props.question.text} />
       </Typography>
       {props.question.answers.map((answer, i) => {
         return (
-          <Button
-            fullWidth
-            variant="contained"
-            size="large"
-            key={i}
-            onClick={() => props.answerCallback(answer)}
-            sx={{ mt: 2 }}
-          >
-            <Typography variant="body1" textAlign="center">
-              {answer.text} - {answer.cost}
-            </Typography>
-          </Button>
+          <>
+            <Button
+              fullWidth
+              variant="outlined"
+              size="large"
+              key={i}
+              onClick={() => props.answerCallback(answer)}
+              sx={{ mt: 2 }}
+            >
+              <Stack
+                direction="row"
+                spacing={2}
+                divider={<Divider orientation="vertical" flexItem />}
+              >
+                <Typography variant="overline">
+                  <AnnotatedTypography text={answer.text} />
+                </Typography>
+                <Typography variant="overline">Cost: {answer.cost}</Typography>
+              </Stack>
+            </Button>
+          </>
         );
       })}
     </>
