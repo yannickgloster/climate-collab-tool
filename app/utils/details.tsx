@@ -143,4 +143,6 @@ export const DescriptiveTooltips = {
   [Region.Island]:
     "Alliance of Small Island States (AOSIS) is an intergovernmental organization of 39 low-lying coastal and small island countries.",
   IPCC: "The Intergovernmental Panel on Climate Change (IPCC) is an intergovernmental body of the United Nations who's job is to advance scientific knowledge about climate change caused by human activities.",
+  "protected forest":
+    "A forest with some amount of legal or constitutional protection, or where the habitat and resident species are legally accorded protection from further depletion.",
 };

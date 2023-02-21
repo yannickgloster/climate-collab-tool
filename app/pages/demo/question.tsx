@@ -9,6 +9,7 @@ import LoadingError from "../../components/loadingError";
 import Typography from "@mui/material/Typography";
 import { Region } from "@prisma/client";
 import { RegionDetails } from "../../utils/details";
+import { qFactor } from "../../utils/constants";
 
 export default function QuestionTest({ user, setUser }: userState) {
   const [questions, setQuestions] = useState<question[]>();
@@ -19,10 +20,10 @@ export default function QuestionTest({ user, setUser }: userState) {
     const question = questions[questionIndex];
     setUser({
       ...user,
-      power: user.power - answer.cost,
-      // TODO: add question importance
+      cost: user.cost - answer.cost,
       emission:
-        user.emission - question.regionWeights[0].weight * answer.weight,
+        user.emission -
+        qFactor * question.regionWeights[0].weight * answer.weight,
     });
     if (questionIndex < questions.length - 1) {
       setQuestionIndex(questionIndex + 1);
@@ -36,7 +37,7 @@ export default function QuestionTest({ user, setUser }: userState) {
     setLoading(true);
     setUser({
       userId: "TEST",
-      power: 100,
+      cost: 100,
       gameCode: "TEST",
       region: region,
       emission: RegionDetails[region].emissionUnits,
@@ -62,7 +63,7 @@ export default function QuestionTest({ user, setUser }: userState) {
       img={questions[questionIndex].imgUrl}
     >
       <Typography variant="h6">Emission: {user.emission}</Typography>
-      <Typography variant="h6">Power: {user.power}</Typography>
+      <Typography variant="h6">cost: {user.cost}</Typography>
       {questionIndex < questions.length - 1 ? (
         <Question
           question={questions[questionIndex]}

@@ -40,7 +40,7 @@ const theme = createTheme();
 
 export default function App({ Component, pageProps }: AppProps) {
   // TODO: consider saving to cookies to refresh?
-  const [user, setUser] = useState<userType>({ userId: uuidv4(), power: 100 });
+  const [user, setUser] = useState<userType>({ userId: uuidv4(), cost: 100 });
   const [game, setGame] = useState<Game>();
   const [snackbar, setSnackbar] = useState<snackbarType>({
     text: "",

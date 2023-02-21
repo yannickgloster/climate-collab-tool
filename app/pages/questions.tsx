@@ -12,6 +12,7 @@ import { userState, gameState } from "../utils/game";
 import Loading from "../components/loading";
 import LoadingError from "../components/loadingError";
 import Typography from "@mui/material/Typography";
+import { qFactor } from "../utils/constants";
 
 export default function Questions({
   user,
@@ -29,10 +30,10 @@ export default function Questions({
     const question = questions[questionIndex];
     const newUser = {
       ...user,
-      power: user.power - answer.cost,
-      // TODO: add question importance
+      cost: user.cost - answer.cost,
       emission:
-        user.emission - question.regionWeights[0].weight * answer.weight,
+        user.emission -
+        qFactor * question.regionWeights[0].weight * answer.weight,
     };
     setUser(newUser);
     setQuestionIndex(questionIndex + 1);
@@ -78,7 +79,7 @@ export default function Questions({
         region={user.region}
         img={questions[questionIndex]?.imgUrl}
       >
-        <Typography variant="h6">Power: {user.power}</Typography>
+        <Typography variant="h6">Cost: {user.cost}</Typography>
         {questionIndex < questions.length ? (
           <Question
             question={questions[questionIndex]}

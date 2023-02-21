@@ -13,6 +13,8 @@ import { DescriptiveTooltips } from "../utils/details";
 import { userState } from "../utils/game";
 import { gameCodeLength } from "../utils/constants";
 
+import AnnotatedTypography from "../components/annotatedTypography";
+
 const disableButtonSeconds = 1;
 
 export default function Home({
@@ -73,16 +75,9 @@ export default function Home({
         Climate Change Simulation
       </Typography>
       <Typography variant="subtitle1" textAlign="center">
-        Built using the{" "}
-        <Tooltip title={DescriptiveTooltips["IPCC"]} placement="bottom-end">
-          <Typography
-            sx={{ textDecoration: "dotted underline" }}
-            display="inline"
-          >
-            IPCC
-          </Typography>
-        </Tooltip>{" "}
-        Dataset. This is the description.
+        <AnnotatedTypography
+          text={"Built using the IPCC Dataset. This is the description."}
+        />
       </Typography>
       <Button
         variant="contained"

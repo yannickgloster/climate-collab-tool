@@ -6,7 +6,7 @@ describe("Game Class", () => {
     const user: userType = {
       userId: "34203a59-39dd-4d81-bf17-06ed793d6804",
       gameCode: gameCode,
-      power: 100,
+      cost: 100,
     };
     const game = new Game(gameCode, [user]);
 
@@ -20,12 +20,12 @@ describe("Game Class", () => {
     const user: userType = {
       userId: "34203a59-39dd-4d81-bf17-06ed793d6804",
       gameCode: gameCode,
-      power: 100,
+      cost: 100,
     };
     const user2: userType = {
       userId: "fd946d2c-01b6-425f-839e-b666c12d5255",
       gameCode: gameCode,
-      power: 100,
+      cost: 100,
     };
     const game = new Game(gameCode, [user]);
 
@@ -40,12 +40,12 @@ describe("Game Class", () => {
     const user: userType = {
       userId: "34203a59-39dd-4d81-bf17-06ed793d6804",
       gameCode: gameCode,
-      power: 100,
+      cost: 100,
     };
     const user2: userType = {
       userId: "fd946d2c-01b6-425f-839e-b666c12d5255",
       gameCode: gameCode,
-      power: 100,
+      cost: 100,
     };
     const game = new Game(gameCode, [user]);
 
@@ -61,12 +61,12 @@ describe("Game Class", () => {
     const user: userType = {
       userId: "34203a59-39dd-4d81-bf17-06ed793d6804",
       gameCode: gameCode,
-      power: 100,
+      cost: 100,
     };
     const user2: userType = {
       userId: "fd946d2c-01b6-425f-839e-b666c12d5255",
       gameCode: gameCode,
-      power: 100,
+      cost: 100,
     };
     const game = new Game(gameCode, [user]);
 

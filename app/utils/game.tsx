@@ -3,7 +3,7 @@ import type { Dispatch, SetStateAction } from "react";
 
 export interface user {
   readonly userId: string;
-  power: number; // TODO: Think about renaming this
+  cost: number; // TODO: Think about renaming this
   region?: Region;
   gameCode?: string;
   completedQuestions?: boolean;
