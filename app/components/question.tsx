@@ -1,42 +1,38 @@
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { questionProps } from "../utils/types/question";
-import Stack from "@mui/material/Stack";
-import Divider from "@mui/material/Divider";
 import AnnotatedTypography from "./annotatedTypography";
+import { QuestionTopicDetails } from "../utils/details";
 
 export default function Question(props: questionProps) {
   return (
     <>
       <Typography variant="h3" textAlign="center">
-        {props.question.topic}
+        {QuestionTopicDetails[props.question.topic].name}
       </Typography>
       <Typography variant="h4" textAlign="center">
         <AnnotatedTypography text={props.question.text} />
       </Typography>
       {props.question.answers.map((answer, i) => {
         return (
-          <>
-            <Button
-              fullWidth
-              variant="outlined"
-              size="large"
-              key={i}
-              onClick={() => props.answerCallback(answer)}
-              sx={{ mt: 2 }}
-            >
-              <Stack
-                direction="row"
-                spacing={2}
-                divider={<Divider orientation="vertical" flexItem />}
-              >
-                <Typography variant="overline">
-                  <AnnotatedTypography text={answer.text} />
-                </Typography>
-                <Typography variant="overline">Cost: {answer.cost}</Typography>
-              </Stack>
-            </Button>
-          </>
+          <Button
+            fullWidth
+            key={i}
+            variant="outlined"
+            size="large"
+            sx={{
+              mt: 2,
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+            onClick={() => props.answerCallback(answer)}
+          >
+            <Typography variant="inherit">
+              <AnnotatedTypography text={answer.text} />
+            </Typography>
+            <Typography variant="inherit">Cost: {answer.cost}</Typography>
+          </Button>
         );
       })}
     </>

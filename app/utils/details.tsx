@@ -1,4 +1,5 @@
-import { Region, SSP, Model } from "@prisma/client";
+import { Region, SSP, Model, QuestionTopic } from "@prisma/client";
+
 type RegionDetails = {
   [key in Region]: {
     name: string;
@@ -145,4 +146,19 @@ export const DescriptiveTooltips = {
   IPCC: "The Intergovernmental Panel on Climate Change (IPCC) is an intergovernmental body of the United Nations who's job is to advance scientific knowledge about climate change caused by human activities.",
   "protected forest":
     "A forest with some amount of legal or constitutional protection, or where the habitat and resident species are legally accorded protection from further depletion.",
+};
+
+type QuestionTopicDetails = {
+  [key in QuestionTopic]: {
+    name: string;
+  };
+};
+
+export const QuestionTopicDetails: QuestionTopicDetails = {
+  [QuestionTopic.EnergyProduction]: {
+    name: "Energy Production",
+  },
+  [QuestionTopic.LandUseChange]: {
+    name: "Land Use Change",
+  },
 };

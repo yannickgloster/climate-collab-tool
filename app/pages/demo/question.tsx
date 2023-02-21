@@ -20,7 +20,7 @@ export default function QuestionTest({ user, setUser }: userState) {
     const question = questions[questionIndex];
     setUser({
       ...user,
-      cost: user.cost - answer.cost,
+      points: user.points - answer.cost,
       emission:
         user.emission -
         qFactor * question.regionWeights[0].weight * answer.weight,
@@ -37,7 +37,7 @@ export default function QuestionTest({ user, setUser }: userState) {
     setLoading(true);
     setUser({
       userId: "TEST",
-      cost: 100,
+      points: 100,
       gameCode: "TEST",
       region: region,
       emission: RegionDetails[region].emissionUnits,
@@ -54,7 +54,7 @@ export default function QuestionTest({ user, setUser }: userState) {
   }, []);
 
   if (isLoading) return <Loading />;
-  if (!questions) return <LoadingError href="/test/question" />;
+  if (!questions) return <LoadingError href="/demo/question" />;
 
   return (
     <Layout
@@ -62,8 +62,7 @@ export default function QuestionTest({ user, setUser }: userState) {
       region={user.region}
       img={questions[questionIndex].imgUrl}
     >
-      <Typography variant="h6">Emission: {user.emission}</Typography>
-      <Typography variant="h6">cost: {user.cost}</Typography>
+      <Typography variant="h6">Points Remaining: {user.points}</Typography>
       {questionIndex < questions.length - 1 ? (
         <Question
           question={questions[questionIndex]}
@@ -74,6 +73,7 @@ export default function QuestionTest({ user, setUser }: userState) {
           Thank you for answering all the questions!
         </Typography>
       )}
+      <Typography variant="h6">DEBUG Emission: {user.emission}</Typography>
     </Layout>
   );
 }

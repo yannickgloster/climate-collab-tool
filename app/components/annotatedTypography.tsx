@@ -3,6 +3,7 @@ import { DescriptiveTooltips } from "../utils/details";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { TooltipProps } from "@mui/material/Tooltip";
+import Grow from "@mui/material/Grow";
 
 export interface annotatedTypographyProps {
   text: string;
@@ -14,11 +15,14 @@ export default function AnnotatedTypography(props: annotatedTypographyProps) {
     <Highlighter
       searchWords={Object.keys(DescriptiveTooltips)}
       autoEscape={true}
+      caseSensitive={false}
       textToHighlight={props.text}
       highlightTag={({ children, _highlightIndex }) => (
         <Tooltip
           title={DescriptiveTooltips[children]}
           placement={props.tooltipPlacement ? props.tooltipPlacement : "bottom"}
+          TransitionComponent={Grow}
+          arrow
         >
           <Typography
             sx={{ textDecoration: "dotted underline" }}

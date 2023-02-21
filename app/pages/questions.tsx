@@ -30,7 +30,7 @@ export default function Questions({
     const question = questions[questionIndex];
     const newUser = {
       ...user,
-      cost: user.cost - answer.cost,
+      points: user.points - answer.cost,
       emission:
         user.emission -
         qFactor * question.regionWeights[0].weight * answer.weight,
@@ -79,7 +79,7 @@ export default function Questions({
         region={user.region}
         img={questions[questionIndex]?.imgUrl}
       >
-        <Typography variant="h6">Cost: {user.cost}</Typography>
+        <Typography variant="h6">Points Remaining: {user.points}</Typography>
         {questionIndex < questions.length ? (
           <Question
             question={questions[questionIndex]}
