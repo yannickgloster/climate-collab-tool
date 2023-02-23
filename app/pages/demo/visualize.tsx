@@ -10,7 +10,7 @@ import { fetcher } from "../../utils/fetcher";
 
 import { Region, SSP } from "@prisma/client";
 
-const ssp = SSP.SSP119;
+const ssp = SSP.SSP585;
 const region = Region.EU;
 
 export default function VisualizeTest({ user, setUser }: userState) {

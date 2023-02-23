@@ -18,6 +18,8 @@
     "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.11.1",
     "@next/font": "13.1.0",
+    "@nivo/core": "^0.80.0",
+    "@nivo/geo": "^0.80.0",
     "@prisma/client": "^4.10.1",
     "@socket.io/admin-ui": "^0.5.1",
     "@types/react": "18.0.26",
