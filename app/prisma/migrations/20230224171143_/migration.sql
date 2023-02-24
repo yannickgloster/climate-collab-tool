@@ -41,6 +41,13 @@ CREATE TABLE "Answer" (
 -- CreateTable
 CREATE TABLE "Data" (
     "ssp" "SSP" NOT NULL,
+    "model" "Model" NOT NULL,
+    "region" "Region" NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "MapData" (
+    "ssp" "SSP" NOT NULL,
     "model" "Model" NOT NULL
 );
 
@@ -51,15 +58,30 @@ CREATE TABLE "TempMaxRow" (
     "tasmax" DOUBLE PRECISION NOT NULL,
     "dataSsp" "SSP" NOT NULL,
     "dataModel" "Model" NOT NULL,
+    "dataRegion" "Region" NOT NULL,
 
     CONSTRAINT "TempMaxRow_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "TempMaxMapRow" (
+    "id" SERIAL NOT NULL,
+    "tasmax" DOUBLE PRECISION NOT NULL,
+    "ISO3" TEXT NOT NULL,
+    "dataSsp" "SSP" NOT NULL,
+    "dataModel" "Model" NOT NULL,
+
+    CONSTRAINT "TempMaxMapRow_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
 CREATE UNIQUE INDEX "RegionWeight_region_questionId_key" ON "RegionWeight"("region", "questionId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Data_ssp_model_key" ON "Data"("ssp", "model");
+CREATE UNIQUE INDEX "Data_ssp_model_region_key" ON "Data"("ssp", "model", "region");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "MapData_ssp_model_key" ON "MapData"("ssp", "model");
 
 -- AddForeignKey
 ALTER TABLE "RegionWeight" ADD CONSTRAINT "RegionWeight_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES "Question"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -68,4 +90,7 @@ ALTER TABLE "RegionWeight" ADD CONSTRAINT "RegionWeight_questionId_fkey" FOREIGN
 ALTER TABLE "Answer" ADD CONSTRAINT "Answer_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES "Question"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "TempMaxRow" ADD CONSTRAINT "TempMaxRow_dataSsp_dataModel_fkey" FOREIGN KEY ("dataSsp", "dataModel") REFERENCES "Data"("ssp", "model") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "TempMaxRow" ADD CONSTRAINT "TempMaxRow_dataSsp_dataModel_dataRegion_fkey" FOREIGN KEY ("dataSsp", "dataModel", "dataRegion") REFERENCES "Data"("ssp", "model", "region") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "TempMaxMapRow" ADD CONSTRAINT "TempMaxMapRow_dataSsp_dataModel_fkey" FOREIGN KEY ("dataSsp", "dataModel") REFERENCES "MapData"("ssp", "model") ON DELETE RESTRICT ON UPDATE CASCADE;

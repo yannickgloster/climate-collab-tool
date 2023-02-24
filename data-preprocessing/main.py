@@ -24,14 +24,12 @@ import geopandas as gpd
 
 # prisma generate --schema="../app/prisma/schema.prisma"
 datasets_root = "data"
+downloaded_ssps = ["119", "126", "245", "370", "434", "460", "534OS", "585"]
+model = "CNRM-ESM2-1"  # (FRANCE)
 
 
 async def process_tasmax() -> None:
-    downloaded_ssps = ["119", "126", "245", "370", "434", "460", "534OS", "585"]
-
     ds_var_name = "tasmax"
-
-    model = "CNRM-ESM2-1"  # (FRANCE)
 
     # https://thematicmapping.org/downloads/world_borders.php
     # https://larmarange.github.io/prevR/reference/TMWorldBorders.html
@@ -55,16 +53,16 @@ async def process_tasmax() -> None:
                     for country_name in constants.regions[region]["country_names"]:
                         polygon.append(
                             world_shape[world_shape.NAME == country_name]
-                            .iloc[0]
-                            .geometry
+                                .iloc[0]
+                                .geometry
                         )
                 else:
                     polygon = (
                         world_shape[
                             world_shape.NAME == constants.regions[region]["full_name"]
-                        ]
-                        .iloc[0]
-                        .geometry
+                            ]
+                            .iloc[0]
+                            .geometry
                     )
 
             if "country_names" in constants.regions[region]:
@@ -123,6 +121,62 @@ async def process_tasmax() -> None:
             await db.disconnect()
 
 
+async def process_tasmax_map() -> None:
+    ds_var_name = "tasmax"
+
+    # https://thematicmapping.org/downloads/world_borders.php
+    # https://larmarange.github.io/prevR/reference/TMWorldBorders.html
+    world_shape = gpd.read_file(f"{datasets_root}/TM_WORLD_BORDERS-0.3.shp")
+    db = Prisma()
+
+    for ssp in downloaded_ssps:
+        # Dataset renamed to follow the following format
+        ds = xr.open_dataset(
+            f"{datasets_root}/{ds_var_name}_Amon_{model}_ssp{ssp}.nc",
+            decode_times=True,
+            use_cftime=True,
+        )
+        for _index, country in world_shape.iterrows():
+            in_region = None
+            data_point = -1
+            try:
+                in_region = ds.where(
+                    (ds.lat >= country.geometry.bounds[0])
+                    & (ds.lat <= country.geometry.bounds[2])
+                    & (ds.lon >= country.geometry.bounds[1])
+                    & (ds.lon <= country.geometry.bounds[3]),
+                    drop=True,
+                )[ds_var_name]
+            except:
+                data_point = -1
+
+            if in_region is not None:
+                max_whole_region = in_region.max(dim=["lat", "lon"]).drop_vars("height").max()
+                data_point = max_whole_region.values
+
+            ssp_enum = SSP["SSP" + ssp.upper()]
+            model_enum = Model[model.upper().replace("-", "_")]
+
+            await db.connect()
+
+            try:
+                await db.mapdata.create(
+                    data={"ssp": ssp_enum, "model": model_enum}
+                )
+            except:
+                print("Data row already exists")
+
+            await db.tempmaxmaprow.create(
+                data={
+                    "tasmax": float(data_point),
+                    "ISO3": country.ISO3,
+                    "dataSsp": ssp_enum,
+                    "dataModel": model_enum,
+                }
+            )
+            await db.disconnect()
+
+
 def test():
     world_shape = gpd.read_file(
         f"{datasets_root}/TM_WORLD_BORDERS-0.3.shp", decode_coords="all"
@@ -149,5 +203,5 @@ def test():
 
 
 if __name__ == "__main__":
-    # asyncio.run(process_tasmax())
-    test()
+    asyncio.run(process_tasmax_map())
+    asyncio.run(process_tasmax())
