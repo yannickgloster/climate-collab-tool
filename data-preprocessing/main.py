@@ -26,7 +26,7 @@ import geopandas as gpd
 datasets_root = "data"
 
 
-async def main() -> None:
+async def process_tasmax() -> None:
     downloaded_ssps = ["119", "126", "245", "370", "434", "460", "534OS", "585"]
 
     ds_var_name = "tasmax"
@@ -88,16 +88,11 @@ async def main() -> None:
                     drop=True,
                 )[ds_var_name]
 
-            # FIXME: there's something broken here the numbers don't seem right, I think it's the region boundaries for the US
-            # TODO: consider using median or mean
+            # FIXME: After testing with test(), it looks like there's a problem with China and India in the actual dataset
             mean_whole_region = in_region.max(dim=["lat", "lon"]).drop_vars("height")
 
             # Get the max of the max temperatures per year
             monthly_max_mean_region = mean_whole_region.groupby("time.year").max()
-
-            # monthly_max_mean_region.to_dataframe().to_csv(
-            #     f"{datasets_root}/ssp{ssp}_{ds_var_name}_{region}.csv"
-            # )
 
             ssp_enum = SSP["SSP" + ssp.upper()]
             model_enum = Model[model.upper().replace("-", "_")]
@@ -128,5 +123,31 @@ async def main() -> None:
             await db.disconnect()
 
 
+def test():
+    world_shape = gpd.read_file(
+        f"{datasets_root}/TM_WORLD_BORDERS-0.3.shp", decode_coords="all"
+    )
+    # EPSG:4326
+    print()
+    print(world_shape.crs)
+
+    ds_var_name = "tasmax"
+
+    model = "CNRM-ESM2-1"  # (FRANCE)
+
+    ssp = "119"
+
+    ds = xr.open_dataset(
+        f"{datasets_root}/{ds_var_name}_Amon_{model}_ssp{ssp}.nc",
+        decode_times=True,
+        use_cftime=True,
+    )
+    print(ds.attrs)
+
+    ds["tasmax"].isel(time=1019).plot(cmap="coolwarm")
+    plt.show()
+
+
 if __name__ == "__main__":
-    asyncio.run(main())
+    # asyncio.run(process_tasmax())
+    test()

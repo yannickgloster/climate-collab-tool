@@ -11,7 +11,8 @@ import { fetcher } from "../../utils/fetcher";
 import { Region, SSP } from "@prisma/client";
 
 const ssp = SSP.SSP585;
-const region = Region.EU;
+
+const region = Region.China;
 
 export default function VisualizeTest({ user, setUser }: userState) {
   const { data, error } = useSWR<VisualizeProps["data"]>(
