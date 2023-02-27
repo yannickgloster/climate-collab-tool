@@ -15,10 +15,12 @@ import { DateTime } from "luxon";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import { useTheme } from "@mui/material/styles";
+import { TempMaxMapRow } from "@prisma/client";
 
 export interface VisualizeProps {
   data: {
     line: { date: Number; temp: Number }[];
+    mapData: TempMaxMapRow[];
   };
 }
 
@@ -50,6 +52,7 @@ export default function Visualize(props: VisualizeProps) {
 
   const temps = props.data.line.map<Number>((point) => point.temp);
 
+  // TODO: Replace with d3 function
   const minDomainTemp = Math.floor(Math.min.apply(Math, temps));
   const maxDomainTemp = Math.ceil(Math.max.apply(Math, temps));
 

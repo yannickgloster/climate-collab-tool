@@ -4,12 +4,14 @@ import Head from "next/head";
 import Layout from "../components/layout";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 
 import { snackbarProps } from "./_app";
 import { userState, gameState, GameStatus } from "../utils/game";
 import { SSPDetails } from "../utils/details";
 
 import Visualize, { VisualizeProps } from "../components/visualize";
+import Map from "../components/map";
 
 export default function VisualizePage({
   user,
@@ -62,6 +64,9 @@ export default function VisualizePage({
         {game.status == GameStatus.visualize && data && (
           <>
             <Visualize data={data} />
+            <Box width={500} border="1px dashed grey">
+              <Map data={data.mapData} />
+            </Box>
             {SSPDetails[game.ssp]?.atlasLink && (
               <Button
                 variant="contained"
