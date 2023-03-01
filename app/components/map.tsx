@@ -9,7 +9,7 @@ import {
 import { scaleLinear } from "d3-scale";
 import { extent } from "d3-array";
 import Tooltip from "@mui/material/Tooltip";
-import { VisualizeProps } from "./lineChart";
+import { VisualizeProps } from "./visualize";
 import { Fragment } from "react";
 import Typography from "@mui/material/Typography";
 import Legend from "./colorLegend";

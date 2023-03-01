@@ -10,8 +10,7 @@ import { snackbarProps } from "./_app";
 import { userState, gameState, GameStatus } from "../utils/game";
 import { SSPDetails } from "../utils/details";
 
-import Visualize, { VisualizeProps } from "../components/lineChart";
-import Map from "../components/map";
+import Visualize, { VisualizeProps } from "../components/visualize";
 
 export default function VisualizePage({
   user,
@@ -63,21 +62,7 @@ export default function VisualizePage({
         )}
         {game.status == GameStatus.visualize && data && (
           <>
-            <Visualize data={data} />
-            <Box width={500} border="1px dashed grey">
-              <Map data={data.mapData} />
-            </Box>
-            {SSPDetails[game.ssp]?.atlasLink && (
-              <Button
-                variant="contained"
-                size="large"
-                href={SSPDetails[game.ssp]?.atlasLink}
-                target="_blank"
-                rel="noopener noreffer"
-              >
-                View Interactive Atlas
-              </Button>
-            )}
+            <Visualize data={data} ssp={game.ssp} />
           </>
         )}
       </Layout>

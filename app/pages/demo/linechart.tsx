@@ -1,8 +1,9 @@
 import Layout from "../../components/layout";
-import Map from "../../components/map";
-import Box from "@mui/material/Box";
+import Linechart from "../../components/lineChart";
 
 import { VisualizeProps } from "../../components/visualize";
+
+import { userState } from "../../utils/game";
 import useSWR from "swr";
 import { fetcher } from "../../utils/fetcher";
 
@@ -12,7 +13,7 @@ const ssp = SSP.SSP585;
 
 const region = Region.China;
 
-export default function LoadingTest() {
+export default function VisualizeTest({ user, setUser }: userState) {
   const { data, error } = useSWR<VisualizeProps["data"]>(
     `/api/data?ssp=${ssp}&region=${region}`,
     fetcher
@@ -22,10 +23,8 @@ export default function LoadingTest() {
   if (!data) return "Loading...";
 
   return (
-    <Layout>
-      <Box width={500} border="1px dashed grey">
-        <Map data={data.mapData} />
-      </Box>
+    <Layout gameCode={"TEST"} region={region}>
+      <Linechart data={data.line} />
     </Layout>
   );
 }

@@ -77,7 +77,11 @@ export default function Questions({
       <Layout
         gameCode={user.gameCode}
         region={user.region}
-        img={questions[questionIndex]?.imgUrl}
+        img={
+          questions[questionIndex]?.imgUrl.length > 0
+            ? questions[questionIndex].imgUrl
+            : undefined
+        }
       >
         <Typography variant="h6">Points Remaining: {user.points}</Typography>
         {questionIndex < questions.length ? (

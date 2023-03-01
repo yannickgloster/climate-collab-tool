@@ -16,13 +16,7 @@ import Box, { BoxProps } from "@mui/material/Box";
 
 import { useTheme } from "@mui/material/styles";
 import { TempMaxMapRow } from "@prisma/client";
-
-export interface VisualizeProps {
-  data: {
-    line: { date: Number; temp: Number }[];
-    mapData: TempMaxMapRow[];
-  };
-}
+import { VisualizeProps } from "./visualize";
 
 const TooltipBox = styled(Box)<BoxProps>(({ theme }) => ({
   backgroundColor: alpha(theme.palette.grey[700], 0.92),
@@ -53,14 +47,18 @@ const CustomTooltip = ({
   return null;
 };
 
+export interface LineProps {
+  data: { date: Number; temp: Number }[];
+}
+
 // TODO: make chart more responsive
 // https://recharts.org/en-US/examples/HighlightAndZoomLineChart
 // Add zoom on mouse wheel event: https://codesandbox.io/s/highlight-zomm-line-chart-forked-j560ov?file=/src/index.tsx
 
-export default function LineChart(props: VisualizeProps) {
+export default function LineChart(props: LineProps) {
   const theme = useTheme();
 
-  const temps = props.data.line.map<Number>((point) => point.temp);
+  const temps = props.data.map<Number>((point) => point.temp);
 
   // TODO: Replace with d3 function
   const minDomainTemp = Math.floor(Math.min.apply(Math, temps));
@@ -77,7 +75,7 @@ export default function LineChart(props: VisualizeProps) {
       <div onWheel={(e) => console.log(e)}>
         <ResponsiveContainer width={theme.breakpoints.values.md} height={300}>
           <RechartsLineChart
-            data={props.data.line}
+            data={props.data}
             margin={{
               top: 10,
               right: 45,

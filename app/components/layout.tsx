@@ -10,6 +10,7 @@ import Stack from "@mui/material/Stack";
 import Paper from "@mui/material/Paper";
 import { Region } from "@prisma/client";
 import { RegionDetails } from "../utils/details";
+import { motion, LayoutGroup } from "framer-motion";
 
 export interface LayoutProps {
   children: ReactNode;
@@ -86,24 +87,31 @@ export default function Layout(props: LayoutProps) {
         maxWidth="lg"
       >
         <Grid container alignItems="center" justifyContent="center">
-          <Grid
-            container
-            spacing={0}
-            direction="column"
-            alignItems="center"
-            justifyContent="center"
-            component={Paper}
-            sx={{ p: 2 }}
-            elevation={3}
+          {/* TODO: Fix animation here */}
+          <motion.div
+            layout
+            transition={{
+              layout: { duration: 0.3, ease: "linear" },
+            }}
           >
-            {Children.map(props.children, (child) => {
-              return (
-                <Grid item p={1}>
-                  {child}
-                </Grid>
-              );
-            })}
-          </Grid>
+            <Paper sx={{ p: 2 }} elevation={3}>
+              <Grid
+                container
+                spacing={0}
+                direction="column"
+                alignItems="center"
+                justifyContent="center"
+              >
+                {Children.map(props.children, (child) => {
+                  return (
+                    <Grid item p={1}>
+                      {child}
+                    </Grid>
+                  );
+                })}
+              </Grid>
+            </Paper>
+          </motion.div>
         </Grid>
         <Box width="100%">
           <Typography
