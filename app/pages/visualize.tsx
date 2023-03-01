@@ -10,7 +10,7 @@ import { snackbarProps } from "./_app";
 import { userState, gameState, GameStatus } from "../utils/game";
 import { SSPDetails } from "../utils/details";
 
-import Visualize, { VisualizeProps } from "../components/visualize";
+import Visualize, { VisualizeProps } from "../components/lineChart";
 import Map from "../components/map";
 
 export default function VisualizePage({

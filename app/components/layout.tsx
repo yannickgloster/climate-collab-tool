@@ -29,10 +29,8 @@ export default function Layout(props: LayoutProps) {
     <Box
       style={{
         backgroundImage: `url(${
-          props.img
-            ? props.img
-            : // Fallback image
-              "/images/eberhard-grossgasteiger-jCL98LGaeoE-unsplash.jpg"
+          props.img ??
+          "/images/eberhard-grossgasteiger-jCL98LGaeoE-unsplash.jpg"
         })`,
         backgroundPosition: "center",
         backgroundRepeat: "repeat",

@@ -1,5 +1,5 @@
 import Layout from "../../components/layout";
-import Visualize, { VisualizeProps } from "../../components/visualize";
+import Visualize, { VisualizeProps } from "../../components/lineChart";
 import Typography from "@mui/material/Typography";
 
 import { SSPDetails } from "../../utils/details";

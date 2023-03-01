@@ -23,6 +23,7 @@ export default function AnnotatedTypography(props: annotatedTypographyProps) {
           placement={props.tooltipPlacement ? props.tooltipPlacement : "bottom"}
           TransitionComponent={Grow}
           arrow
+          describeChild
         >
           <Typography
             sx={{ textDecoration: "dotted underline" }}

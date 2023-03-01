@@ -1,5 +1,5 @@
 import {
-  LineChart,
+  LineChart as RechartsLineChart,
   Line,
   CartesianGrid,
   XAxis,
@@ -7,13 +7,13 @@ import {
   ResponsiveContainer,
   Tooltip,
   Legend,
-  ReferenceArea,
   TooltipProps,
   Brush,
 } from "recharts";
-import { DateTime } from "luxon";
+import { styled, alpha } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
+import Box, { BoxProps } from "@mui/material/Box";
+
 import { useTheme } from "@mui/material/styles";
 import { TempMaxMapRow } from "@prisma/client";
 
@@ -24,6 +24,18 @@ export interface VisualizeProps {
   };
 }
 
+const TooltipBox = styled(Box)<BoxProps>(({ theme }) => ({
+  backgroundColor: alpha(theme.palette.grey[700], 0.92),
+  borderRadius: theme.shape.borderRadius,
+  color: theme.palette.common.white,
+  padding: "4px 8px",
+  fontFamily: theme.typography.pxToRem(11),
+  maxWidth: 300,
+  margin: 2,
+  wordWrap: "break-word",
+  fontWeight: theme.typography.fontWeightMedium,
+}));
+
 const CustomTooltip = ({
   active,
   payload,
@@ -31,12 +43,10 @@ const CustomTooltip = ({
 }: TooltipProps<number, number>) => {
   if (active && payload && payload.length) {
     return (
-      <Paper sx={{ p: 1 }}>
-        <Typography variant="body2">{`Predicted Max Temperature in ${DateTime.fromMillis(
-          label
-        ).toLocaleString({ year: "numeric" })}`}</Typography>
+      <TooltipBox>
+        <Typography variant="body2">{`Predicted Max Temperature in ${label}`}</Typography>
         <Typography variant="body2">{`${payload[1].value}°C`}</Typography>
-      </Paper>
+      </TooltipBox>
     );
   }
 
@@ -47,7 +57,7 @@ const CustomTooltip = ({
 // https://recharts.org/en-US/examples/HighlightAndZoomLineChart
 // Add zoom on mouse wheel event: https://codesandbox.io/s/highlight-zomm-line-chart-forked-j560ov?file=/src/index.tsx
 
-export default function Visualize(props: VisualizeProps) {
+export default function LineChart(props: VisualizeProps) {
   const theme = useTheme();
 
   const temps = props.data.line.map<Number>((point) => point.temp);
@@ -66,7 +76,7 @@ export default function Visualize(props: VisualizeProps) {
       </Typography>
       <div onWheel={(e) => console.log(e)}>
         <ResponsiveContainer width={theme.breakpoints.values.md} height={300}>
-          <LineChart
+          <RechartsLineChart
             data={props.data.line}
             margin={{
               top: 10,
@@ -92,19 +102,14 @@ export default function Visualize(props: VisualizeProps) {
             />
             <CartesianGrid stroke="#ccc" />
             <XAxis dataKey="date" />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip
+              wrapperStyle={{ outline: "none" }}
+              content={<CustomTooltip />}
+            />
             <Legend iconType="plainline" />
             <YAxis domain={[minDomainTemp, maxDomainTemp]} unit="°C" />
-            <Brush
-              dataKey="date"
-              height={20}
-              tickFormatter={(unixTime) =>
-                DateTime.fromMillis(unixTime).toLocaleString({
-                  year: "numeric",
-                })
-              }
-            />
-          </LineChart>
+            <Brush dataKey="date" height={20} />
+          </RechartsLineChart>
         </ResponsiveContainer>
       </div>
     </>

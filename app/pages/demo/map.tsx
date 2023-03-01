@@ -2,7 +2,7 @@ import Layout from "../../components/layout";
 import Map from "../../components/map";
 import Box from "@mui/material/Box";
 
-import { VisualizeProps } from "../../components/visualize";
+import { VisualizeProps } from "../../components/lineChart";
 
 import useSWR from "swr";
 import { fetcher } from "../../utils/fetcher";
