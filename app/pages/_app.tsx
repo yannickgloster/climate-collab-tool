@@ -40,7 +40,7 @@ const theme = createTheme();
 
 export default function App({ Component, pageProps }: AppProps) {
   // TODO: consider saving to cookies to refresh?
-  const [user, setUser] = useState<userType>({ userId: uuidv4(), points: 100 });
+  const [user, setUser] = useState<userType>({ userId: uuidv4(), points: 20 });
   const [game, setGame] = useState<Game>();
   const [snackbar, setSnackbar] = useState<snackbarType>({
     text: "",
@@ -90,6 +90,7 @@ export default function App({ Component, pageProps }: AppProps) {
       socket.on(socketEvent.joined_room, (code: string, region: Region) => {
         setUser({
           ...user,
+          points: 20,
           gameCode: code,
           region: region,
           emission: RegionDetails[region].emissionUnits,

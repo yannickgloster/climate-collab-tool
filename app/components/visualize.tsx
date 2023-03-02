@@ -20,6 +20,7 @@ import { LineProps } from "./lineChart";
 import { SSPDetails } from "../utils/details";
 
 import LineChart from "./lineChart";
+import Stack from "@mui/material/Stack";
 
 export interface VisualizeProps {
   data: {
@@ -47,12 +48,12 @@ type steps = {
 
 const steps: steps = {
   [VisualizeState.Context]: {
-    label: "Ireland in 100 Years",
+    label: "Ireland in the Future",
     content: (props) => {
       return (
         <>
           <Typography variant="h3" textAlign="center" fontWeight={800}>
-            100 Years from now, Ireland will look like this.
+            In the future, Ireland will look like this.
           </Typography>
         </>
       );
@@ -89,7 +90,7 @@ const steps: steps = {
     content: (props) => {
       // TODO: Make Responsive
       return (
-        <Box width="1000px" border="1px dashed grey">
+        <Box margin="0 auto" width="500px" border="1px dashed grey">
           <Map data={props.data.mapData} />
         </Box>
       );
@@ -155,8 +156,11 @@ export default function Visualize(props: VisualizeProps) {
       </IconButton>
       <AnimatePresence mode="wait">
         <motion.div
+          initial={{
+            y: 10,
+            opacity: 0,
+          }}
           key={visState}
-          initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -10, opacity: 0 }}
           transition={{ duration: 0.2 }}

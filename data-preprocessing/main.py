@@ -27,6 +27,8 @@ datasets_root = "data"
 downloaded_ssps = ["119", "126", "245", "370", "434", "460", "534OS", "585"]
 model = "CNRM-ESM2-1"  # (FRANCE)
 
+# TODO: convert to K to C
+
 
 async def process_tasmax() -> None:
     ds_var_name = "tasmax"
@@ -53,16 +55,16 @@ async def process_tasmax() -> None:
                     for country_name in constants.regions[region]["country_names"]:
                         polygon.append(
                             world_shape[world_shape.NAME == country_name]
-                                .iloc[0]
-                                .geometry
+                            .iloc[0]
+                            .geometry
                         )
                 else:
                     polygon = (
                         world_shape[
                             world_shape.NAME == constants.regions[region]["full_name"]
-                            ]
-                            .iloc[0]
-                            .geometry
+                        ]
+                        .iloc[0]
+                        .geometry
                     )
 
             if "country_names" in constants.regions[region]:
@@ -151,7 +153,9 @@ async def process_tasmax_map() -> None:
                 data_point = -1
 
             if in_region is not None:
-                max_whole_region = in_region.max(dim=["lat", "lon"]).drop_vars("height").max()
+                max_whole_region = (
+                    in_region.max(dim=["lat", "lon"]).drop_vars("height").max()
+                )
                 data_point = max_whole_region.values
 
             ssp_enum = SSP["SSP" + ssp.upper()]
@@ -160,9 +164,7 @@ async def process_tasmax_map() -> None:
             await db.connect()
 
             try:
-                await db.mapdata.create(
-                    data={"ssp": ssp_enum, "model": model_enum}
-                )
+                await db.mapdata.create(data={"ssp": ssp_enum, "model": model_enum})
             except:
                 print("Data row already exists")
 

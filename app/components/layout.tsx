@@ -10,13 +10,15 @@ import Stack from "@mui/material/Stack";
 import Paper from "@mui/material/Paper";
 import { Region } from "@prisma/client";
 import { RegionDetails } from "../utils/details";
-import { motion, LayoutGroup } from "framer-motion";
+import { motion } from "framer-motion";
+import LinearProgress from "@mui/material/LinearProgress";
 
 export interface LayoutProps {
   children: ReactNode;
   region?: Region;
   gameCode?: string;
   img?: string;
+  progress?: number;
 }
 
 export default function Layout(props: LayoutProps) {
@@ -86,33 +88,45 @@ export default function Layout(props: LayoutProps) {
         paddingTop={7.5}
         maxWidth="lg"
       >
-        <Grid container alignItems="center" justifyContent="center">
-          {/* TODO: Fix animation here */}
-          <motion.div
-            layout
-            transition={{
-              layout: { duration: 0.3, ease: "linear" },
-            }}
+        <motion.div
+          layout
+          initial={{ y: 10, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: -10, opacity: 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          {props.progress && props.progress < 100 && (
+            <LinearProgress
+              sx={{ mb: "4px", borderRadius: "2px", height: "8px" }}
+              variant="determinate"
+              value={props.progress}
+            />
+          )}
+          <Grid
+            container
+            alignItems="center"
+            justifyContent="center"
+            component={Paper}
+            sx={{ p: 2 }}
+            elevation={3}
           >
-            <Paper sx={{ p: 2 }} elevation={3}>
-              <Grid
-                container
-                spacing={0}
-                direction="column"
-                alignItems="center"
-                justifyContent="center"
-              >
-                {Children.map(props.children, (child) => {
-                  return (
-                    <Grid item p={1}>
-                      {child}
-                    </Grid>
-                  );
-                })}
-              </Grid>
-            </Paper>
-          </motion.div>
-        </Grid>
+            <Grid
+              container
+              spacing={0}
+              direction="column"
+              alignItems="center"
+              justifyContent="center"
+            >
+              {Children.map(props.children, (child) => {
+                return (
+                  <Grid item p={1}>
+                    {child}
+                  </Grid>
+                );
+              })}
+            </Grid>
+          </Grid>
+        </motion.div>
         <Box width="100%">
           <Typography
             variant="overline"

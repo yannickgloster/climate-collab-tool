@@ -37,7 +37,7 @@ export default function QuestionTest({ user, setUser }: userState) {
     setLoading(true);
     setUser({
       userId: "TEST",
-      points: 100,
+      points: 20,
       gameCode: "TEST",
       region: region,
       emission: RegionDetails[region].emissionUnits,
@@ -65,6 +65,7 @@ export default function QuestionTest({ user, setUser }: userState) {
           ? questions[questionIndex].imgUrl
           : undefined
       }
+      progress={((questionIndex + 1) * 100) / questions.length}
     >
       <Typography variant="h6">Points Remaining: {user.points}</Typography>
       {questionIndex < questions.length - 1 ? (

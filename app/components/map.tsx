@@ -40,6 +40,17 @@ export default function Map({ data }: MapProps) {
 
   return (
     <Fragment>
+      <svg
+        dangerouslySetInnerHTML={{
+          __html: Legend(colorScale, {
+            title: "Temperature (K)",
+          }).innerHTML,
+        }}
+        height={50}
+        display="block"
+        style={{ margin: "0 auto" }}
+      />
+
       <ComposableMap
         projectionConfig={{
           rotate: [-10, 0, 0],
@@ -106,14 +117,6 @@ export default function Map({ data }: MapProps) {
           </Geographies>
         </ZoomableGroup>
       </ComposableMap>
-      <svg
-        dangerouslySetInnerHTML={{
-          __html: Legend(colorScale, {
-            title: "Temperature (°K)",
-          }).innerHTML,
-        }}
-        height={50}
-      />
     </Fragment>
   );
 }
