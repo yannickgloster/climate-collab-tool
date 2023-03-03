@@ -1,6 +1,6 @@
 import Layout from "../../components/layout";
 import { question } from "../../utils/types/question";
-import { userState } from "../../utils/game";
+import { regeneratePoints, userState } from "../../utils/game";
 import { Answer } from "@prisma/client";
 import Question from "../../components/question";
 import { useEffect, useState } from "react";
@@ -10,25 +10,49 @@ import Typography from "@mui/material/Typography";
 import { Region } from "@prisma/client";
 import { RegionDetails } from "../../utils/details";
 import { qFactor } from "../../utils/constants";
+import { snackbarProps } from "../_app";
 
-export default function QuestionTest({ user, setUser }: userState) {
+export default function QuestionTest({
+  user,
+  setUser,
+  snackbar,
+  setSnackbar,
+}: userState & snackbarProps) {
   const [questions, setQuestions] = useState<question[]>();
   const [isLoading, setLoading] = useState(true);
   const [questionIndex, setQuestionIndex] = useState(0);
 
   const answerCallback = (answer: Answer, index: number) => {
     const question = questions[questionIndex];
-    setUser({
+    const extraPoints = regeneratePoints(questionIndex, questions.length);
+    const newUser = {
       ...user,
-      points: user.points - answer.cost,
+      points: user.points - answer.cost + extraPoints,
       emission:
         user.emission -
         qFactor * question.regionWeights[0].weight * answer.weight,
-    });
-    if (questionIndex < questions.length - 1) {
+    };
+
+    if (extraPoints > 0) {
+      setSnackbar({
+        text: `You've been given ${extraPoints} extra points to spend!`,
+        enabled: true,
+        severity: "success",
+      });
+    }
+
+    if (user.points - answer.cost > 0) {
+      setUser(newUser);
       setQuestionIndex(questionIndex + 1);
+      if (questionIndex == questions.length - 1) {
+        alert("(not) Alerting server of completion");
+      }
     } else {
-      alert("(not) Alerting server of completion");
+      setSnackbar({
+        text: "You cannot afford this option",
+        enabled: true,
+        severity: "error",
+      });
     }
   };
 
