@@ -1,109 +1,314 @@
-import {
-  LineChart,
-  Line,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  ResponsiveContainer,
-  Tooltip,
-  Legend,
-  ReferenceArea,
-  TooltipProps,
-  Brush,
-} from "recharts";
-import { DateTime } from "luxon";
+import { Region, TempMaxMapRow } from "@prisma/client";
+import { useState } from "react";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+
+import IconButton from "@mui/material/IconButton";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import Stepper from "@mui/material/Stepper";
+import Step from "@mui/material/Step";
+import StepLabel from "@mui/material/StepLabel";
+import Map from "./map";
+import { motion, AnimatePresence } from "framer-motion";
 import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
-import { useTheme } from "@mui/material/styles";
+import { SSP } from "@prisma/client";
+
+import { ReactNode } from "react";
+
+import { LineProps } from "./lineChart";
+import { SSPDetails } from "../utils/details";
+
+import LineChart from "./lineChart";
+import WorldCountries from "../utils/world_countries.json";
+import IrelandUK from "../utils/ireland_uk.json";
+import {
+  ComposableMap,
+  Geographies,
+  Geography,
+  Marker,
+  Annotation,
+} from "react-simple-maps";
 
 export interface VisualizeProps {
   data: {
-    line: { date: Number; temp: Number }[];
+    line: LineProps["data"];
+    mapData: TempMaxMapRow[];
   };
+  ssp: SSP;
+  region: Region;
 }
 
-const CustomTooltip = ({
-  active,
-  payload,
-  label,
-}: TooltipProps<number, number>) => {
-  if (active && payload && payload.length) {
-    return (
-      <Paper sx={{ p: 1 }}>
-        <Typography variant="body2">{`Predicted Max Temperature in ${DateTime.fromMillis(
-          label
-        ).toLocaleString({ year: "numeric" })}`}</Typography>
-        <Typography variant="body2">{`${payload[1].value}°C`}</Typography>
-      </Paper>
-    );
-  }
+// TODO: Refactor this mess
+enum VisualizeState {
+  Context,
+  SSP,
+  Map,
+  Line,
+  Other,
+}
 
-  return null;
+export interface stepContentProps extends VisualizeProps {
+  selectedSSP: SSP;
+  handleSSPChange: (event: SelectChangeEvent) => void;
+  selectedData: VisualizeProps["data"];
+}
+
+type steps = {
+  [key in VisualizeState]: {
+    label: string;
+    content: (props: stepContentProps) => ReactNode;
+  };
 };
 
-// TODO: make chart more responsive
-// https://recharts.org/en-US/examples/HighlightAndZoomLineChart
-// Add zoom on mouse wheel event: https://codesandbox.io/s/highlight-zomm-line-chart-forked-j560ov?file=/src/index.tsx
+const steps: steps = {
+  [VisualizeState.Context]: {
+    label: "Ireland in the Future",
+    content: (props) => {
+      return (
+        <>
+          <Typography variant="h3" textAlign="center" fontWeight={800}>
+            In the future, Ireland will look like this.
+          </Typography>
+          <Typography variant="body1" textAlign="center">
+            Here is a description about what Ireland will look like.
+          </Typography>
+          <ComposableMap
+            projectionConfig={{
+              rotate: [-10, 0, 0],
+              center: [-15, 53],
+              scale: 1500,
+            }}
+            height={300}
+          >
+            <Geographies geography={IrelandUK}>
+              {({ geographies }) =>
+                geographies.map((geo) => (
+                  <Geography
+                    key={geo.rsmKey}
+                    geography={geo}
+                    style={{
+                      default: {
+                        fill: "#DDD",
+                        outline: "none",
+                      },
+                      hover: {
+                        fill: "#DDD",
+                        outline: "none",
+                      },
+                      pressed: {
+                        fill: "#DDD",
+                        outline: "none",
+                      },
+                    }}
+                  />
+                ))
+              }
+            </Geographies>
+            <Annotation
+              subject={[-7.5029786, 53.4494762]}
+              dx={-90}
+              dy={-30}
+              connectorProps={{
+                stroke: "#FF5533",
+                strokeWidth: 3,
+                strokeLinecap: "round",
+              }}
+            >
+              <text
+                x="-8"
+                textAnchor="end"
+                alignmentBaseline="middle"
+                fill="#000"
+                fontFamily="Roboto"
+                fontWeight={500}
+              >
+                <tspan x="-8" dy="0">
+                  Temperature in Ireland
+                </tspan>
+                <tspan x="-8" dy="1.2em">
+                  [TEMP]
+                </tspan>
+              </text>
+            </Annotation>
+            <Marker coordinates={[-7.5029786, 53.4494762]}>
+              <circle r={8} fill="#F53" />
+            </Marker>
+          </ComposableMap>
+        </>
+      );
+    },
+  },
+  [VisualizeState.SSP]: {
+    label: "World Pathway",
+    content: (props) => {
+      return (
+        <>
+          <Typography variant="h3" textAlign="center" fontWeight={800}>
+            Visualize Data: {SSPDetails[props.ssp].name}
+          </Typography>
+          <Typography variant="body1" textAlign="center">
+            {SSPDetails[props.ssp].description}
+          </Typography>
+          {SSPDetails[props.ssp]?.atlasLink && (
+            <Button
+              variant="contained"
+              size="large"
+              href={SSPDetails[props.ssp]?.atlasLink}
+              target="_blank"
+              rel="noopener noreffer"
+            >
+              View Interactive Atlas
+            </Button>
+          )}
+        </>
+      );
+    },
+  },
+  [VisualizeState.Map]: {
+    label: "World Map",
+    content: (props) => {
+      // TODO: Make Responsive
+      return (
+        <Box margin="0 auto" width="700px" border="1px dashed grey">
+          <Map data={props.data.mapData} map={WorldCountries} />
+        </Box>
+      );
+    },
+  },
+  [VisualizeState.Line]: {
+    label: "How did we get here?",
+    content: (props) => {
+      return <LineChart data={props.data.line} />;
+    },
+  },
+  [VisualizeState.Other]: {
+    label: "What other options were there?",
+    content: (props) => {
+      return (
+        <Box>
+          <Typography variant="h3" textAlign="center" fontWeight={800} mb={2}>
+            Here is what could have happened?
+          </Typography>
+          <FormControl fullWidth sx={{ marginBottom: 2 }}>
+            <InputLabel id="ssp-select">Socio Economic Pathway</InputLabel>
+            <Select
+              labelId="ssp-select"
+              id="ssp-select"
+              defaultValue={props.ssp}
+              value={props.selectedSSP}
+              label="Socioeconomic Pathway"
+              onChange={props.handleSSPChange}
+            >
+              {Object.keys(SSP).map((ssp, i) => {
+                return (
+                  <MenuItem
+                    key={ssp}
+                    value={ssp}
+                    divider={i != Object.keys(SSP).length - 1}
+                  >
+                    {SSPDetails[ssp].name} | Short Description
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+          <Box mb={2}>
+            <Typography variant="body1" textAlign="center">
+              {SSPDetails[props.selectedSSP].description}
+            </Typography>
+          </Box>
+          <Box mb={2}>
+            {steps[VisualizeState.Map].content({
+              ...props,
+              data: props.selectedData,
+            })}
+          </Box>
+          <Box mb={2}>
+            {steps[VisualizeState.Line].content({
+              ...props,
+              data: props.selectedData,
+            })}
+          </Box>
+        </Box>
+      );
+    },
+  },
+};
 
 export default function Visualize(props: VisualizeProps) {
-  const theme = useTheme();
+  const [visState, setVisState] = useState<VisualizeState>(
+    VisualizeState.Context
+  );
+  const [selectedSSP, setSelectedSSP] = useState<SSP>(props.ssp);
+  const [selectedData, setSelectedData] = useState<VisualizeProps["data"]>(
+    props.data
+  );
 
-  const temps = props.data.line.map<Number>((point) => point.temp);
+  const handleNext = () => {
+    setVisState((prevVisState) => prevVisState + 1);
+  };
 
-  const minDomainTemp = Math.floor(Math.min.apply(Math, temps));
-  const maxDomainTemp = Math.ceil(Math.max.apply(Math, temps));
+  const handleBack = () => {
+    setVisState((prevVisState) => prevVisState - 1);
+  };
+
+  const handleSSPChange = (event: SelectChangeEvent) => {
+    const ssp = event.target.value as SSP;
+    fetch(`/api/data?ssp=${ssp}&region=${props.region}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setSelectedSSP(ssp);
+        setSelectedData(data);
+      })
+      .catch((_error) => {});
+    console.log("here");
+  };
 
   return (
     <>
-      <Typography variant="h6" textAlign="center">
-        Predicted Max Temperature in Celcius
-      </Typography>
-      <Typography variant="body1" textAlign="center">
-        Descriptive paragraph on the visualization.
-      </Typography>
-      <div onWheel={(e) => console.log(e)}>
-        <ResponsiveContainer width={theme.breakpoints.values.md} height={300}>
-          <LineChart
-            data={props.data.line}
-            margin={{
-              top: 10,
-              right: 45,
-              left: 0,
-              bottom: 0,
-            }}
-            // onMouseMove={(e) => console.log(e)}
-          >
-            <Line
-              type="monotone"
-              dataKey="linear_regression"
-              stroke={theme.palette.secondary.main}
-              dot={false}
-              activeDot={false}
-              name="Best Fit Line"
-            />
-            <Line
-              type="monotone"
-              dataKey="temp"
-              stroke={theme.palette.primary.main}
-              name="Max Temperature (°C)"
-            />
-            <CartesianGrid stroke="#ccc" />
-            <XAxis dataKey="date" />
-            <Tooltip content={<CustomTooltip />} />
-            <Legend iconType="plainline" />
-            <YAxis domain={[minDomainTemp, maxDomainTemp]} unit="°C" />
-            <Brush
-              dataKey="date"
-              height={20}
-              tickFormatter={(unixTime) =>
-                DateTime.fromMillis(unixTime).toLocaleString({
-                  year: "numeric",
-                })
-              }
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
+      <Stepper activeStep={visState} alternativeLabel>
+        {Object.keys(steps).map((stepKey) => {
+          const step = steps[stepKey];
+          return (
+            <Step key={stepKey}>
+              <StepLabel>{step.label}</StepLabel>
+            </Step>
+          );
+        })}
+      </Stepper>
+      <IconButton disabled={visState === 0} onClick={handleBack}>
+        <ArrowBackIcon />
+      </IconButton>
+      <IconButton
+        disabled={visState === VisualizeState.Other}
+        onClick={handleNext}
+      >
+        <ArrowForwardIcon />
+      </IconButton>
+      <AnimatePresence mode="wait">
+        <motion.div
+          initial={{
+            y: 10,
+            opacity: 0,
+          }}
+          key={visState}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: -10, opacity: 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          {steps[visState].content({
+            ...props,
+            selectedSSP,
+            handleSSPChange,
+            selectedData,
+          })}
+        </motion.div>
+      </AnimatePresence>
     </>
   );
 }

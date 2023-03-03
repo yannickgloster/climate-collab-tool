@@ -83,6 +83,14 @@ model Data {
   @@unique([ssp, model, region])
 }
 
+model MapData {
+  ssp               SSP
+  model             Model
+  temp_max_map_rows TempMaxMapRow[]
+
+  @@unique([ssp, model])
+}
+
 model TempMaxRow {
   id         Int      @id @default(autoincrement())
   year       DateTime
@@ -91,4 +99,13 @@ model TempMaxRow {
   dataModel  Model
   dataRegion Region
   Data       Data?    @relation(fields: [dataSsp, dataModel, dataRegion], references: [ssp, model, region], onDelete: Cascade)
+}
+
+model TempMaxMapRow {
+  id        Int      @id @default(autoincrement())
+  tasmax    Float
+  ISO3      String
+  dataSsp   SSP
+  dataModel Model
+  MapData   MapData? @relation(fields: [dataSsp, dataModel], references: [ssp, model])
 }

@@ -20,6 +20,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     },
   });
 
+  const mapData = await prisma.mapData.findUnique({
+    where: {
+      ssp_model: {
+        ssp: SSP[ssp.toString()],
+        model: "CNRM_ESM2_1",
+      },
+    },
+    select: {
+      temp_max_map_rows: true,
+    },
+  });
+
   const processedData = results.temp_max_rows.map((dataPoint) => {
     return {
       date: dataPoint.year.getUTCFullYear(),
@@ -42,6 +54,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         linear_regression: regression.predict(dp.date),
       };
     }),
+    mapData: mapData.temp_max_map_rows,
   });
 };
 

@@ -1,36 +1,45 @@
 import Layout from "../../components/layout";
+import { userState } from "../../utils/game";
+import { useEffect, useState } from "react";
+import Loading from "../../components/loading";
+import LoadingError from "../../components/loadingError";
+import { Region, SSP } from "@prisma/client";
+import { RegionDetails } from "../../utils/details";
 import Visualize, { VisualizeProps } from "../../components/visualize";
 
-import { SSPDetails } from "../../utils/details";
-import { userState } from "../../utils/game";
-import useSWR from "swr";
-import Typography from "@mui/material/Typography";
-
-import { fetcher } from "../../utils/fetcher";
-
-import { Region, SSP } from "@prisma/client";
-
-const ssp = SSP.SSP119;
-const region = Region.EU;
+// TODO: replace with game
+const ssp = SSP.SSP460;
 
 export default function VisualizeTest({ user, setUser }: userState) {
-  const { data, error } = useSWR<VisualizeProps["data"]>(
-    `/api/data?ssp=${ssp}&region=${region}`,
-    fetcher
-  );
+  const [data, setData] = useState<VisualizeProps["data"]>();
+  const [isLoading, setLoading] = useState(true);
 
-  if (error) return "An error has occurred.";
-  if (!data) return "Loading...";
+  useEffect(() => {
+    const region = Region.EU;
+    setUser({
+      userId: "TEST",
+      points: 100,
+      gameCode: "TEST",
+      region: region,
+      emission: RegionDetails[region].emissionUnits,
+    });
+    fetch(`/api/data?ssp=${ssp}&region=${region}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setData(data);
+        setLoading(false);
+      })
+      .catch((_error) => {
+        setLoading(false);
+      });
+  }, []);
+
+  if (isLoading) return <Loading />;
+  if (!data) return <LoadingError href="/demo/question" />;
 
   return (
-    <Layout gameCode={"TEST"} region={region}>
-      <Typography variant="h3" textAlign="center" fontWeight={800}>
-        Visualize Data: {SSPDetails[ssp].name}
-      </Typography>
-      <Typography variant="body1" textAlign="center">
-        {SSPDetails[ssp].description}
-      </Typography>
-      <Visualize data={data} />
+    <Layout gameCode={user.gameCode} region={user.region}>
+      <Visualize data={data} ssp={ssp} region={user.region} />
     </Layout>
   );
 }

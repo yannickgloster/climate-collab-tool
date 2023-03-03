@@ -3,11 +3,10 @@ import Head from "next/head";
 
 import Layout from "../components/layout";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import { snackbarProps } from "./_app";
 import { userState, gameState, GameStatus } from "../utils/game";
-import { SSPDetails } from "../utils/details";
 
 import Visualize, { VisualizeProps } from "../components/visualize";
 
@@ -49,31 +48,9 @@ export default function VisualizePage({
             Everyone hasn't finished their questions.
           </Typography>
         )}
-        {game.status == GameStatus.visualize && (
-          <Typography variant="h3" textAlign="center" fontWeight={800}>
-            Visualize Data: {SSPDetails[game.ssp].name}
-          </Typography>
-        )}
-        {game.status == GameStatus.visualize && (
-          <Typography variant="body1" textAlign="center">
-            {SSPDetails[game.ssp].description}
-          </Typography>
-        )}
+        {game.status == GameStatus.visualize && !data && <CircularProgress />}
         {game.status == GameStatus.visualize && data && (
-          <>
-            <Visualize data={data} />
-            {SSPDetails[game.ssp]?.atlasLink && (
-              <Button
-                variant="contained"
-                size="large"
-                href={SSPDetails[game.ssp]?.atlasLink}
-                target="_blank"
-                rel="noopener noreffer"
-              >
-                View Interactive Atlas
-              </Button>
-            )}
-          </>
+          <Visualize data={data} ssp={game.ssp} region={user.region} />
         )}
       </Layout>
     </>

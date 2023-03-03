@@ -1,5 +1,6 @@
 import { Region, SSP } from "@prisma/client";
 import type { Dispatch, SetStateAction } from "react";
+import { numRegenPoints } from "./constants";
 
 export interface user {
   readonly userId: string;
@@ -24,6 +25,14 @@ export interface userState {
 export interface gameState {
   game: Game;
   setGame: Dispatch<SetStateAction<Game>>;
+}
+
+export function regeneratePoints(index: number, length: number) {
+  if (index == Math.round(length / numRegenPoints)) {
+    return 10;
+  } else {
+    return 0;
+  }
 }
 
 export class Game {
