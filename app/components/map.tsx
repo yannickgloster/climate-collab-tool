@@ -1,11 +1,13 @@
-import WorldCountries from "../utils/world_countries.json";
 import {
   ComposableMap,
   Geographies,
   Geography,
   ZoomableGroup,
   Graticule,
+  GeographyProps,
+  Sphere,
 } from "react-simple-maps";
+
 import { scaleLinear } from "d3-scale";
 import { extent } from "d3-array";
 import Tooltip from "@mui/material/Tooltip";
@@ -16,6 +18,7 @@ import Legend from "./colorLegend";
 
 export interface MapProps {
   data: VisualizeProps["data"]["mapData"];
+  map: GeographyProps["geography"];
 }
 
 // Could be used for the Geographies
@@ -24,7 +27,7 @@ const geoUrl =
 
 const KELVIN_CELSIUS_DIFF = 273.15;
 
-export default function Map({ data }: MapProps) {
+export default function Map({ data, map }: MapProps) {
   const domain = extent(
     data.map((d) => {
       if (d.tasmax != -1) {
@@ -58,14 +61,16 @@ export default function Map({ data }: MapProps) {
         }}
       >
         <ZoomableGroup center={[0, 0]} zoom={1}>
+          <Sphere stroke="#88898a" strokeWidth={2} id="outline" fill="#fff" />
           <Graticule stroke="#88898a" strokeWidth={0.5} />
-          <Geographies geography={WorldCountries.features}>
+          <Geographies geography={map.features}>
             {({ geographies }) =>
               geographies.map((geo, i) => {
                 // TODO: instead of maping an array, use a hashmap that is generated on the serverside
                 // TODO: this data is buggy af figure where the hell the bug is
+
                 const countryData = data.filter(
-                  (row) => row.ISO3 === geo.id
+                  (row) => row.ISO3 === geo.id || geo.properties.ISO3
                 )[0];
 
                 const tasmax = countryData ? countryData.tasmax : -1;

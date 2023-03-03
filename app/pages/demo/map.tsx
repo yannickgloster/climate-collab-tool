@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 import { VisualizeProps } from "../../components/visualize";
 import useSWR from "swr";
 import { fetcher } from "../../utils/fetcher";
+import World from "../../utils/world_countries.json";
 
 import { Region, SSP } from "@prisma/client";
 
@@ -24,7 +25,7 @@ export default function LoadingTest() {
   return (
     <Layout>
       <Box width={500} border="1px dashed grey">
-        <Map data={data.mapData} />
+        <Map data={data.mapData} map={World} />
       </Box>
     </Layout>
   );

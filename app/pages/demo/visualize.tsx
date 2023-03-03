@@ -39,7 +39,7 @@ export default function VisualizeTest({ user, setUser }: userState) {
 
   return (
     <Layout gameCode={user.gameCode} region={user.region}>
-      <Visualize data={data} ssp={ssp} />
+      <Visualize data={data} ssp={ssp} region={user.region} />
     </Layout>
   );
 }

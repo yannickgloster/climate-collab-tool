@@ -1,7 +1,11 @@
-import { TempMaxMapRow } from "@prisma/client";
+import { Region, TempMaxMapRow } from "@prisma/client";
 import { useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 import IconButton from "@mui/material/IconButton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -20,7 +24,15 @@ import { LineProps } from "./lineChart";
 import { SSPDetails } from "../utils/details";
 
 import LineChart from "./lineChart";
-import Stack from "@mui/material/Stack";
+import WorldCountries from "../utils/world_countries.json";
+import IrelandUK from "../utils/ireland_uk.json";
+import {
+  ComposableMap,
+  Geographies,
+  Geography,
+  Marker,
+  Annotation,
+} from "react-simple-maps";
 
 export interface VisualizeProps {
   data: {
@@ -28,6 +40,7 @@ export interface VisualizeProps {
     mapData: TempMaxMapRow[];
   };
   ssp: SSP;
+  region: Region;
 }
 
 // TODO: Refactor this mess
@@ -39,10 +52,16 @@ enum VisualizeState {
   Other,
 }
 
+export interface stepContentProps extends VisualizeProps {
+  selectedSSP: SSP;
+  handleSSPChange: (event: SelectChangeEvent) => void;
+  selectedData: VisualizeProps["data"];
+}
+
 type steps = {
   [key in VisualizeState]: {
     label: string;
-    content: (props: VisualizeProps) => ReactNode;
+    content: (props: stepContentProps) => ReactNode;
   };
 };
 
@@ -55,6 +74,71 @@ const steps: steps = {
           <Typography variant="h3" textAlign="center" fontWeight={800}>
             In the future, Ireland will look like this.
           </Typography>
+          <Typography variant="body1" textAlign="center">
+            Here is a description about what Ireland will look like.
+          </Typography>
+          <ComposableMap
+            projectionConfig={{
+              rotate: [-10, 0, 0],
+              center: [-15, 53],
+              scale: 1500,
+            }}
+            height={300}
+          >
+            <Geographies geography={IrelandUK}>
+              {({ geographies }) =>
+                geographies.map((geo) => (
+                  <Geography
+                    key={geo.rsmKey}
+                    geography={geo}
+                    style={{
+                      default: {
+                        fill: "#DDD",
+                        outline: "none",
+                      },
+                      hover: {
+                        fill: "#DDD",
+                        outline: "none",
+                      },
+                      pressed: {
+                        fill: "#DDD",
+                        outline: "none",
+                      },
+                    }}
+                  />
+                ))
+              }
+            </Geographies>
+            <Annotation
+              subject={[-7.5029786, 53.4494762]}
+              dx={-90}
+              dy={-30}
+              connectorProps={{
+                stroke: "#FF5533",
+                strokeWidth: 3,
+                strokeLinecap: "round",
+              }}
+            >
+              <text
+                x="-8"
+                textAnchor="end"
+                alignmentBaseline="middle"
+                fill="#000"
+                fontFamily="Roboto"
+                fontWeight={500}
+              >
+                <tspan x="-8" dy="0">
+                  Temperature in Ireland
+                </tspan>
+                <tspan x="-8" dy="1.2em">
+                  [TEMP]
+                </tspan>
+              </text>
+            </Annotation>
+            <Marker coordinates={[-7.5029786, 53.4494762]}>
+              <circle r={8} fill="#F53" />
+            </Marker>
+          </ComposableMap>
         </>
       );
     },
@@ -90,8 +174,8 @@ const steps: steps = {
     content: (props) => {
       // TODO: Make Responsive
       return (
-        <Box margin="0 auto" width="500px" border="1px dashed grey">
-          <Map data={props.data.mapData} />
+        <Box margin="0 auto" width="700px" border="1px dashed grey">
+          <Map data={props.data.mapData} map={WorldCountries} />
         </Box>
       );
     },
@@ -106,11 +190,51 @@ const steps: steps = {
     label: "What other options were there?",
     content: (props) => {
       return (
-        <>
-          <Typography variant="h3" textAlign="center" fontWeight={800}>
+        <Box>
+          <Typography variant="h3" textAlign="center" fontWeight={800} mb={2}>
             Here is what could have happened?
           </Typography>
-        </>
+          <FormControl fullWidth sx={{ marginBottom: 2 }}>
+            <InputLabel id="ssp-select">Socio Economic Pathway</InputLabel>
+            <Select
+              labelId="ssp-select"
+              id="ssp-select"
+              defaultValue={props.ssp}
+              value={props.selectedSSP}
+              label="Socioeconomic Pathway"
+              onChange={props.handleSSPChange}
+            >
+              {Object.keys(SSP).map((ssp, i) => {
+                return (
+                  <MenuItem
+                    key={ssp}
+                    value={ssp}
+                    divider={i != Object.keys(SSP).length - 1}
+                  >
+                    {SSPDetails[ssp].name} | Short Description
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+          <Box mb={2}>
+            <Typography variant="body1" textAlign="center">
+              {SSPDetails[props.selectedSSP].description}
+            </Typography>
+          </Box>
+          <Box mb={2}>
+            {steps[VisualizeState.Map].content({
+              ...props,
+              data: props.selectedData,
+            })}
+          </Box>
+          <Box mb={2}>
+            {steps[VisualizeState.Line].content({
+              ...props,
+              data: props.selectedData,
+            })}
+          </Box>
+        </Box>
       );
     },
   },
@@ -119,6 +243,10 @@ const steps: steps = {
 export default function Visualize(props: VisualizeProps) {
   const [visState, setVisState] = useState<VisualizeState>(
     VisualizeState.Context
+  );
+  const [selectedSSP, setSelectedSSP] = useState<SSP>(props.ssp);
+  const [selectedData, setSelectedData] = useState<VisualizeProps["data"]>(
+    props.data
   );
 
   const handleNext = () => {
@@ -129,8 +257,16 @@ export default function Visualize(props: VisualizeProps) {
     setVisState((prevVisState) => prevVisState - 1);
   };
 
-  const handleStep = (step) => () => {
-    setVisState(step);
+  const handleSSPChange = (event: SelectChangeEvent) => {
+    const ssp = event.target.value as SSP;
+    fetch(`/api/data?ssp=${ssp}&region=${props.region}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setSelectedSSP(ssp);
+        setSelectedData(data);
+      })
+      .catch((_error) => {});
+    console.log("here");
   };
 
   return (
@@ -165,7 +301,12 @@ export default function Visualize(props: VisualizeProps) {
           exit={{ y: -10, opacity: 0 }}
           transition={{ duration: 0.2 }}
         >
-          {steps[visState].content(props)}
+          {steps[visState].content({
+            ...props,
+            selectedSSP,
+            handleSSPChange,
+            selectedData,
+          })}
         </motion.div>
       </AnimatePresence>
     </>
