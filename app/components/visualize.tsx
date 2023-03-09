@@ -25,7 +25,6 @@ import { LineProps } from "./lineChart";
 import { SSPDetails } from "../utils/details";
 
 import LineChart from "./lineChart";
-import WorldCountries from "../utils/world_countries.json";
 import IrelandUK from "../utils/ireland_uk.json";
 import {
   ComposableMap,
@@ -176,7 +175,7 @@ const steps: steps = {
       // TODO: Make Responsive
       return (
         <Box margin="0 auto" width="700px" border="1px dashed grey">
-          <Map data={props.data.mapData} map={WorldCountries} />
+          <Map data={props.data.mapData} />
         </Box>
       );
     },
@@ -224,9 +223,10 @@ const steps: steps = {
             </Select>
           </FormControl>
           <Box>
-            <Typography variant="body1" textAlign="center">
-              {SSPDetails[props.selectedSSP].description}
-            </Typography>
+            {steps[VisualizeState.Line].content({
+              ...props,
+              data: props.selectedData,
+            })}
           </Box>
           <Box>
             {steps[VisualizeState.Map].content({
@@ -235,10 +235,9 @@ const steps: steps = {
             })}
           </Box>
           <Box>
-            {steps[VisualizeState.Line].content({
-              ...props,
-              data: props.selectedData,
-            })}
+            <Typography variant="body1" textAlign="center">
+              {SSPDetails[props.selectedSSP].description}
+            </Typography>
           </Box>
         </Stack>
       );

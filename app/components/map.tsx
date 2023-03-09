@@ -16,37 +16,27 @@ import { Fragment } from "react";
 import Typography from "@mui/material/Typography";
 import Legend from "./colorLegend";
 
+// https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json
+import world from "../utils/world_countries.json";
+
 export interface MapProps {
   data: VisualizeProps["data"]["mapData"];
-  map: GeographyProps["geography"];
 }
 
-// Could be used for the Geographies
-const geoUrl =
-  "https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json";
-
-const KELVIN_CELSIUS_DIFF = 273.15;
-
-export default function Map({ data, map }: MapProps) {
-  const domain = extent(
-    data.map((d) => {
-      if (d.tasmax != -1) {
-        return d.tasmax;
-      }
-    })
-  );
+export default function Map({ data }: MapProps) {
+  const domain = [-2, 60];
 
   const colorScale = scaleLinear()
     .domain(domain)
     // @ts-ignore: You can do colors actually
-    .range(["#ffedea", "#ff5233"]);
+    .range(["#80ff00", "#ff5233"]);
 
   return (
     <Fragment>
       <svg
         dangerouslySetInnerHTML={{
           __html: Legend(colorScale, {
-            title: "Temperature (K)",
+            title: "Temperature (°C)",
           }).innerHTML,
         }}
         height={50}
@@ -63,23 +53,15 @@ export default function Map({ data, map }: MapProps) {
         <ZoomableGroup center={[0, 0]} zoom={1}>
           <Sphere stroke="#88898a" strokeWidth={2} id="outline" fill="#fff" />
           <Graticule stroke="#88898a" strokeWidth={0.5} />
-          <Geographies geography={map.features}>
+          <Geographies geography={world.features}>
             {({ geographies }) =>
               geographies.map((geo, i) => {
                 // TODO: instead of maping an array, use a hashmap that is generated on the serverside
-                // TODO: this data is buggy af figure where the hell the bug is
-
                 const countryData = data.filter(
                   (row) => row.ISO3 === geo.id || geo.properties.ISO3
                 )[0];
 
                 const tasmax = countryData ? countryData.tasmax : -1;
-
-                // TODO: move to serverside
-                const tasmax_c =
-                  Math.round(
-                    (tasmax - KELVIN_CELSIUS_DIFF + Number.EPSILON) * 10000
-                  ) / 10000;
 
                 return (
                   <Tooltip
@@ -88,7 +70,7 @@ export default function Map({ data, map }: MapProps) {
                         <Typography variant="inherit">
                           {geo.properties.name}
                         </Typography>
-                        <Typography variant="inherit">{tasmax_c} °C</Typography>
+                        <Typography variant="inherit">{tasmax} °C</Typography>
                         <Typography variant="inherit">{geo.id}</Typography>
                       </Fragment>
                     }

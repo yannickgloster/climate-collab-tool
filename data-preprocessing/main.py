@@ -6,11 +6,12 @@ import xarray as xr
 
 import matplotlib.path as mpath
 import matplotlib.pyplot as plt
+import rioxarray
 
-# import cartopy.crs as ccrs
 import cftime
 
-from shapely.geometry import Point, Polygon
+from shapely.geometry import Point, Polygon, box
+from math import isnan
 
 import constants
 
@@ -27,77 +28,133 @@ datasets_root = "data"
 downloaded_ssps = ["119", "126", "245", "370", "434", "460", "534OS", "585"]
 model = "CNRM-ESM2-1"  # (FRANCE)
 
-# TODO: convert to K to C
+
+async def process_tasmax_map() -> None:
+    ds_var_name = "tasmax"
+
+    # Generated from https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json using https://mapshaper.org/
+    world_shape = gpd.read_file(f"{datasets_root}/world_countries.shp")
+    db = Prisma()
+
+    for ssp in downloaded_ssps:
+        # Dataset renamed to follow the following format
+        data = rioxarray.open_rasterio(
+            f"{datasets_root}/{ds_var_name}_Amon_{model}_ssp{ssp}.nc",
+            decode_times=True,
+            use_cftime=True,
+            masked=True,
+        )[1]
+        # Convert longitude from 0 to 360 to -180 to 180
+        data.coords["x"] = (data.coords["x"] + 180) % 360 - 180
+        data = data.sortby(data.x)
+        # Add in the correct crs
+        data.rio.write_crs(world_shape.crs, inplace=True)
+
+        await db.connect()
+        for index, country in world_shape.iterrows():
+            # Get the data only for the one region
+            country_data = data.rio.clip(
+                gpd.GeoSeries(country.geometry), world_shape.crs, drop=False
+            )
+            # Get the max across time and across that region
+            country_max = country_data.max()[ds_var_name]
+            if isnan(country_max):
+                # Replace NaN with -1, mostly for very small countries
+                country_max = -1
+            else:
+                # Convert values to degrees C
+                country_max = country_max - 273.1
+
+            ssp_enum = SSP["SSP" + ssp.upper()]
+            model_enum = Model[model.upper().replace("-", "_")]
+
+            try:
+                await db.mapdata.create(data={"ssp": ssp_enum, "model": model_enum})
+            except:
+                print("Data row already exists")
+
+            await db.tempmaxmaprow.create(
+                data={
+                    "tasmax": float(country_max),
+                    "ISO3": country.FID,
+                    "dataSsp": ssp_enum,
+                    "dataModel": model_enum,
+                }
+            )
+        await db.disconnect()
 
 
 async def process_tasmax() -> None:
     ds_var_name = "tasmax"
 
-    # https://thematicmapping.org/downloads/world_borders.php
-    # https://larmarange.github.io/prevR/reference/TMWorldBorders.html
-    world_shape = gpd.read_file(f"{datasets_root}/TM_WORLD_BORDERS-0.3.shp")
+    world_shape = gpd.read_file(f"{datasets_root}/world_countries.shp")
     db = Prisma()
 
     for ssp in downloaded_ssps:
-        # Dataset renamed to follow the following format
-        ds = xr.open_dataset(
+        # Load in data
+        # The first element in the array is height while the second is tasmax, lat, and lon over time.
+        data = rioxarray.open_rasterio(
             f"{datasets_root}/{ds_var_name}_Amon_{model}_ssp{ssp}.nc",
             decode_times=True,
             use_cftime=True,
-        )
+            masked=True,
+        )[1]
+        # Convert longitude from 0 to 360 to -180 to 180
+        data.coords["x"] = (data.coords["x"] + 180) % 360 - 180
+        data = data.sortby(data.x)
+        # Add in the correct crs
+        data.rio.write_crs(world_shape.crs, inplace=True)
+        data[ds_var_name][0, ...].plot()
+        plt.title(f"{ssp}")
+        plt.show()
 
         for region in constants.regions.keys():
+            polygons = []
             if "points" in constants.regions[region]:
-                polygon = Polygon(constants.regions[region]["points"])
+                polygons.append(
+                    gpd.GeoDataFrame(
+                        geometry=[box(-25, 34, 32, 72)], crs=world_shape.crs
+                    )
+                )
             else:
                 if "country_names" in constants.regions[region]:
-                    polygon = []
                     for country_name in constants.regions[region]["country_names"]:
-                        polygon.append(
-                            world_shape[world_shape.NAME == country_name]
-                            .iloc[0]
-                            .geometry
-                        )
+                        polygons.append(world_shape[world_shape.name == country_name])
                 else:
-                    polygon = (
+                    polygons.append(
                         world_shape[
-                            world_shape.NAME == constants.regions[region]["full_name"]
+                            world_shape.name == constants.regions[region]["full_name"]
                         ]
-                        .iloc[0]
-                        .geometry
                     )
 
-            if "country_names" in constants.regions[region]:
-                all_in_region = []
-                for p in polygon:
-                    bounds = p.bounds
-                    in_region_temp = ds.where(
-                        (ds.lat >= bounds[0])
-                        & (ds.lat <= bounds[2])
-                        & (ds.lon >= bounds[1])
-                        & (ds.lon <= bounds[3])
-                    )
-                    all_in_region.append(in_region_temp[ds_var_name])
-                in_region: xr.Dataset = xr.merge(all_in_region)
-            else:
-                in_region = ds.where(
-                    (ds.lat >= polygon.bounds[0])
-                    & (ds.lat <= polygon.bounds[2])
-                    & (ds.lon >= polygon.bounds[1])
-                    & (ds.lon <= polygon.bounds[3]),
-                    drop=True,
-                )[ds_var_name]
+            # Group all the different polygon data into one dataset
+            all_clips = []
+            for p in polygons:
+                all_clips.append(data.rio.clip(p.geometry, world_shape.crs, drop=False))
+            region_data = xr.merge(all_clips)
+            # Plot first data point on map for debug
+            # region_data[ds_var_name][0, ...].plot()
+            # plt.show()
 
-            # FIXME: After testing with test(), it looks like there's a problem with China and India in the actual dataset
-            mean_whole_region = in_region.max(dim=["lat", "lon"]).drop_vars("height")
+            # get the max temperature in the region over time
+            region_data = region_data.max(dim=["x", "y"])
 
-            # Get the max of the max temperatures per year
-            monthly_max_mean_region = mean_whole_region.groupby("time.year").max()
+            # convert max temperature from monthly data to yearly data
+            region_data = region_data.groupby("time.year").max()
 
+            # convert K to degrees C
+            region_data[ds_var_name] = region_data[ds_var_name] - 273.15
+
+            # Plot line chart for debug
+            # region_data[ds_var_name].plot()
+            # plt.show()
+
+            region_data_df = region_data.to_dataframe()
+
+            # Prisma Enums
             ssp_enum = SSP["SSP" + ssp.upper()]
             model_enum = Model[model.upper().replace("-", "_")]
             region_enum = Region[region]
-            df = monthly_max_mean_region.to_dataframe()
 
             await db.connect()
 
@@ -108,8 +165,7 @@ async def process_tasmax() -> None:
             except:
                 print("Data row already exists")
 
-            # TODO: switch to create many
-            for index, row in df.iterrows():
+            for index, row in region_data_df.iterrows():
                 await db.tempmaxrow.create(
                     data={
                         "year": datetime(index, 1, 1),
@@ -123,87 +179,6 @@ async def process_tasmax() -> None:
             await db.disconnect()
 
 
-async def process_tasmax_map() -> None:
-    ds_var_name = "tasmax"
-
-    # https://thematicmapping.org/downloads/world_borders.php
-    # https://larmarange.github.io/prevR/reference/TMWorldBorders.html
-    world_shape = gpd.read_file(f"{datasets_root}/TM_WORLD_BORDERS-0.3.shp")
-    db = Prisma()
-
-    for ssp in downloaded_ssps:
-        # Dataset renamed to follow the following format
-        ds = xr.open_dataset(
-            f"{datasets_root}/{ds_var_name}_Amon_{model}_ssp{ssp}.nc",
-            decode_times=True,
-            use_cftime=True,
-        )
-        for _index, country in world_shape.iterrows():
-            in_region = None
-            data_point = -1
-            try:
-                in_region = ds.where(
-                    (ds.lat >= country.geometry.bounds[0])
-                    & (ds.lat <= country.geometry.bounds[2])
-                    & (ds.lon >= country.geometry.bounds[1])
-                    & (ds.lon <= country.geometry.bounds[3]),
-                    drop=True,
-                )[ds_var_name]
-            except:
-                data_point = -1
-
-            if in_region is not None:
-                max_whole_region = (
-                    in_region.max(dim=["lat", "lon"]).drop_vars("height").max()
-                )
-                data_point = max_whole_region.values
-
-            ssp_enum = SSP["SSP" + ssp.upper()]
-            model_enum = Model[model.upper().replace("-", "_")]
-
-            await db.connect()
-
-            try:
-                await db.mapdata.create(data={"ssp": ssp_enum, "model": model_enum})
-            except:
-                print("Data row already exists")
-
-            await db.tempmaxmaprow.create(
-                data={
-                    "tasmax": float(data_point),
-                    "ISO3": country.ISO3,
-                    "dataSsp": ssp_enum,
-                    "dataModel": model_enum,
-                }
-            )
-            await db.disconnect()
-
-
-def test():
-    world_shape = gpd.read_file(
-        f"{datasets_root}/TM_WORLD_BORDERS-0.3.shp", decode_coords="all"
-    )
-    # EPSG:4326
-    print()
-    print(world_shape.crs)
-
-    ds_var_name = "tasmax"
-
-    model = "CNRM-ESM2-1"  # (FRANCE)
-
-    ssp = "119"
-
-    ds = xr.open_dataset(
-        f"{datasets_root}/{ds_var_name}_Amon_{model}_ssp{ssp}.nc",
-        decode_times=True,
-        use_cftime=True,
-    )
-    print(ds.attrs)
-
-    ds["tasmax"].isel(time=1019).plot(cmap="coolwarm")
-    plt.show()
-
-
 if __name__ == "__main__":
-    asyncio.run(process_tasmax_map())
     asyncio.run(process_tasmax())
+    asyncio.run(process_tasmax_map())

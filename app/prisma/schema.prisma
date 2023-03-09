@@ -107,5 +107,5 @@ model TempMaxMapRow {
   ISO3      String
   dataSsp   SSP
   dataModel Model
-  MapData   MapData? @relation(fields: [dataSsp, dataModel], references: [ssp, model])
+  MapData   MapData? @relation(fields: [dataSsp, dataModel], references: [ssp, model], onDelete: Cascade)
 }
