@@ -12,6 +12,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
+import Stack from "@mui/material/Stack";
 import StepLabel from "@mui/material/StepLabel";
 import Map from "./map";
 import { motion, AnimatePresence } from "framer-motion";
@@ -24,7 +25,6 @@ import { LineProps } from "./lineChart";
 import { SSPDetails } from "../utils/details";
 
 import LineChart from "./lineChart";
-import WorldCountries from "../utils/world_countries.json";
 import IrelandUK from "../utils/ireland_uk.json";
 import {
   ComposableMap,
@@ -175,7 +175,7 @@ const steps: steps = {
       // TODO: Make Responsive
       return (
         <Box margin="0 auto" width="700px" border="1px dashed grey">
-          <Map data={props.data.mapData} map={WorldCountries} />
+          <Map data={props.data.mapData} />
         </Box>
       );
     },
@@ -190,11 +190,16 @@ const steps: steps = {
     label: "What other options were there?",
     content: (props) => {
       return (
-        <Box>
-          <Typography variant="h3" textAlign="center" fontWeight={800} mb={2}>
+        <Stack
+          spacing={2}
+          direction="column"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Typography variant="h3" textAlign="center" fontWeight={800}>
             Here is what could have happened?
           </Typography>
-          <FormControl fullWidth sx={{ marginBottom: 2 }}>
+          <FormControl fullWidth>
             <InputLabel id="ssp-select">Socio Economic Pathway</InputLabel>
             <Select
               labelId="ssp-select"
@@ -217,24 +222,24 @@ const steps: steps = {
               })}
             </Select>
           </FormControl>
-          <Box mb={2}>
-            <Typography variant="body1" textAlign="center">
-              {SSPDetails[props.selectedSSP].description}
-            </Typography>
-          </Box>
-          <Box mb={2}>
-            {steps[VisualizeState.Map].content({
-              ...props,
-              data: props.selectedData,
-            })}
-          </Box>
-          <Box mb={2}>
+          <Box>
             {steps[VisualizeState.Line].content({
               ...props,
               data: props.selectedData,
             })}
           </Box>
-        </Box>
+          <Box>
+            {steps[VisualizeState.Map].content({
+              ...props,
+              data: props.selectedData,
+            })}
+          </Box>
+          <Box>
+            <Typography variant="body1" textAlign="center">
+              {SSPDetails[props.selectedSSP].description}
+            </Typography>
+          </Box>
+        </Stack>
       );
     },
   },
@@ -281,34 +286,46 @@ export default function Visualize(props: VisualizeProps) {
           );
         })}
       </Stepper>
-      <IconButton disabled={visState === 0} onClick={handleBack}>
-        <ArrowBackIcon />
-      </IconButton>
-      <IconButton
-        disabled={visState === VisualizeState.Other}
-        onClick={handleNext}
-      >
-        <ArrowForwardIcon />
-      </IconButton>
-      <AnimatePresence mode="wait">
-        <motion.div
-          initial={{
-            y: 10,
-            opacity: 0,
-          }}
-          key={visState}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: -10, opacity: 0 }}
-          transition={{ duration: 0.2 }}
+
+      <Box sx={{ display: "flex" }}>
+        <IconButton
+          disabled={visState === 0}
+          onClick={handleBack}
+          sx={{ borderRadius: 0 }}
+          size="large"
         >
-          {steps[visState].content({
-            ...props,
-            selectedSSP,
-            handleSSPChange,
-            selectedData,
-          })}
-        </motion.div>
-      </AnimatePresence>
+          <ArrowBackIcon />
+        </IconButton>
+        <Box>
+          <AnimatePresence mode="wait">
+            <motion.div
+              initial={{
+                y: 10,
+                opacity: 0,
+              }}
+              key={visState}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -10, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              {steps[visState].content({
+                ...props,
+                selectedSSP,
+                handleSSPChange,
+                selectedData,
+              })}
+            </motion.div>
+          </AnimatePresence>
+        </Box>
+        <IconButton
+          disabled={visState === VisualizeState.Other}
+          onClick={handleNext}
+          sx={{ borderRadius: 0 }}
+          size="large"
+        >
+          <ArrowForwardIcon />
+        </IconButton>
+      </Box>
     </>
   );
 }

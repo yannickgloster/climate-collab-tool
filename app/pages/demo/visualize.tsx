@@ -35,7 +35,7 @@ export default function VisualizeTest({ user, setUser }: userState) {
   }, []);
 
   if (isLoading) return <Loading />;
-  if (!data) return <LoadingError href="/demo/question" />;
+  if (!data) return <LoadingError href="/demo/visualize" />;
 
   return (
     <Layout gameCode={user.gameCode} region={user.region}>

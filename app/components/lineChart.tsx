@@ -61,8 +61,8 @@ export default function LineChart(props: LineProps) {
   const temps = props.data.map<Number>((point) => point.temp);
 
   // TODO: Replace with d3 function
-  const minDomainTemp = Math.floor(Math.min.apply(Math, temps));
-  const maxDomainTemp = Math.ceil(Math.max.apply(Math, temps));
+  const minDomainTemp = 35; //Math.floor(Math.min.apply(Math, temps));
+  const maxDomainTemp = 60; // Math.ceil(Math.max.apply(Math, temps));
 
   return (
     <>
