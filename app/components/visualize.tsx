@@ -67,23 +67,24 @@ type steps = {
 
 const steps: steps = {
   [VisualizeState.Context]: {
-    label: "Ireland in the Future",
+    label: "Ireland's Future",
     content: (props) => {
       return (
         <>
           <Typography variant="h3" textAlign="center" fontWeight={800}>
-            In the future, Ireland will look like this.
+            Ireland's Future
           </Typography>
           <Typography variant="body1" textAlign="center">
-            Here is a description about what Ireland will look like.
+            Based off all the policy decisions made by all the players in the
+            world, this is what Ireland's future might look like.
           </Typography>
           <ComposableMap
             projectionConfig={{
               rotate: [-10, 0, 0],
-              center: [-15, 53],
-              scale: 1500,
+              center: [-18, 55],
+              scale: 2400,
             }}
-            height={300}
+            height={500}
           >
             <Geographies geography={IrelandUK}>
               {({ geographies }) =>
@@ -120,17 +121,18 @@ const steps: steps = {
               }}
             >
               <text
-                x="-8"
+                x="-10"
                 textAnchor="end"
                 alignmentBaseline="middle"
                 fill="#000"
                 fontFamily="Roboto"
                 fontWeight={500}
+                fontSize={27}
               >
-                <tspan x="-8" dy="0">
+                <tspan x="-10" dy="-5">
                   Temperature in Ireland
                 </tspan>
-                <tspan x="-8" dy="1.2em">
+                <tspan x="-10" dy="1.2em">
                   [TEMP]
                 </tspan>
               </text>
@@ -149,7 +151,12 @@ const steps: steps = {
       return (
         <>
           <Typography variant="h3" textAlign="center" fontWeight={800}>
-            Visualize Data: {SSPDetails[props.ssp].name}
+            Pathway: {SSPDetails[props.ssp].name}
+          </Typography>
+          <Typography variant="body1" textAlign="center">
+            The decisions that each region made were used to calculate what the
+            world may be based off of the 8 world pathways determined by the
+            IPCC.
           </Typography>
           <Typography variant="body1" textAlign="center">
             {SSPDetails[props.ssp].description}
@@ -187,7 +194,7 @@ const steps: steps = {
     },
   },
   [VisualizeState.Other]: {
-    label: "What other options were there?",
+    label: "Other pathways?",
     content: (props) => {
       return (
         <Stack
@@ -197,10 +204,16 @@ const steps: steps = {
           alignItems="center"
         >
           <Typography variant="h3" textAlign="center" fontWeight={800}>
-            Here is what could have happened?
+            What other pathways could occur?
+          </Typography>
+          <Typography variant="body1" textAlign="center">
+            This wasn't the only option. Depending on how regions and countries
+            collaborate to tackle climate change, there are other pathways that
+            could deteriorate or improve our global outlook. You can select the
+            different modelled options from the dropdown below.
           </Typography>
           <FormControl fullWidth>
-            <InputLabel id="ssp-select">Socio Economic Pathway</InputLabel>
+            <InputLabel id="ssp-select">Pathway</InputLabel>
             <Select
               labelId="ssp-select"
               id="ssp-select"
@@ -296,7 +309,7 @@ export default function Visualize(props: VisualizeProps) {
         >
           <ArrowBackIcon />
         </IconButton>
-        <Box>
+        <Box flex="90%">
           <AnimatePresence mode="wait">
             <motion.div
               initial={{

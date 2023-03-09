@@ -5,17 +5,32 @@ import Layout from "../components/layout";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import Tooltip from "@mui/material/Tooltip";
 
 import { socket, snackbarProps } from "./_app";
 import { socketEvent } from "../utils/socketServerHandler";
-import { DescriptiveTooltips } from "../utils/details";
 import { userState } from "../utils/game";
 import { gameCodeLength } from "../utils/constants";
 
 import AnnotatedTypography from "../components/annotatedTypography";
 
+import { Trans, t } from "@lingui/macro";
+import { loadTranslation } from "../utils/translation";
+import { GetStaticProps } from "next/types";
+
 const disableButtonSeconds = 1;
+
+export const getStaticProps: GetStaticProps = async (ctx) => {
+  const translation = await loadTranslation(
+    ctx.locale!,
+    process.env.NODE_ENV === "production"
+  );
+
+  return {
+    props: {
+      translation,
+    },
+  };
+};
 
 export default function Home({
   user,
@@ -52,14 +67,13 @@ export default function Home({
   };
 
   useEffect(() => {
-    console.log(router.query);
     if (router.query?.join) {
       setGameCode(router.query.join.toString());
       setTimeout(() => {
         joinRoom(router.query.join.toString());
       }, 1500);
     }
-  }, [router.query, socket]);
+  }, [router.query.join, socket]);
 
   useEffect(() => {
     if (!joinEnable) {
@@ -72,11 +86,11 @@ export default function Home({
   return (
     <Layout img="/images/eberhard-grossgasteiger-jCL98LGaeoE-unsplash.jpg">
       <Typography variant="h3" textAlign="center" fontWeight={800}>
-        Climate Change Simulation
+        <Trans id="title">Climate Change Simulation</Trans>
       </Typography>
       <Typography variant="subtitle1" textAlign="center">
         <AnnotatedTypography
-          text={"Built using the IPCC Dataset. This is the description."}
+          text={t`Can you work with others to reduce the worst impacts of climate change? Built using the IPCC CMIP6 climate projections.`}
         />
       </Typography>
       <Button
@@ -85,7 +99,7 @@ export default function Home({
         onClick={generateGameCode}
         data-cy="newGameButton"
       >
-        New Simulation
+        <Trans id="button.newSimulation">New Simulation</Trans>
       </Button>
       <TextField
         id="gameCodeTextField"
@@ -101,7 +115,7 @@ export default function Home({
         data-cy="joinGameButton"
         disabled={!joinEnable}
       >
-        Join Simulation
+        <Trans id="button.joinSimulation">Join Simulation</Trans>
       </Button>
     </Layout>
   );

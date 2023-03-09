@@ -70,7 +70,9 @@ export default function LineChart(props: LineProps) {
         Predicted Max Temperature in Celcius
       </Typography>
       <Typography variant="body1" textAlign="center">
-        Descriptive paragraph on the visualization.
+        Based on a large amount of data modeling, this is the predicted maximum
+        yearly temperature for your region. On top of the data points, a linear
+        line of best fit has been included to show what trends are occurring.
       </Typography>
       <div onWheel={(e) => console.log(e)}>
         <ResponsiveContainer width={theme.breakpoints.values.md} height={300}>

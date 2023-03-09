@@ -17,6 +17,23 @@ import { userState, gameState, GameStatus } from "../utils/game";
 import { DescriptiveTooltips, RegionDetails } from "../utils/details";
 import { Region } from "@prisma/client";
 
+import { Trans, t } from "@lingui/macro";
+import { loadTranslation } from "../utils/translation";
+import { GetStaticProps } from "next/types";
+
+export const getStaticProps: GetStaticProps = async (ctx) => {
+  const translation = await loadTranslation(
+    ctx.locale!,
+    process.env.NODE_ENV === "production"
+  );
+
+  return {
+    props: {
+      translation,
+    },
+  };
+};
+
 export default function Join({
   user,
   setUser,
@@ -68,12 +85,12 @@ export default function Join({
                 game.availableRegions.length > 1 ? "s" : ""
               } Remaining`
             : `Ready to start!`}
-          {!game ? "Select Region" : ""}
+          {!game ? "Region Lobby" : ""}
         </title>
       </Head>
       <Layout gameCode={user.gameCode} region={user.region}>
         <Typography variant="h3" textAlign="center" fontWeight={800}>
-          Select Region
+          <Trans id="region.title">Region Lobby</Trans>
         </Typography>
         <Typography variant="subtitle1" textAlign="center">
           This is the description.

@@ -1,7 +1,7 @@
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import type { Dispatch, SetStateAction } from "react";
 
 import io, { Socket } from "socket.io-client";
@@ -21,6 +21,12 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+
+import { i18n } from "@lingui/core";
+import { initTranslation } from "../utils/translation";
+import { I18nProvider } from "@lingui/react";
+
+initTranslation(i18n);
 
 export let socket: Socket;
 
@@ -42,12 +48,32 @@ export default function App({ Component, pageProps }: AppProps) {
   // TODO: consider saving to cookies to refresh?
   const [user, setUser] = useState<userType>({ userId: uuidv4(), points: 20 });
   const [game, setGame] = useState<Game>();
+
   const [snackbar, setSnackbar] = useState<snackbarType>({
     text: "",
     enabled: false,
     severity: "error",
   });
   const router = useRouter();
+
+  const locale = router.locale || router.defaultLocale;
+  const firstRender = useRef(true);
+
+  if (pageProps.translation && firstRender.current) {
+    //load the translations for the locale
+    i18n.load(locale, pageProps.translation);
+    i18n.activate(locale);
+    // render only once
+    firstRender.current = false;
+  }
+
+  // listen for the locale changes
+  useEffect(() => {
+    if (pageProps.translation) {
+      i18n.load(locale, pageProps.translation);
+      i18n.activate(locale);
+    }
+  }, [locale, pageProps.translation]);
 
   useEffect(() => {
     fetch("/api/socket").finally(() => {
@@ -162,7 +188,7 @@ export default function App({ Component, pageProps }: AppProps) {
         enabled: true,
         severity: "error",
       });
-      router.push("/");
+      router.push("/", undefined, { shallow: true });
     }
   }, []);
 
@@ -187,7 +213,7 @@ export default function App({ Component, pageProps }: AppProps) {
   };
 
   return (
-    <>
+    <I18nProvider i18n={i18n}>
       <Head>
         <title>Climate Change Simulation</title>
         <meta name="description" content="TODO: Write Description" />
@@ -234,6 +260,6 @@ export default function App({ Component, pageProps }: AppProps) {
           </MuiAlert>
         </Snackbar>
       </ThemeProvider>
-    </>
+    </I18nProvider>
   );
 }

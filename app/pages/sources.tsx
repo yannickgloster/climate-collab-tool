@@ -4,6 +4,22 @@ import { default as NextLink } from "next/link";
 
 import Layout from "../components/layout";
 
+import { loadTranslation } from "../utils/translation";
+import { GetStaticProps } from "next/types";
+
+export const getStaticProps: GetStaticProps = async (ctx) => {
+  const translation = await loadTranslation(
+    ctx.locale!,
+    process.env.NODE_ENV === "production"
+  );
+
+  return {
+    props: {
+      translation,
+    },
+  };
+};
+
 export default function () {
   return (
     <Layout img="/images/eberhard-grossgasteiger-jCL98LGaeoE-unsplash.jpg">
