@@ -5,6 +5,7 @@ import Link from "@mui/material/Link";
 
 import { loadTranslation } from "../utils/translation";
 import { GetStaticProps } from "next/types";
+import { Trans, t, plural } from "@lingui/macro";
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
   const translation = await loadTranslation(
@@ -23,14 +24,14 @@ export default function Custom404() {
   return (
     <Layout>
       <Typography variant="h3" textAlign="center" fontWeight={800}>
-        Page Not Found
+        <Trans>Page Not Found</Trans>
       </Typography>
       <Typography variant="body1" textAlign="center">
-        You're looking a little lost.
+        <Trans>You're looking a little lost.</Trans>
       </Typography>
       <Typography variant="body2" textAlign="center">
         <Link component={NextLink} href="/">
-          Return Home
+          <Trans>Return Home</Trans>
         </Link>
       </Typography>
     </Layout>

@@ -15,6 +15,7 @@ import { VisualizeProps } from "./visualize";
 import { Fragment } from "react";
 import Typography from "@mui/material/Typography";
 import Legend from "./colorLegend";
+import { Trans, t, plural } from "@lingui/macro";
 
 // https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json
 import world from "../utils/world_countries.json";
@@ -36,7 +37,7 @@ export default function Map({ data }: MapProps) {
       <svg
         dangerouslySetInnerHTML={{
           __html: Legend(colorScale, {
-            title: "Temperature (°C)",
+            title: t`Temperature (°C)`,
           }).innerHTML,
         }}
         height={50}

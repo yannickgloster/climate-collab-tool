@@ -3,6 +3,7 @@ import Button from "@mui/material/Button";
 import { questionProps } from "../utils/types/question";
 import AnnotatedTypography from "./annotatedTypography";
 import { QuestionTopicDetails } from "../utils/details";
+import { Trans } from "@lingui/macro";
 
 export default function Question(props: questionProps) {
   return (
@@ -31,7 +32,9 @@ export default function Question(props: questionProps) {
             <Typography variant="inherit">
               <AnnotatedTypography text={answer.text} />
             </Typography>
-            <Typography variant="inherit">Cost: {answer.cost}</Typography>
+            <Typography variant="inherit">
+              <Trans>Cost</Trans>: {answer.cost}
+            </Typography>
           </Button>
         );
       })}

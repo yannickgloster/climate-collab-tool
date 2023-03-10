@@ -12,6 +12,22 @@ import { RegionDetails } from "../../utils/details";
 import { qFactor } from "../../utils/constants";
 import { snackbarProps } from "../_app";
 
+import { loadTranslation } from "../../utils/translation";
+import { GetStaticProps } from "next/types";
+
+export const getStaticProps: GetStaticProps = async (ctx) => {
+  const translation = await loadTranslation(
+    ctx.locale!,
+    process.env.NODE_ENV === "production"
+  );
+
+  return {
+    props: {
+      translation,
+    },
+  };
+};
+
 export default function QuestionTest({
   user,
   setUser,

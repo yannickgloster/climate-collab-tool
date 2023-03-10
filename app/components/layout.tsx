@@ -159,7 +159,15 @@ export default function Layout(props: LayoutProps) {
             </Grid>
           </Grid>
         </motion.div>
-        <Box position="absolute" bottom={0} right={0} padding={1}>
+
+        <Box
+          position="absolute"
+          sx={{
+            position: "fixed",
+            bottom: (theme) => theme.spacing(2),
+            right: (theme) => theme.spacing(2),
+          }}
+        >
           <Fab
             variant="extended"
             size="medium"

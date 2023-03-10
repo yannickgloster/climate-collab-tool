@@ -15,8 +15,7 @@ import Typography from "@mui/material/Typography";
 import Box, { BoxProps } from "@mui/material/Box";
 
 import { useTheme } from "@mui/material/styles";
-import { TempMaxMapRow } from "@prisma/client";
-import { VisualizeProps } from "./visualize";
+import { Trans, t, plural } from "@lingui/macro";
 
 const TooltipBox = styled(Box)<BoxProps>(({ theme }) => ({
   backgroundColor: alpha(theme.palette.grey[700], 0.92),
@@ -38,7 +37,7 @@ const CustomTooltip = ({
   if (active && payload && payload.length) {
     return (
       <TooltipBox>
-        <Typography variant="body2">{`Predicted Max Temperature in ${label}`}</Typography>
+        <Typography variant="body2">{t`Predicted Max Temperature in ${label}`}</Typography>
         <Typography variant="body2">{`${payload[1].value}°C`}</Typography>
       </TooltipBox>
     );
@@ -67,12 +66,17 @@ export default function LineChart(props: LineProps) {
   return (
     <>
       <Typography variant="h6" textAlign="center">
-        Predicted Max Temperature in Celcius
+        <Trans id="visualize.line.title">
+          Predicted Max Temperature in Celcius
+        </Trans>
       </Typography>
       <Typography variant="body1" textAlign="center">
-        Based on a large amount of data modeling, this is the predicted maximum
-        yearly temperature for your region. On top of the data points, a linear
-        line of best fit has been included to show what trends are occurring.
+        <Trans id="visualize.line.description">
+          Based on a large amount of data modeling, this is the predicted
+          maximum yearly temperature for your region. On top of the data points,
+          a linear line of best fit has been included to show what trends are
+          occurring.
+        </Trans>
       </Typography>
       <div onWheel={(e) => console.log(e)}>
         <ResponsiveContainer width={theme.breakpoints.values.md} height={300}>
@@ -92,13 +96,13 @@ export default function LineChart(props: LineProps) {
               stroke={theme.palette.secondary.main}
               dot={false}
               activeDot={false}
-              name="Best Fit Line"
+              name={t`Best Fit Line`}
             />
             <Line
               type="monotone"
               dataKey="temp"
               stroke={theme.palette.primary.main}
-              name="Max Temperature (°C)"
+              name={t`Max Temperature (°C)`}
             />
             <CartesianGrid stroke="#ccc" />
             <XAxis dataKey="date" />

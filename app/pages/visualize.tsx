@@ -9,6 +9,7 @@ import { snackbarProps } from "./_app";
 import { userState, gameState, GameStatus } from "../utils/game";
 
 import Visualize, { VisualizeProps } from "../components/visualize";
+import { Trans, t, plural } from "@lingui/macro";
 
 export default function VisualizePage({
   user,
@@ -29,7 +30,7 @@ export default function VisualizePage({
         })
         .catch((_error) => {
           setSnackbar({
-            text: "Could not load data.",
+            text: t`Could not load data.`,
             enabled: true,
             severity: "error",
           });
@@ -40,12 +41,14 @@ export default function VisualizePage({
   return (
     <>
       <Head>
-        <title>View the World</title>
+        <title>
+          <Trans>View the World</Trans>
+        </title>
       </Head>
       <Layout gameCode={user.gameCode} region={user.region}>
         {game.status == GameStatus.questions && (
           <Typography variant="h3" textAlign="center" fontWeight={800}>
-            Everyone hasn't finished their questions.
+            <Trans>Everyone hasn't finished their questions.</Trans>
           </Typography>
         )}
         {game.status == GameStatus.visualize && !data && <CircularProgress />}

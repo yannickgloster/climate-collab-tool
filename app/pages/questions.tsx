@@ -13,6 +13,7 @@ import Loading from "../components/loading";
 import LoadingError from "../components/loadingError";
 import Typography from "@mui/material/Typography";
 import { qFactor } from "../utils/constants";
+import { Trans, t, plural } from "@lingui/macro";
 
 export default function Questions({
   user,
@@ -39,7 +40,10 @@ export default function Questions({
 
     if (extraPoints > 0) {
       setSnackbar({
-        text: `You've been given ${extraPoints} extra points to spend!`,
+        text: plural(extraPoints, {
+          one: "You've been given an extra point to spend!",
+          other: "You've been given # extra points to spend!",
+        }),
         enabled: true,
         severity: "success",
       });
@@ -58,7 +62,7 @@ export default function Questions({
       }
     } else {
       setSnackbar({
-        text: "You cannot afford this option",
+        text: t`You cannot afford this option`,
         enabled: true,
         severity: "error",
       });
@@ -76,7 +80,7 @@ export default function Questions({
       .catch((_error) => {
         setLoading(false);
         setSnackbar({
-          text: "Could not load questions.",
+          text: t`Could not load questions.`,
           enabled: true,
           severity: "error",
         });
@@ -89,7 +93,9 @@ export default function Questions({
   return (
     <>
       <Head>
-        <title>Answer Questions</title>
+        <title>
+          <Trans>Answer Questions</Trans>
+        </title>
       </Head>
       <Layout
         gameCode={user.gameCode}
@@ -100,7 +106,13 @@ export default function Questions({
             : undefined
         }
       >
-        <Typography variant="h6">Points Remaining: {user.points}</Typography>
+        <Typography variant="h6">
+          {plural(user.points, {
+            one: "# Point Remaining To Spend",
+            other: "# Points Remaining To Spend",
+          })}
+        </Typography>
+        {/* TODO: Localize questions */}
         {questionIndex < questions.length ? (
           <Question
             question={questions[questionIndex]}
@@ -108,7 +120,7 @@ export default function Questions({
           />
         ) : (
           <Typography variant="h6">
-            Thank you for answering all the questions!
+            <Trans>Thank you for answering all the questions!</Trans>
           </Typography>
         )}
       </Layout>

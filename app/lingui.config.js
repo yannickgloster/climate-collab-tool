@@ -15,7 +15,7 @@ module.exports = {
   catalogs: [
     {
       path: "locales/{locale}/messages",
-      include: ["pages", "components"],
+      include: ["pages", "components", "utils"],
       exclude: ["**/node_modules/**"],
     },
   ],

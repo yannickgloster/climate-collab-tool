@@ -61,8 +61,8 @@ export default function Home({
 
   const joinRoom = (code: string) => {
     setJoinEnable(false);
-    const newUser = { ...user, gameCode: code };
-    socket.emit(socketEvent.join_room, newUser, code);
+    const newUser = { ...user, gameCode: code.toLowerCase() };
+    socket.emit(socketEvent.join_room, newUser, code.toLowerCase());
     setUser(newUser);
   };
 

@@ -34,6 +34,8 @@ import {
   Annotation,
 } from "react-simple-maps";
 
+import { Trans, t, plural } from "@lingui/macro";
+
 export interface VisualizeProps {
   data: {
     line: LineProps["data"];
@@ -45,8 +47,8 @@ export interface VisualizeProps {
 
 // TODO: Refactor this mess
 enum VisualizeState {
-  Context,
   SSP,
+  Context,
   Map,
   Line,
   Other,
@@ -66,17 +68,53 @@ type steps = {
 };
 
 const steps: steps = {
-  [VisualizeState.Context]: {
-    label: "Ireland's Future",
+  // TODO: Localize this to be based on the region of the user
+  [VisualizeState.SSP]: {
+    label: t({
+      id: "visualize.ssp.label",
+      message: "World Scenario",
+    }),
     content: (props) => {
       return (
         <>
           <Typography variant="h3" textAlign="center" fontWeight={800}>
-            Ireland's Future
+            <Trans id="visualize.ssp.title">{SSPDetails[props.ssp].name}</Trans>
           </Typography>
           <Typography variant="body1" textAlign="center">
-            Based off all the policy decisions made by all the players in the
-            world, this is what Ireland's future might look like.
+            <Trans id="visualize.ssp.description">
+              The decisions that each region made were used to calculate what
+              the world may be based off of the 8 world pathways determined by
+              the IPCC.
+            </Trans>
+          </Typography>
+          <br />
+          <Typography variant="body1" textAlign="center">
+            {SSPDetails[props.ssp].shortDescription}
+          </Typography>
+          <br />
+          <Typography variant="body1" textAlign="center">
+            {SSPDetails[props.ssp].description}
+          </Typography>
+        </>
+      );
+    },
+  },
+  [VisualizeState.Context]: {
+    label: t({
+      id: "visualize.contextualize.label",
+      message: "Ireland's Future",
+    }),
+    content: (props) => {
+      return (
+        <>
+          <Typography variant="h3" textAlign="center" fontWeight={800}>
+            <Trans id="visualize.contextualize.title">Ireland's Future</Trans>
+          </Typography>
+          <Typography variant="body1" textAlign="center">
+            <Trans id="visualize.contextualize.description">
+              Based off all the policy decisions made by all the players in the
+              world, this is what Ireland's future might look like.
+            </Trans>
           </Typography>
           <ComposableMap
             projectionConfig={{
@@ -130,10 +168,10 @@ const steps: steps = {
                 fontSize={27}
               >
                 <tspan x="-10" dy="-5">
-                  Temperature in Ireland
+                  <Trans>Temperature in Ireland</Trans>
                 </tspan>
                 <tspan x="-10" dy="1.2em">
-                  [TEMP]
+                  [TEMP] °C
                 </tspan>
               </text>
             </Annotation>
@@ -145,56 +183,34 @@ const steps: steps = {
       );
     },
   },
-  [VisualizeState.SSP]: {
-    label: "World Pathway",
-    content: (props) => {
-      return (
-        <>
-          <Typography variant="h3" textAlign="center" fontWeight={800}>
-            Pathway: {SSPDetails[props.ssp].name}
-          </Typography>
-          <Typography variant="body1" textAlign="center">
-            The decisions that each region made were used to calculate what the
-            world may be based off of the 8 world pathways determined by the
-            IPCC.
-          </Typography>
-          <Typography variant="body1" textAlign="center">
-            {SSPDetails[props.ssp].description}
-          </Typography>
-          {SSPDetails[props.ssp]?.atlasLink && (
-            <Button
-              variant="contained"
-              size="large"
-              href={SSPDetails[props.ssp]?.atlasLink}
-              target="_blank"
-              rel="noopener noreffer"
-            >
-              View Interactive Atlas
-            </Button>
-          )}
-        </>
-      );
-    },
-  },
   [VisualizeState.Map]: {
-    label: "World Map",
+    label: t({
+      id: "visualize.map.label",
+      message: "World Map",
+    }),
     content: (props) => {
       // TODO: Make Responsive
       return (
-        <Box margin="0 auto" width="700px" border="1px dashed grey">
+        <Box margin="0 auto" width="700px">
           <Map data={props.data.mapData} />
         </Box>
       );
     },
   },
   [VisualizeState.Line]: {
-    label: "How did we get here?",
+    label: t({
+      id: "visualize.line.label",
+      message: "How did we get here?",
+    }),
     content: (props) => {
       return <LineChart data={props.data.line} />;
     },
   },
   [VisualizeState.Other]: {
-    label: "Other pathways?",
+    label: t({
+      id: "visualize.other.label",
+      message: "Other Scenarios?",
+    }),
     content: (props) => {
       return (
         <Stack
@@ -204,16 +220,24 @@ const steps: steps = {
           alignItems="center"
         >
           <Typography variant="h3" textAlign="center" fontWeight={800}>
-            What other pathways could occur?
+            <Trans id="visualize.other.title">
+              What other Scenarios could occur?
+            </Trans>
           </Typography>
           <Typography variant="body1" textAlign="center">
-            This wasn't the only option. Depending on how regions and countries
-            collaborate to tackle climate change, there are other pathways that
-            could deteriorate or improve our global outlook. You can select the
-            different modelled options from the dropdown below.
+            <Trans id="visualize.other.description">
+              This wasn't the only option. Depending on how regions and
+              countries collaborate to tackle climate change, there are other
+              pathways that could deteriorate or improve our global outlook. You
+              can select the different scenarios from the dropdown below.
+            </Trans>
           </Typography>
-          <FormControl fullWidth>
-            <InputLabel id="ssp-select">Pathway</InputLabel>
+          <FormControl>
+            <InputLabel id="ssp-select">
+              <Trans id="visualize.other.dropdown.scenarios.label">
+                Scenarios
+              </Trans>
+            </InputLabel>
             <Select
               labelId="ssp-select"
               id="ssp-select"
@@ -229,11 +253,12 @@ const steps: steps = {
                     value={ssp}
                     divider={i != Object.keys(SSP).length - 1}
                   >
-                    {SSPDetails[ssp].name} | Short Description
+                    {SSPDetails[ssp].name} | {SSPDetails[ssp].oneLine}
                   </MenuItem>
                 );
               })}
             </Select>
+            {/* TODO: Add selection for region */}
           </FormControl>
           <Box>
             {steps[VisualizeState.Line].content({
@@ -252,6 +277,17 @@ const steps: steps = {
               {SSPDetails[props.selectedSSP].description}
             </Typography>
           </Box>
+          {/* {SSPDetails[props.selectedSSP]?.atlasLink && (
+            <Button
+              variant="contained"
+              size="large"
+              href={SSPDetails[props.selectedSSP]?.atlasLink}
+              target="_blank"
+              rel="noopener noreffer"
+            >
+              <Trans>View Interactive Atlas</Trans>
+            </Button>
+          )} */}
         </Stack>
       );
     },
@@ -259,9 +295,7 @@ const steps: steps = {
 };
 
 export default function Visualize(props: VisualizeProps) {
-  const [visState, setVisState] = useState<VisualizeState>(
-    VisualizeState.Context
-  );
+  const [visState, setVisState] = useState<VisualizeState>(VisualizeState.SSP);
   const [selectedSSP, setSelectedSSP] = useState<SSP>(props.ssp);
   const [selectedData, setSelectedData] = useState<VisualizeProps["data"]>(
     props.data
