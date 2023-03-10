@@ -1,7 +1,7 @@
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import type { Dispatch, SetStateAction } from "react";
 
 import io, { Socket } from "socket.io-client";
@@ -21,6 +21,13 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+
+import { i18n } from "@lingui/core";
+import { initTranslation } from "../utils/translation";
+import { I18nProvider } from "@lingui/react";
+import { Trans, t, plural } from "@lingui/macro";
+
+initTranslation(i18n);
 
 export let socket: Socket;
 
@@ -42,12 +49,32 @@ export default function App({ Component, pageProps }: AppProps) {
   // TODO: consider saving to cookies to refresh?
   const [user, setUser] = useState<userType>({ userId: uuidv4(), points: 20 });
   const [game, setGame] = useState<Game>();
+
   const [snackbar, setSnackbar] = useState<snackbarType>({
     text: "",
     enabled: false,
     severity: "error",
   });
   const router = useRouter();
+
+  const locale = router.locale || router.defaultLocale;
+  const firstRender = useRef(true);
+
+  if (pageProps.translation && firstRender.current) {
+    //load the translations for the locale
+    i18n.load(locale, pageProps.translation);
+    i18n.activate(locale);
+    // render only once
+    firstRender.current = false;
+  }
+
+  // listen for the locale changes
+  useEffect(() => {
+    if (pageProps.translation) {
+      i18n.load(locale, pageProps.translation);
+      i18n.activate(locale);
+    }
+  }, [locale, pageProps.translation]);
 
   useEffect(() => {
     fetch("/api/socket").finally(() => {
@@ -109,7 +136,7 @@ export default function App({ Component, pageProps }: AppProps) {
         setUser({ ...user, gameCode: null });
         setGame(null);
         setSnackbar({
-          text: "Lobby timed out and you have been disconnected.",
+          text: t`Lobby timed out and you have been disconnected.`,
           enabled: true,
           severity: "warning",
         });
@@ -117,7 +144,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
       socket.on(socketEvent.error_lobby_does_not_exist, () => {
         setSnackbar({
-          text: "Lobby does not exist.",
+          text: t`Lobby does not exist.`,
           enabled: true,
           severity: "error",
         });
@@ -126,7 +153,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
       socket.on(socketEvent.error_lobby_already_exists, () => {
         setSnackbar({
-          text: "Lobby code already in use. Try again by clicking New Game.",
+          text: t`Lobby code already in use. Try again by clicking New Game.`,
           enabled: true,
           severity: "error",
         });
@@ -134,7 +161,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
       socket.on(socketEvent.error_lobby_full, () => {
         setSnackbar({
-          text: "Cannot join lobby, lobby full.",
+          text: t`Cannot join lobby, lobby full.`,
           enabled: true,
           severity: "error",
         });
@@ -142,7 +169,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
       socket.on(socketEvent.error_lobby_not_full, () => {
         setSnackbar({
-          text: "Cannot start game, lobby not full.",
+          text: t`Cannot start game, lobby not full.`,
           enabled: true,
           severity: "error",
         });
@@ -158,11 +185,11 @@ export default function App({ Component, pageProps }: AppProps) {
       !user?.gameCode
     ) {
       setSnackbar({
-        text: "You aren't in a lobby.",
+        text: t`You aren't in a lobby.`,
         enabled: true,
         severity: "error",
       });
-      router.push("/");
+      router.push("/", undefined, { shallow: true });
     }
   }, []);
 
@@ -172,7 +199,13 @@ export default function App({ Component, pageProps }: AppProps) {
       router.pathname === "/visualize") &&
     !user?.gameCode
   ) {
-    return <Loading />;
+    return (
+      <I18nProvider i18n={i18n}>
+        <ThemeProvider theme={theme}>
+          <Loading />
+        </ThemeProvider>
+      </I18nProvider>
+    );
   }
 
   const handleSnackbarClose = (
@@ -187,30 +220,39 @@ export default function App({ Component, pageProps }: AppProps) {
   };
 
   return (
-    <>
-      <Head>
-        <title>Climate Change Simulation</title>
-        <meta name="description" content="TODO: Write Description" />
-        <meta name="theme-color" content="#005EB8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.svg" />
-
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="/" />
-        <meta property="og:title" content="Climate Change Game" />
-        <meta property="og:description" content="TODO: Write Description" />
-        <meta property="og:image" content="/social-image.png" />
-
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content="/" />
-        <meta property="twitter:title" content="Climate Change Game" />
-        <meta
-          property="twitter:description"
-          content="TODO: Write Description"
-        />
-        <meta property="twitter:image" content="/social-image.png" />
-      </Head>
+    <I18nProvider i18n={i18n}>
       <ThemeProvider theme={theme}>
+        <Head>
+          <title>{t`Climate Change Simulation`}</title>
+          <meta
+            name="description"
+            content={t`Can you work with others to reduce the worst impacts of climate change? Built using the IPCC CMIP6 climate projections.`}
+          />
+          <meta name="theme-color" content="#005EB8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <link rel="icon" href="/favicon.svg" />
+
+          <meta property="og:type" content="website" />
+          <meta property="og:url" content="/" />
+          <meta property="og:title" content={t`Climate Change Simulation`} />
+          <meta
+            property="og:description"
+            content={t`Can you work with others to reduce the worst impacts of climate change? Built using the IPCC CMIP6 climate projections.`}
+          />
+          <meta property="og:image" content="/social-image.png" />
+
+          <meta property="twitter:card" content="summary_large_image" />
+          <meta property="twitter:url" content="/" />
+          <meta
+            property="twitter:title"
+            content={t`Climate Change Simulation`}
+          />
+          <meta
+            property="twitter:description"
+            content={t`Can you work with others to reduce the worst impacts of climate change? Built using the IPCC CMIP6 climate projections.`}
+          />
+          <meta property="twitter:image" content="/social-image.png" />
+        </Head>
         <Component
           {...pageProps}
           user={user}
@@ -234,6 +276,6 @@ export default function App({ Component, pageProps }: AppProps) {
           </MuiAlert>
         </Snackbar>
       </ThemeProvider>
-    </>
+    </I18nProvider>
   );
 }

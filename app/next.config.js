@@ -10,11 +10,26 @@ const nextConfig = {
       },
     ];
   },
-  // TODO: Add localization
-  // i18n: {
-  //   locales: ["en-US", "fr", "nl-NL"],
-  //   defaultLocale: "en-US",
-  // },
+  i18n: {
+    locales: ["en", "fr", "pseudo"],
+    defaultLocale: "en",
+  },
+  experimental: {
+    swcPlugins: [
+      [
+        "@lingui/swc-plugin",
+        {
+          // Optional
+          // Unlike the JS version this option must be passed as object only.
+          // Docs https://lingui.dev/ref/conf#runtimeconfigmodule
+          // runtimeModules: {
+          //   i18n: ["@lingui/core", "i18n"],
+          //   trans: ["@lingui/react", "Trans"],
+          // },
+        },
+      ],
+    ],
+  },
 };
 
 module.exports = nextConfig;

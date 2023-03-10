@@ -1,4 +1,4 @@
-import { ReactNode, Children } from "react";
+import { ReactNode, Children, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
@@ -12,6 +12,16 @@ import { Region } from "@prisma/client";
 import { RegionDetails } from "../utils/details";
 import { motion } from "framer-motion";
 import LinearProgress from "@mui/material/LinearProgress";
+import DialogTitle from "@mui/material/DialogTitle";
+import Dialog from "@mui/material/Dialog";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
+import { Trans, t } from "@lingui/macro";
+import Flag from "react-world-flags";
+import Fab from "@mui/material/Fab";
 
 export interface LayoutProps {
   children: ReactNode;
@@ -21,12 +31,30 @@ export interface LayoutProps {
   progress?: number;
 }
 
+type LOCALES = "en" | "fr" | "pseudo";
+
 export default function Layout(props: LayoutProps) {
   const router = useRouter();
 
   const copy = async (text: string) => {
     await navigator.clipboard.writeText(text);
   };
+
+  const [openLocaleSelect, setOpenLocaleSelect] = useState(false);
+
+  const [locale, setLocale] = useState<LOCALES>(
+    router.locale!.split("-")[0] as LOCALES
+  );
+
+  const languages: { [key: string]: { name: string; code: string } } = {
+    en: { name: t`English`, code: "us" },
+    fr: { name: t`French`, code: "fr" },
+  };
+
+  // enable 'pseudo' locale only for development environment
+  if (process.env.NEXT_PUBLIC_NODE_ENV !== "production") {
+    languages["pseudo"] = { name: t`Pseudo`, code: "AQ" };
+  }
 
   return (
     <Box
@@ -50,7 +78,9 @@ export default function Layout(props: LayoutProps) {
           fontSize={15}
           padding={1}
         >
-          Region: <strong>{RegionDetails[props.region].name}</strong>
+          <Trans>
+            Region: <strong>{RegionDetails[props.region].name}</strong>
+          </Trans>
         </Typography>
       )}
       {props.gameCode && (
@@ -62,7 +92,9 @@ export default function Layout(props: LayoutProps) {
             display="block"
             onClick={() => copy(props.gameCode)}
           >
-            Game Code: <strong>{props.gameCode}</strong>
+            <Trans>
+              Simulation Code: <strong>{props.gameCode}</strong>
+            </Trans>
           </Typography>
           {router.pathname === "/lobby" && (
             <Typography
@@ -127,27 +159,83 @@ export default function Layout(props: LayoutProps) {
             </Grid>
           </Grid>
         </motion.div>
-        <Box width="100%">
-          <Typography
-            variant="overline"
-            textAlign="center"
-            fontSize={15}
-            display="block"
+
+        <Box
+          position="absolute"
+          sx={{
+            position: "fixed",
+            bottom: (theme) => theme.spacing(2),
+            right: (theme) => theme.spacing(2),
+          }}
+        >
+          <Fab
+            variant="extended"
+            size="medium"
+            color="primary"
+            onClick={() => {
+              setOpenLocaleSelect(true);
+            }}
           >
-            Built by{" "}
-            <Link
-              href="https://yannickgloster.com"
-              target="_blank"
-              rel="noopener noreffer"
-            >
-              Yannick Gloster
-            </Link>{" "}
-            |{" "}
-            <Link component={NextLink} href="/sources">
-              Sources
-            </Link>
-          </Typography>
+            <Flag
+              code={languages[locale as unknown as LOCALES].code}
+              height="18"
+            />
+          </Fab>
         </Box>
+        <Dialog
+          onClose={() => setOpenLocaleSelect(false)}
+          open={openLocaleSelect}
+        >
+          <DialogTitle>
+            <Trans>Select Language</Trans>
+          </DialogTitle>
+          <List sx={{ pt: 0 }}>
+            {Object.keys(languages).map((locale) => {
+              const lang = languages[locale as unknown as LOCALES];
+              return (
+                <ListItem disableGutters key={locale}>
+                  <ListItemButton
+                    onClick={() => {
+                      setLocale(locale as LOCALES);
+                      setOpenLocaleSelect(false);
+                      router.push(router.pathname, router.pathname, { locale });
+                    }}
+                  >
+                    <ListItemAvatar>
+                      <Flag code={lang.code} height="24" />
+                    </ListItemAvatar>
+                    <ListItemText primary={lang.name} />
+                  </ListItemButton>
+                </ListItem>
+              );
+            })}
+          </List>
+        </Dialog>
+        <footer>
+          <Box width="100%">
+            <Typography
+              variant="overline"
+              textAlign="center"
+              fontSize={15}
+              display="block"
+            >
+              <Trans id={"footer"}>
+                Built by{" "}
+                <Link
+                  href="https://yannickgloster.com"
+                  target="_blank"
+                  rel="noopener noreffer"
+                >
+                  Yannick Gloster
+                </Link>{" "}
+                |{" "}
+                <Link component={NextLink} href="/sources">
+                  Sources
+                </Link>
+              </Trans>
+            </Typography>
+          </Box>
+        </footer>
       </Stack>
     </Box>
   );

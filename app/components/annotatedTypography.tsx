@@ -8,18 +8,23 @@ import Grow from "@mui/material/Grow";
 export interface annotatedTypographyProps {
   text: string;
   tooltipPlacement?: TooltipProps["placement"];
+  dict?: { [key: string]: string }[];
 }
 
 export default function AnnotatedTypography(props: annotatedTypographyProps) {
   return (
     <Highlighter
-      searchWords={Object.keys(DescriptiveTooltips)}
+      searchWords={
+        props.dict ? Object.keys(props.dict) : Object.keys(DescriptiveTooltips)
+      }
       autoEscape={true}
       caseSensitive={false}
       textToHighlight={props.text}
       highlightTag={({ children, _highlightIndex }) => (
         <Tooltip
-          title={DescriptiveTooltips[children]}
+          title={
+            props.dict ? props.dict[children] : DescriptiveTooltips[children]
+          }
           placement={props.tooltipPlacement ? props.tooltipPlacement : "bottom"}
           TransitionComponent={Grow}
           arrow

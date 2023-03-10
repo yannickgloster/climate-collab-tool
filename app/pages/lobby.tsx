@@ -1,4 +1,3 @@
-import { useRouter } from "next/router";
 import { Fragment } from "react";
 import Head from "next/head";
 
@@ -17,6 +16,23 @@ import { userState, gameState, GameStatus } from "../utils/game";
 import { DescriptiveTooltips, RegionDetails } from "../utils/details";
 import { Region } from "@prisma/client";
 
+import { Trans, t, plural } from "@lingui/macro";
+import { loadTranslation } from "../utils/translation";
+import { GetStaticProps } from "next/types";
+
+export const getStaticProps: GetStaticProps = async (ctx) => {
+  const translation = await loadTranslation(
+    ctx.locale!,
+    process.env.NODE_ENV === "production"
+  );
+
+  return {
+    props: {
+      translation,
+    },
+  };
+};
+
 export default function Join({
   user,
   setUser,
@@ -34,7 +50,7 @@ export default function Join({
       socket.emit(socketEvent.user_request_start_game, user.gameCode);
     } else {
       setSnackbar({
-        text: "Cannot start game, lobby not full.",
+        text: t`Cannot start game, lobby not full.`,
         enabled: true,
         severity: "error",
       });
@@ -64,19 +80,25 @@ export default function Join({
       <Head>
         <title>
           {game.availableRegions.length > 0
-            ? `${game.availableRegions.length} Region${
-                game.availableRegions.length > 1 ? "s" : ""
-              } Remaining`
-            : `Ready to start!`}
-          {!game ? "Select Region" : ""}
+            ? plural(game.availableRegions.length, {
+                one: "# Region Remaining",
+                other: "# Regions Remaining",
+              })
+            : t`Ready to start!`}
+          {!game ? t`Region Lobby` : ""}
         </title>
       </Head>
       <Layout gameCode={user.gameCode} region={user.region}>
         <Typography variant="h3" textAlign="center" fontWeight={800}>
-          Select Region
+          <Trans id="region.title">Region Lobby</Trans>
         </Typography>
         <Typography variant="subtitle1" textAlign="center">
-          This is the description.
+          <Trans id="region.description">
+            You've been automatically assigned a region. Once the simulation
+            starts, each player will have to make policy decisions for their
+            region which will impact the global state of the world. Be careful
+            as to not spend all your money!
+          </Trans>
         </Typography>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           {Object.keys(Region).map((region) => {
@@ -95,6 +117,7 @@ export default function Join({
             return (
               <Fragment key={region}>
                 <Grid item xs={6}>
+                  {/* // TODO: Replace with my auto tooltip function */}
                   <Tooltip title={regionToolTip} placement="bottom-end">
                     <Typography
                       variant="h6"
@@ -113,9 +136,11 @@ export default function Join({
                   <Chip
                     label={`${
                       selfRegion
-                        ? "Your"
-                        : `${takenRegion ? "Taken" : "Unassigned"}`
-                    } Region`}
+                        ? t`Your Region`
+                        : `${
+                            takenRegion ? t`Taken Region` : t`Unassigned Region`
+                          }`
+                    }`}
                     color={selfRegion ? "success" : "primary"}
                     disabled={takenRegion}
                   />
@@ -130,10 +155,10 @@ export default function Join({
           onClick={startGame}
           disabled={game && game?.availableRegions.length > 0}
         >
-          Start Simulation
+          <Trans id="region.button.start">Start Simulation</Trans>
         </Button>
         <Button variant="contained" size="large" onClick={leaveRoom}>
-          Leave Simulation
+          <Trans id="region.button.leave">Leave Simulation</Trans>
         </Button>
       </Layout>
     </>
