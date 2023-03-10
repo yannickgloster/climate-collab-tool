@@ -22,7 +22,7 @@ import { SSP } from "@prisma/client";
 import { ReactNode } from "react";
 
 import { LineProps } from "./lineChart";
-import { SSPDetails } from "../utils/details";
+import { RegionDetails, SSPDetails } from "../utils/details";
 
 import LineChart from "./lineChart";
 import IrelandUK from "../utils/ireland_uk.json";
@@ -46,7 +46,7 @@ export interface VisualizeProps {
 }
 
 // TODO: Refactor this mess
-enum VisualizeState {
+export enum VisualizeState {
   SSP,
   Context,
   Map,
@@ -57,7 +57,11 @@ enum VisualizeState {
 export interface stepContentProps extends VisualizeProps {
   selectedSSP: SSP;
   handleSSPChange: (event: SelectChangeEvent) => void;
+  selectedRegion: Region;
+  handleRegionChange: (event: SelectChangeEvent) => void;
   selectedData: VisualizeProps["data"];
+  disableTitle?: boolean;
+  disableSubtitle?: boolean;
 }
 
 type steps = {
@@ -67,7 +71,7 @@ type steps = {
   };
 };
 
-const steps: steps = {
+export const steps: steps = {
   // TODO: Localize this to be based on the region of the user
   [VisualizeState.SSP]: {
     label: t({
@@ -77,17 +81,23 @@ const steps: steps = {
     content: (props) => {
       return (
         <>
-          <Typography variant="h3" textAlign="center" fontWeight={800}>
-            <Trans id="visualize.ssp.title">{SSPDetails[props.ssp].name}</Trans>
-          </Typography>
-          <Typography variant="body1" textAlign="center">
-            <Trans id="visualize.ssp.description">
-              The decisions that each region made were used to calculate what
-              the world may be based off of the 8 world pathways determined by
-              the IPCC.
-            </Trans>
-          </Typography>
-          <br />
+          {!props?.disableTitle && (
+            <Typography variant="h3" textAlign="center" fontWeight={800}>
+              <Trans id="visualize.ssp.title">
+                {SSPDetails[props.ssp].name}
+              </Trans>
+            </Typography>
+          )}
+          {!props?.disableSubtitle && (
+            <Typography variant="subtitle2" textAlign="center">
+              <Trans id="visualize.ssp.description">
+                The decisions that each region made were used to calculate what
+                the world may be based off of the 8 world pathways determined by
+                the IPCC.
+              </Trans>
+            </Typography>
+          )}
+          {(!props?.disableTitle || !props?.disableSubtitle) && <br />}
           <Typography variant="body1" textAlign="center">
             {SSPDetails[props.ssp].shortDescription}
           </Typography>
@@ -107,15 +117,19 @@ const steps: steps = {
     content: (props) => {
       return (
         <>
-          <Typography variant="h3" textAlign="center" fontWeight={800}>
-            <Trans id="visualize.contextualize.title">Ireland's Future</Trans>
-          </Typography>
-          <Typography variant="body1" textAlign="center">
-            <Trans id="visualize.contextualize.description">
-              Based off all the policy decisions made by all the players in the
-              world, this is what Ireland's future might look like.
-            </Trans>
-          </Typography>
+          {!props?.disableTitle && (
+            <Typography variant="h3" textAlign="center" fontWeight={800}>
+              <Trans id="visualize.contextualize.title">Ireland's Future</Trans>
+            </Typography>
+          )}
+          {!props?.disableSubtitle && (
+            <Typography variant="subtitle2" textAlign="center">
+              <Trans id="visualize.contextualize.description">
+                Based off all the policy decisions made by all the players in
+                the world, this is what Ireland's future might look like.
+              </Trans>
+            </Typography>
+          )}
           <ComposableMap
             projectionConfig={{
               rotate: [-10, 0, 0],
@@ -191,9 +205,26 @@ const steps: steps = {
     content: (props) => {
       // TODO: Make Responsive
       return (
-        <Box margin="0 auto" width="700px">
-          <Map data={props.data.mapData} />
-        </Box>
+        <>
+          {!props?.disableTitle && (
+            <Typography variant="h3" textAlign="center" fontWeight={800}>
+              <Trans id="visualize.map.title">World Map</Trans>
+            </Typography>
+          )}
+          {!props?.disableSubtitle && (
+            <Typography variant="subtitle2" textAlign="center">
+              <Trans id="visualize.map.description">
+                Hover over each country to see additional information. <br />{" "}
+                Zoom in with your scroll to find smaller countries. <br />
+                Click and drag to move the map around.
+              </Trans>
+            </Typography>
+          )}
+          {(!props?.disableTitle || !props?.disableSubtitle) && <br />}
+          <Box margin="0 auto" width="700px">
+            <Map data={props.data.mapData} />
+          </Box>
+        </>
       );
     },
   },
@@ -203,7 +234,28 @@ const steps: steps = {
       message: "How did we get here?",
     }),
     content: (props) => {
-      return <LineChart data={props.data.line} />;
+      return (
+        <>
+          {!props?.disableTitle && (
+            <Typography variant="h3" textAlign="center" fontWeight={800}>
+              <Trans id="visualize.line.title">
+                Predicted Max Temperature in Celcius
+              </Trans>
+            </Typography>
+          )}
+          {!props?.disableSubtitle && (
+            <Typography variant="subtitle2" textAlign="center">
+              <Trans id="visualize.line.description">
+                Based on a large amount of data modeling, this is the predicted
+                maximum yearly temperature for your region. On top of the data
+                points, a linear line of best fit has been included to show what
+                trends are occurring.
+              </Trans>
+            </Typography>
+          )}
+          <LineChart data={props.data.line} />
+        </>
+      );
     },
   },
   [VisualizeState.Other]: {
@@ -219,31 +271,38 @@ const steps: steps = {
           justifyContent="center"
           alignItems="center"
         >
-          <Typography variant="h3" textAlign="center" fontWeight={800}>
-            <Trans id="visualize.other.title">
-              What other Scenarios could occur?
-            </Trans>
-          </Typography>
-          <Typography variant="body1" textAlign="center">
-            <Trans id="visualize.other.description">
-              This wasn't the only option. Depending on how regions and
-              countries collaborate to tackle climate change, there are other
-              pathways that could deteriorate or improve our global outlook. You
-              can select the different scenarios from the dropdown below.
-            </Trans>
-          </Typography>
+          {!props?.disableTitle && (
+            <Typography variant="h3" textAlign="center" fontWeight={800}>
+              <Trans id="visualize.other.title">
+                What other Scenarios could occur?
+              </Trans>
+            </Typography>
+          )}
+          {!props?.disableSubtitle && (
+            <Typography variant="body1" textAlign="center">
+              <Trans id="visualize.other.description">
+                This wasn't the only option. Depending on how regions and
+                countries collaborate to tackle climate change, there are other
+                pathways that could deteriorate or improve our global outlook.
+                You can select the different scenarios from the dropdown below.
+              </Trans>
+            </Typography>
+          )}
           <FormControl>
             <InputLabel id="ssp-select">
               <Trans id="visualize.other.dropdown.scenarios.label">
-                Scenarios
+                Scenario
               </Trans>
             </InputLabel>
             <Select
               labelId="ssp-select"
-              id="ssp-select"
+              id="ssp-select-id"
               defaultValue={props.ssp}
               value={props.selectedSSP}
-              label="Socioeconomic Pathway"
+              label={t({
+                id: "visualize.other.dropdown.scenarios.label",
+                message: "Scenario",
+              })}
               onChange={props.handleSSPChange}
             >
               {Object.keys(SSP).map((ssp, i) => {
@@ -258,7 +317,34 @@ const steps: steps = {
                 );
               })}
             </Select>
-            {/* TODO: Add selection for region */}
+          </FormControl>
+          <FormControl>
+            <InputLabel id="region-select">
+              <Trans id="visualize.other.dropdown.regions.label">Region</Trans>
+            </InputLabel>
+            <Select
+              labelId="region-select"
+              id="region-select-id"
+              defaultValue={props.region}
+              value={props.selectedRegion}
+              label={t({
+                id: "visualize.other.dropdown.regions.label",
+                message: "Region",
+              })}
+              onChange={props.handleRegionChange}
+            >
+              {Object.keys(Region).map((region, i) => {
+                return (
+                  <MenuItem
+                    key={region}
+                    value={region}
+                    divider={i != Object.keys(Region).length - 1}
+                  >
+                    {RegionDetails[region].name}
+                  </MenuItem>
+                );
+              })}
+            </Select>
           </FormControl>
           <Box>
             {steps[VisualizeState.Line].content({
@@ -274,9 +360,10 @@ const steps: steps = {
           </Box>
           <Box>
             <Typography variant="body1" textAlign="center">
-              {SSPDetails[props.selectedSSP].description}
+              {SSPDetails[props.selectedSSP].shortDescription}
             </Typography>
           </Box>
+          {/* TODO: Enable after testing with TY students */}
           {/* {SSPDetails[props.selectedSSP]?.atlasLink && (
             <Button
               variant="contained"
@@ -297,6 +384,8 @@ const steps: steps = {
 export default function Visualize(props: VisualizeProps) {
   const [visState, setVisState] = useState<VisualizeState>(VisualizeState.SSP);
   const [selectedSSP, setSelectedSSP] = useState<SSP>(props.ssp);
+  const [selectedRegion, setSelectedRegion] = useState<Region>(props.region);
+
   const [selectedData, setSelectedData] = useState<VisualizeProps["data"]>(
     props.data
   );
@@ -309,16 +398,25 @@ export default function Visualize(props: VisualizeProps) {
     setVisState((prevVisState) => prevVisState - 1);
   };
 
-  const handleSSPChange = (event: SelectChangeEvent) => {
-    const ssp = event.target.value as SSP;
-    fetch(`/api/data?ssp=${ssp}&region=${props.region}`)
+  const fetchData = (ssp: SSP, region: Region) => {
+    fetch(`/api/data?ssp=${ssp}&region=${region}`)
       .then((res) => res.json())
       .then((data) => {
         setSelectedSSP(ssp);
+        setSelectedRegion(region);
         setSelectedData(data);
       })
       .catch((_error) => {});
-    console.log("here");
+  };
+
+  const handleRegionChange = (event: SelectChangeEvent) => {
+    const region = event.target.value as Region;
+    fetchData(selectedSSP, region);
+  };
+
+  const handleSSPChange = (event: SelectChangeEvent) => {
+    const ssp = event.target.value as SSP;
+    fetchData(ssp, selectedRegion);
   };
 
   return (
@@ -359,6 +457,8 @@ export default function Visualize(props: VisualizeProps) {
                 ...props,
                 selectedSSP,
                 handleSSPChange,
+                selectedRegion,
+                handleRegionChange,
                 selectedData,
               })}
             </motion.div>

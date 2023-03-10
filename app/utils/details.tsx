@@ -540,4 +540,13 @@ export const DescriptiveTooltips = {
   [Region.Island]: `Alliance of Small Island States (AOSIS) is an intergovernmental organization of 39 low-lying coastal and small island countries.`,
   IPCC: `The Intergovernmental Panel on Climate Change (IPCC) is an intergovernmental body of the United Nations who's job is to advance scientific knowledge about climate change caused by human activities.`,
   "protected forest": `A forest with some amount of legal or constitutional protection, or where the habitat and resident species are legally accorded protection from further depletion.`,
+  "nitrous oxide": `A type of pollutant which hurts the enviroment.`,
+  biofuels:
+    "Fuel produced quickly from plants or biowaste. Considere to be a renewable energy source.",
+  "plantation forests":
+    "Forsts planted to grow large amounts of wood. Also known as tree farms.",
+  hydrogen:
+    "Hydrogen can be used as a fuel that emits zero emissions. When burned as fuel, water is produced as a result.",
+  biogas:
+    "A mixture of gases such as methane, carbon dioxide, and others which create a renewable energy soruce.",
 };

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "build": "lingui compile && prisma generate && next build",
     "start": "next start",
     "digital-ocean": "next start -H 0.0.0.0 -p ${PORT:-8080}",
     "cypress": "cypress open",

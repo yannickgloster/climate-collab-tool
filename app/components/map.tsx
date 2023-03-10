@@ -19,18 +19,19 @@ import { Trans, t, plural } from "@lingui/macro";
 
 // https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json
 import world from "../utils/world_countries.json";
+import { round } from "../utils/math";
 
 export interface MapProps {
   data: VisualizeProps["data"]["mapData"];
 }
 
 export default function Map({ data }: MapProps) {
-  const domain = [-2, 60];
+  const domain = [8, 60];
 
   const colorScale = scaleLinear()
     .domain(domain)
     // @ts-ignore: You can do colors actually
-    .range(["#80ff00", "#ff5233"]);
+    .range(["#ffff00", "#be0000"]);
 
   return (
     <Fragment>
@@ -71,8 +72,9 @@ export default function Map({ data }: MapProps) {
                         <Typography variant="inherit">
                           {geo.properties.name}
                         </Typography>
-                        <Typography variant="inherit">{tasmax} °C</Typography>
-                        <Typography variant="inherit">{geo.id}</Typography>
+                        <Typography variant="inherit">
+                          ~ {round(tasmax, 1)} °C
+                        </Typography>
                       </Fragment>
                     }
                     followCursor

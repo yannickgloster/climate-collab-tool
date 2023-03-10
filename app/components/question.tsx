@@ -16,26 +16,28 @@ export default function Question(props: questionProps) {
       </Typography>
       {props.question.answers.map((answer, i) => {
         return (
-          <Button
-            fullWidth
-            key={i}
-            variant="outlined"
-            size="large"
-            sx={{
-              mt: 2,
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-            onClick={() => props.answerCallback(answer)}
-          >
-            <Typography variant="inherit">
-              <AnnotatedTypography text={answer.text} />
-            </Typography>
-            <Typography variant="inherit">
-              <Trans>Cost</Trans>: {answer.cost}
-            </Typography>
-          </Button>
+          <>
+            <Button
+              fullWidth
+              key={i}
+              variant="outlined"
+              size="large"
+              sx={{
+                mt: 2,
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+              onClick={() => props.answerCallback(answer)}
+            >
+              <Typography variant="inherit">
+                <AnnotatedTypography text={answer.text} />
+              </Typography>
+              <Typography variant="inherit">
+                <Trans>Cost</Trans>: {answer.cost}
+              </Typography>
+            </Button>
+          </>
         );
       })}
     </>

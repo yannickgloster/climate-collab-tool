@@ -41,9 +41,9 @@ msgstr "Alliance of Small Island States (AOSIS) is an intergovernmental organiza
 msgid "Answer Questions"
 msgstr "Answer Questions"
 
-#: components/lineChart.tsx:99
-msgid "Best Fit Line"
-msgstr "Best Fit Line"
+#: components/lineChart.tsx:93
+#~ msgid "Best Fit Line"
+#~ msgstr "Best Fit Line"
 
 #: utils/details.tsx:474
 #: utils/details.tsx:497
@@ -84,7 +84,7 @@ msgstr "China"
 msgid "Climate Change Simulation"
 msgstr "Climate Change Simulation"
 
-#: components/question.tsx:36
+#: components/question.tsx:37
 msgid "Cost"
 msgstr "Cost"
 
@@ -171,7 +171,7 @@ msgstr "Lobby does not exist."
 msgid "Lobby timed out and you have been disconnected."
 msgstr "Lobby timed out and you have been disconnected."
 
-#: components/lineChart.tsx:105
+#: components/lineChart.tsx:99
 msgid "Max Temperature (°C)"
 msgstr "Max Temperature (°C)"
 
@@ -187,7 +187,7 @@ msgstr "Middle of the road. Society follows a path with very change from history
 msgid "Page Not Found"
 msgstr "Page Not Found"
 
-#: components/lineChart.tsx:40
+#: components/lineChart.tsx:44
 msgid "Predicted Max Temperature in {label}"
 msgstr "Predicted Max Temperature in {label}"
 
@@ -316,6 +316,10 @@ msgstr "Scenario 7"
 msgid "Scenario 8"
 msgstr "Scenario 8"
 
+#: pages/teaching.tsx:63
+msgid "Scenarios"
+msgstr "Scenarios"
+
 #: components/layout.tsx:190
 msgid "Select Language"
 msgstr "Select Language"
@@ -349,11 +353,11 @@ msgstr "Taking the Green Road. A sustainable society leads to very strongly decl
 msgid "Taking the Green Road. Our best-case scenario. A sustainable society leads to strongly declining emissions with ~2.0 °C average temperature increase."
 msgstr "Taking the Green Road. Our best-case scenario. A sustainable society leads to strongly declining emissions with ~2.0 °C average temperature increase."
 
-#: components/map.tsx:40
+#: components/map.tsx:41
 msgid "Temperature (°C)"
 msgstr "Temperature (°C)"
 
-#: components/visualize.tsx:171
+#: components/visualize.tsx:185
 msgid "Temperature in Ireland"
 msgstr "Temperature in Ireland"
 
@@ -390,6 +394,10 @@ msgstr "The world shifts gradually, but pervasively, toward a more sustainable p
 #: utils/details.tsx:423
 msgid "This world places increasing faith in competitive markets, innovation and participatory societies to produce rapid technological progress and development of human capital as the path to sustainable development. Global markets are increasingly integrated. There are also strong investments in health, education, and institutions to enhance human and social capital. At the same time, the push for economic and social development is coupled with the exploitation of abundant fossil fuel resources and the adoption of resource and energy intensive lifestyles around the world. All these factors lead to rapid growth of the global economy, while global population peaks and declines in the 21st century. Local environmental problems like air pollution are successfully managed. There is faith in the ability to effectively manage social and ecological systems, including by geo-engineering if necessary."
 msgstr "This world places increasing faith in competitive markets, innovation and participatory societies to produce rapid technological progress and development of human capital as the path to sustainable development. Global markets are increasingly integrated. There are also strong investments in health, education, and institutions to enhance human and social capital. At the same time, the push for economic and social development is coupled with the exploitation of abundant fossil fuel resources and the adoption of resource and energy intensive lifestyles around the world. All these factors lead to rapid growth of the global economy, while global population peaks and declines in the 21st century. Local environmental problems like air pollution are successfully managed. There is faith in the ability to effectively manage social and ecological systems, including by geo-engineering if necessary."
+
+#: components/lineChart.tsx:93
+msgid "Trend Line"
+msgstr "Trend Line"
 
 #: components/loadingError.tsx:20
 msgid "Try load it again."
@@ -475,59 +483,73 @@ msgstr "Region Lobby"
 msgid "title"
 msgstr "Climate Change Simulation"
 
-#: components/visualize.tsx:114
+#: components/visualize.tsx:127
 msgid "visualize.contextualize.description"
 msgstr "Based off all the policy decisions made by all the players in the world, this is what Ireland's future might look like."
 
-#: components/visualize.tsx:103
+#: components/visualize.tsx:113
 msgid "visualize.contextualize.label"
 msgstr "Ireland's Future"
 
-#: components/visualize.tsx:111
+#: components/visualize.tsx:122
 msgid "visualize.contextualize.title"
 msgstr "Ireland's Future"
 
-#: components/lineChart.tsx:74
+#: components/visualize.tsx:248
 msgid "visualize.line.description"
 msgstr "Based on a large amount of data modeling, this is the predicted maximum yearly temperature for your region. On top of the data points, a linear line of best fit has been included to show what trends are occurring."
 
-#: components/visualize.tsx:201
+#: components/visualize.tsx:232
 msgid "visualize.line.label"
 msgstr "How did we get here?"
 
-#: components/lineChart.tsx:69
+#: components/visualize.tsx:241
 msgid "visualize.line.title"
 msgstr "Predicted Max Temperature in Celcius"
 
-#: components/visualize.tsx:187
+#: components/visualize.tsx:216
+msgid "visualize.map.description"
+msgstr "Hover over each country to see additional information. <0/> Zoom in with your scroll to find smaller countries. <1/>Click and drag to move the map around."
+
+#: components/visualize.tsx:201
 msgid "visualize.map.label"
 msgstr "World Map"
 
-#: components/visualize.tsx:228
+#: components/visualize.tsx:211
+msgid "visualize.map.title"
+msgstr "World Map"
+
+#: components/visualize.tsx:283
 msgid "visualize.other.description"
 msgstr "This wasn't the only option. Depending on how regions and countries collaborate to tackle climate change, there are other pathways that could deteriorate or improve our global outlook. You can select the different scenarios from the dropdown below."
 
-#: components/visualize.tsx:237
-msgid "visualize.other.dropdown.scenarios.label"
-msgstr "Scenarios"
+#: components/visualize.tsx:323
+#: components/visualize.tsx:330
+msgid "visualize.other.dropdown.regions.label"
+msgstr "Region"
 
-#: components/visualize.tsx:210
+#: components/visualize.tsx:293
+#: components/visualize.tsx:302
+msgid "visualize.other.dropdown.scenarios.label"
+msgstr "Scenario"
+
+#: components/visualize.tsx:262
 msgid "visualize.other.label"
 msgstr "Other Scenarios?"
 
-#: components/visualize.tsx:223
+#: components/visualize.tsx:276
 msgid "visualize.other.title"
 msgstr "What other Scenarios could occur?"
 
-#: components/visualize.tsx:84
+#: components/visualize.tsx:93
 msgid "visualize.ssp.description"
 msgstr "The decisions that each region made were used to calculate what the world may be based off of the 8 world pathways determined by the IPCC."
 
-#: components/visualize.tsx:73
+#: components/visualize.tsx:77
 msgid "visualize.ssp.label"
 msgstr "World Pathway"
 
-#: components/visualize.tsx:81
+#: components/visualize.tsx:86
 msgid "visualize.ssp.title"
 msgstr "{0}"
 

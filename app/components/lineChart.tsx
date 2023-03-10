@@ -16,13 +16,14 @@ import Box, { BoxProps } from "@mui/material/Box";
 
 import { useTheme } from "@mui/material/styles";
 import { Trans, t, plural } from "@lingui/macro";
+import { round } from "../utils/math";
 
 const TooltipBox = styled(Box)<BoxProps>(({ theme }) => ({
   backgroundColor: alpha(theme.palette.grey[700], 0.92),
   borderRadius: theme.shape.borderRadius,
   color: theme.palette.common.white,
   padding: "4px 8px",
-  fontFamily: theme.typography.pxToRem(11),
+  fontFamily: theme.typography.pxToRem(12),
   maxWidth: 300,
   margin: 2,
   wordWrap: "break-word",
@@ -37,8 +38,14 @@ const CustomTooltip = ({
   if (active && payload && payload.length) {
     return (
       <TooltipBox>
-        <Typography variant="body2">{t`Predicted Max Temperature in ${label}`}</Typography>
-        <Typography variant="body2">{`${payload[1].value}°C`}</Typography>
+        <Typography
+          variant="body2"
+          sx={{ fontSize: (theme) => theme.typography.pxToRem(12) }}
+        >{t`Predicted Max Temperature in ${label}`}</Typography>
+        <Typography
+          variant="body2"
+          sx={{ fontSize: (theme) => theme.typography.pxToRem(12) }}
+        >{`~ ${round(payload[1].value, 1)}°C`}</Typography>
       </TooltipBox>
     );
   }
@@ -60,24 +67,11 @@ export default function LineChart(props: LineProps) {
   const temps = props.data.map<Number>((point) => point.temp);
 
   // TODO: Replace with d3 function
-  const minDomainTemp = 35; //Math.floor(Math.min.apply(Math, temps));
+  const minDomainTemp = 34.5; //Math.floor(Math.min.apply(Math, temps));
   const maxDomainTemp = 60; // Math.ceil(Math.max.apply(Math, temps));
 
   return (
     <>
-      <Typography variant="h6" textAlign="center">
-        <Trans id="visualize.line.title">
-          Predicted Max Temperature in Celcius
-        </Trans>
-      </Typography>
-      <Typography variant="body1" textAlign="center">
-        <Trans id="visualize.line.description">
-          Based on a large amount of data modeling, this is the predicted
-          maximum yearly temperature for your region. On top of the data points,
-          a linear line of best fit has been included to show what trends are
-          occurring.
-        </Trans>
-      </Typography>
       <div onWheel={(e) => console.log(e)}>
         <ResponsiveContainer width={theme.breakpoints.values.md} height={300}>
           <RechartsLineChart
@@ -96,7 +90,7 @@ export default function LineChart(props: LineProps) {
               stroke={theme.palette.secondary.main}
               dot={false}
               activeDot={false}
-              name={t`Best Fit Line`}
+              name={t`Trend Line`}
             />
             <Line
               type="monotone"
