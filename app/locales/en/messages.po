@@ -461,7 +461,7 @@ msgstr "Energy Production"
 
 #: utils/details.tsx:531
 msgid "question.type.landUseChange"
-msgstr "Changing how we use our Land"
+msgstr "Changing how we use our land"
 
 #: pages/lobby.tsx:161
 msgid "region.button.leave"
