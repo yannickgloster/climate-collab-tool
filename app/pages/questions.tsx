@@ -36,7 +36,7 @@ export default function Questions({
     )[0];
     const newUser = {
       ...user,
-      // points: user.points - answer.cost + extraPoints,
+      points: user.points - answer.cost + extraPoints,
       emission: user.emission - qFactor * regionWeight.weight * answer.weight,
     };
 

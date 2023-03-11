@@ -41,9 +41,7 @@ export default function VisualizePage({
   return (
     <>
       <Head>
-        <title>
-          <Trans>View the World</Trans>
-        </title>
+        <title>{t`View the World`}</title>
       </Head>
       <Layout gameCode={user.gameCode} region={user.region}>
         {game.status == GameStatus.questions && (
