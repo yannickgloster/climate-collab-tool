@@ -91,23 +91,35 @@ export default function LineChart(props: LineProps) {
               dot={false}
               activeDot={false}
               name={t`Trend Line`}
-              label={{ fontFamily: "Roboto" }}
             />
             <Line
               type="monotone"
               dataKey="temp"
               stroke={theme.palette.primary.main}
               name={t`Max Temperature (°C)`}
-              label={{ fontFamily: "Roboto" }}
             />
             <CartesianGrid stroke="#ccc" />
-            <XAxis dataKey="date" />
+            <XAxis
+              dataKey="date"
+              fontFamily="Roboto"
+              fontSize={theme.typography.pxToRem(14)}
+            />
             <Tooltip
               wrapperStyle={{ outline: "none" }}
               content={<CustomTooltip />}
             />
-            <Legend iconType="plainline" />
-            <YAxis domain={[minDomainTemp, maxDomainTemp]} unit="°C" />
+            <Legend
+              iconType="plainline"
+              formatter={(value, entry, index) => (
+                <span style={{ fontFamily: "Roboto" }}>{value}</span>
+              )}
+            />
+            <YAxis
+              domain={[minDomainTemp, maxDomainTemp]}
+              unit="°C"
+              fontFamily="Roboto"
+              fontSize={theme.typography.pxToRem(14)}
+            />
             <Brush dataKey="date" height={20} />
           </RechartsLineChart>
         </ResponsiveContainer>
