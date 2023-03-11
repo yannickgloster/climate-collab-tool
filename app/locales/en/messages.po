@@ -37,7 +37,7 @@ msgstr "Alliance of Small Island States"
 msgid "Alliance of Small Island States (AOSIS) is an intergovernmental organization of 39 low-lying coastal and small island countries."
 msgstr "Alliance of Small Island States (AOSIS) is an intergovernmental organization of 39 low-lying coastal and small island countries."
 
-#: pages/questions.tsx:97
+#: pages/questions.tsx:99
 msgid "Answer Questions"
 msgstr "Answer Questions"
 
@@ -84,7 +84,7 @@ msgstr "China"
 msgid "Climate Change Simulation"
 msgstr "Climate Change Simulation"
 
-#: components/question.tsx:37
+#: components/question.tsx:36
 msgid "Cost"
 msgstr "Cost"
 
@@ -92,7 +92,7 @@ msgstr "Cost"
 msgid "Could not load data."
 msgstr "Could not load data."
 
-#: pages/questions.tsx:83
+#: pages/questions.tsx:85
 msgid "Could not load questions."
 msgstr "Could not load questions."
 
@@ -100,7 +100,11 @@ msgstr "Could not load questions."
 msgid "Data could not be loaded"
 msgstr "Data could not be loaded"
 
-#: components/layout.tsx:50
+#: components/map.tsx:78
+msgid "Data precision too low"
+msgstr "Data precision too low"
+
+#: components/layout.tsx:52
 msgid "English"
 msgstr "English"
 
@@ -112,7 +116,7 @@ msgstr "European Union"
 #~ msgid "European Unions"
 #~ msgstr "European Unions"
 
-#: pages/visualize.tsx:51
+#: pages/visualize.tsx:49
 msgid "Everyone hasn't finished their questions."
 msgstr "Everyone hasn't finished their questions."
 
@@ -129,7 +133,7 @@ msgstr "Fossil fuelled development - Taking the Highway. The world places faith 
 msgid "Fossil fuelled development - Taking the Highway. The world places faith in competitive markets that succeed in tackling the climate change crisis which cause only a ~2.4 °C increase in average temperature."
 msgstr "Fossil fuelled development - Taking the Highway. The world places faith in competitive markets that succeed in tackling the climate change crisis which cause only a ~2.4 °C increase in average temperature."
 
-#: components/layout.tsx:51
+#: components/layout.tsx:53
 msgid "French"
 msgstr "French"
 
@@ -191,7 +195,7 @@ msgstr "Page Not Found"
 msgid "Predicted Max Temperature in {label}"
 msgstr "Predicted Max Temperature in {label}"
 
-#: components/layout.tsx:56
+#: components/layout.tsx:58
 msgid "Pseudo"
 msgstr "Pseudo"
 
@@ -203,7 +207,7 @@ msgstr "Ready to start!"
 msgid "Region Lobby"
 msgstr "Region Lobby"
 
-#: components/layout.tsx:81
+#: components/layout.tsx:83
 msgid "Region: <0>{0}</0>"
 msgstr "Region: <0>{0}</0>"
 
@@ -320,11 +324,11 @@ msgstr "Scenario 8"
 msgid "Scenarios"
 msgstr "Scenarios"
 
-#: components/layout.tsx:190
+#: components/layout.tsx:200
 msgid "Select Language"
 msgstr "Select Language"
 
-#: components/layout.tsx:95
+#: components/layout.tsx:97
 msgid "Simulation Code: <0>{0}</0>"
 msgstr "Simulation Code: <0>{0}</0>"
 
@@ -361,7 +365,7 @@ msgstr "Temperature (°C)"
 msgid "Temperature in Ireland"
 msgstr "Temperature in Ireland"
 
-#: pages/questions.tsx:123
+#: pages/questions.tsx:126
 msgid "Thank you for answering all the questions!"
 msgstr "Thank you for answering all the questions!"
 
@@ -415,7 +419,7 @@ msgstr "United States of America"
 #~ msgid "View Interactive Atlas"
 #~ msgstr "View Interactive Atlas"
 
-#: pages/visualize.tsx:45
+#: pages/visualize.tsx:44
 msgid "View the World"
 msgstr "View the World"
 
@@ -423,7 +427,7 @@ msgstr "View the World"
 msgid "You aren't in a lobby."
 msgstr "You aren't in a lobby."
 
-#: pages/questions.tsx:65
+#: pages/questions.tsx:67
 msgid "You cannot afford this option"
 msgstr "You cannot afford this option"
 
@@ -443,7 +447,7 @@ msgstr "Join Simulation"
 msgid "button.newSimulation"
 msgstr "New Simulation"
 
-#: components/layout.tsx:222
+#: components/layout.tsx:232
 msgid "footer"
 msgstr "Built by <0>Yannick Gloster</0> | <1>Sources</1>"
 
@@ -451,9 +455,85 @@ msgstr "Built by <0>Yannick Gloster</0> | <1>Sources</1>"
 msgid "image.credit.1"
 msgstr "Photo by <0>Katerina Kerdi</0> on <1>Unsplash</1>"
 
+#: pages/sources.tsx:147
+msgid "image.credit.10"
+msgstr "Photo by <0>Qang Jaka</0> on <1>Unsplash</1>"
+
+#: pages/sources.tsx:159
+msgid "image.credit.11"
+msgstr "Photo by <0>Luca Bravo</0> on <1>Unsplash</1>"
+
+#: pages/sources.tsx:171
+msgid "image.credit.12"
+msgstr "Photo by <0>Ant Rozetsky</0> on <1>Unsplash</1>"
+
+#: pages/sources.tsx:183
+msgid "image.credit.13"
+msgstr "Photo by <0>Joël de Vriend</0> on <1>Unsplash</1>"
+
+#: pages/sources.tsx:195
+msgid "image.credit.14"
+msgstr "Photo by <0>Breno Assis</0> on <1>Unsplash</1>"
+
+#: pages/sources.tsx:207
+msgid "image.credit.15"
+msgstr "Photo by <0>Rob Menting</0> on <1>Unsplash</1>"
+
+#: pages/sources.tsx:219
+msgid "image.credit.16"
+msgstr "Photo by <0>American Public Power Association</0> on <1>Unsplash</1>"
+
+#: pages/sources.tsx:231
+msgid "image.credit.17"
+msgstr "Photo by <0>Frank Eiffert</0> on <1>Unsplash</1>"
+
+#: pages/sources.tsx:243
+msgid "image.credit.18"
+msgstr "Photo by <0>Luke Besley</0> on <1>Unsplash</1>"
+
+#: pages/sources.tsx:255
+msgid "image.credit.19"
+msgstr "Photo by <0>VOO QQQ</0> on <1>Unsplash</1>"
+
 #: pages/sources.tsx:51
 msgid "image.credit.2"
 msgstr "Photo by <0>eberhard 🖐 grossgasteiger</0> on <1>Unsplash</1>"
+
+#: pages/sources.tsx:267
+msgid "image.credit.20"
+msgstr "Photo by <0>Arno Senoner</0> on <1>Unsplash</1>"
+
+#: pages/sources.tsx:279
+msgid "image.credit.21"
+msgstr "Photo by <0>Collab Media</0> on <1>Unsplash</1>"
+
+#: pages/sources.tsx:63
+msgid "image.credit.3"
+msgstr "Photo by <0>Marita Kavelashvili</0> on <1>Unsplash</1>"
+
+#: pages/sources.tsx:75
+msgid "image.credit.4"
+msgstr "Photo by <0>Chris LeBoutillier</0> on <1>Unsplash</1>"
+
+#: pages/sources.tsx:87
+msgid "image.credit.5"
+msgstr "Photo by <0>Anne Nygård</0> on <1>Unsplash</1>"
+
+#: pages/sources.tsx:99
+msgid "image.credit.6"
+msgstr "Photo by <0>Stijn te Strake</0> on <1>Unsplash</1>"
+
+#: pages/sources.tsx:111
+msgid "image.credit.7"
+msgstr "Photo by <0>Chris Ensminger</0> on <1>Unsplash</1>"
+
+#: pages/sources.tsx:123
+msgid "image.credit.8"
+msgstr "Photo by <0>Annie Spratt</0> on <1>Unsplash</1>"
+
+#: pages/sources.tsx:135
+msgid "image.credit.9"
+msgstr "Photo by <0>Tim Mossholder</0> on <1>Unsplash</1>"
 
 #: utils/details.tsx:527
 msgid "question.type.energyProduction"
@@ -461,7 +541,7 @@ msgstr "Energy Production"
 
 #: utils/details.tsx:531
 msgid "question.type.landUseChange"
-msgstr "Changing how we use our Land"
+msgstr "Changing how we use our land"
 
 #: pages/lobby.tsx:161
 msgid "region.button.leave"
@@ -553,7 +633,7 @@ msgstr "World Pathway"
 msgid "visualize.ssp.title"
 msgstr "{0}"
 
-#: pages/questions.tsx:110
+#: pages/questions.tsx:113
 msgid "{0, plural, one {# Point Remaining To Spend} other {# Points Remaining To Spend}}"
 msgstr "{0, plural, one {# Point Remaining To Spend} other {# Points Remaining To Spend}}"
 
@@ -569,6 +649,6 @@ msgstr "{0, plural, one {# Region Remaining} other {# Regions Remaining}}"
 #~ msgid "{0} Region"
 #~ msgstr "{0} Region"
 
-#: pages/questions.tsx:43
+#: pages/questions.tsx:45
 msgid "{extraPoints, plural, one {You've been given an extra point to spend!} other {You've been given # extra points to spend!}}"
 msgstr "{extraPoints, plural, one {You've been given an extra point to spend!} other {You've been given # extra points to spend!}}"

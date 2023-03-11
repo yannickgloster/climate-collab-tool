@@ -22,6 +22,8 @@ import ListItemText from "@mui/material/ListItemText";
 import { Trans, t } from "@lingui/macro";
 import Flag from "react-world-flags";
 import Fab from "@mui/material/Fab";
+import Tooltip from "@mui/material/Tooltip";
+import Grow from "@mui/material/Grow";
 
 export interface LayoutProps {
   children: ReactNode;
@@ -97,18 +99,26 @@ export default function Layout(props: LayoutProps) {
             </Trans>
           </Typography>
           {router.pathname === "/lobby" && (
-            <Typography
-              component={Link}
-              textAlign="right"
-              fontSize={15}
-              underline="hover"
-              display="block"
-              onClick={() =>
-                copy(`${window.location.origin}?join=${props.gameCode}`)
-              }
+            <Tooltip
+              title="Click to copy to clipboard!"
+              placement={"bottom"}
+              TransitionComponent={Grow}
+              arrow
+              describeChild
             >
-              {window.location.origin}?join={props.gameCode}
-            </Typography>
+              <Typography
+                component={Link}
+                textAlign="right"
+                fontSize={15}
+                underline="hover"
+                display="block"
+                onClick={() =>
+                  copy(`${window.location.origin}?join=${props.gameCode}`)
+                }
+              >
+                {window.location.origin}?join={props.gameCode}
+              </Typography>
+            </Tooltip>
           )}
         </Box>
       )}

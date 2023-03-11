@@ -529,7 +529,7 @@ export const QuestionTopicDetails: QuestionTopicDetails = {
   [QuestionTopic.LandUseChange]: {
     name: (
       <Trans id="question.type.landUseChange">
-        Changing how we use our Land
+        Changing how we use our land
       </Trans>
     ),
   },
@@ -542,7 +542,7 @@ export const DescriptiveTooltips = {
   "protected forest": `A forest with some amount of legal or constitutional protection, or where the habitat and resident species are legally accorded protection from further depletion.`,
   "nitrous oxide": `A type of pollutant which hurts the enviroment.`,
   biofuels:
-    "Fuel produced quickly from plants or biowaste. Considere to be a renewable energy source.",
+    "Fuel produced quickly from plants or biowaste. Considered to be a renewable energy source.",
   "plantation forests":
     "Forsts planted to grow large amounts of wood. Also known as tree farms.",
   hydrogen:

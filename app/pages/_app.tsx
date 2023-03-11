@@ -189,7 +189,7 @@ export default function App({ Component, pageProps }: AppProps) {
         enabled: true,
         severity: "error",
       });
-      router.push("/", undefined, { shallow: true });
+      router.push("/");
     }
   }, []);
 

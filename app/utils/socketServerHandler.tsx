@@ -118,11 +118,6 @@ export default (io: Server, socket: Socket, rooms: Map<string, Game>) => {
             ? b
             : a;
         });
-        // TODO: Remove after debugging
-        console.log("Emmission: " + game.emission);
-        console.log(
-          "Closest SSP: " + finalSSP + " " + SSPDetails[finalSSP].emission
-        );
         game.ssp = SSP[finalSSP];
         io.to(code).emit(socketEvent.game_update, game);
       }

@@ -14,6 +14,7 @@ import LoadingError from "../components/loadingError";
 import Typography from "@mui/material/Typography";
 import { qFactor } from "../utils/constants";
 import { Trans, t, plural } from "@lingui/macro";
+import { Button } from "@mui/material";
 
 export default function Questions({
   user,
@@ -30,12 +31,13 @@ export default function Questions({
   const answerCallback = (answer: Answer, index: number) => {
     const question = questions[questionIndex];
     const extraPoints = regeneratePoints(questionIndex, questions.length);
+    const regionWeight = question.regionWeights.filter(
+      (rw) => rw.region == user.region
+    )[0];
     const newUser = {
       ...user,
       points: user.points - answer.cost + extraPoints,
-      emission:
-        user.emission -
-        qFactor * question.regionWeights[0].weight * answer.weight,
+      emission: user.emission - qFactor * regionWeight.weight * answer.weight,
     };
 
     if (extraPoints > 0) {
@@ -49,7 +51,7 @@ export default function Questions({
       });
     }
 
-    if (user.points - answer.cost > 0) {
+    if (user.points - answer.cost >= 0) {
       setUser(newUser);
       setQuestionIndex(questionIndex + 1);
       if (questionIndex == questions.length - 1) {
@@ -105,6 +107,7 @@ export default function Questions({
             ? questions[questionIndex].imgUrl
             : undefined
         }
+        progress={((questionIndex + 1) * 100) / questions.length}
       >
         <Typography variant="h6">
           {plural(user.points, {
