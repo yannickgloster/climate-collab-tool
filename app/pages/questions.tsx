@@ -14,6 +14,7 @@ import LoadingError from "../components/loadingError";
 import Typography from "@mui/material/Typography";
 import { qFactor } from "../utils/constants";
 import { Trans, t, plural } from "@lingui/macro";
+import { Button } from "@mui/material";
 
 export default function Questions({
   user,
@@ -30,12 +31,13 @@ export default function Questions({
   const answerCallback = (answer: Answer, index: number) => {
     const question = questions[questionIndex];
     const extraPoints = regeneratePoints(questionIndex, questions.length);
+    const regionWeight = question.regionWeights.filter(
+      (rw) => rw.region == user.region
+    )[0];
     const newUser = {
       ...user,
-      points: user.points - answer.cost + extraPoints,
-      emission:
-        user.emission -
-        qFactor * question.regionWeights[0].weight * answer.weight,
+      // points: user.points - answer.cost + extraPoints,
+      emission: user.emission - qFactor * regionWeight.weight * answer.weight,
     };
 
     if (extraPoints > 0) {
@@ -115,10 +117,33 @@ export default function Questions({
         </Typography>
         {/* TODO: Localize questions */}
         {questionIndex < questions.length ? (
-          <Question
-            question={questions[questionIndex]}
-            answerCallback={(answer) => answerCallback(answer, questionIndex)}
-          />
+          <>
+            <Button
+              onClick={() => {
+                const bestAnswer = questions[questionIndex].answers.reduce(
+                  (a, b) => {
+                    const regionWeight = questions[
+                      questionIndex
+                    ].regionWeights.filter((rw) => rw.region == user.region)[0];
+                    if (
+                      qFactor * regionWeight.weight * a.weight <
+                      qFactor * regionWeight.weight * b.weight
+                    )
+                      return a;
+                    else return b;
+                  }
+                );
+                console.log(bestAnswer);
+                answerCallback(bestAnswer, questionIndex);
+              }}
+            >
+              Worst answer
+            </Button>
+            <Question
+              question={questions[questionIndex]}
+              answerCallback={(answer) => answerCallback(answer, questionIndex)}
+            />
+          </>
         ) : (
           <Typography variant="h6">
             <Trans>Thank you for answering all the questions!</Trans>
