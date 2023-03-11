@@ -18,6 +18,7 @@ import Map from "./map";
 import { motion, AnimatePresence } from "framer-motion";
 import Typography from "@mui/material/Typography";
 import { SSP } from "@prisma/client";
+import Chip from "@mui/material/Chip";
 
 import { ReactNode } from "react";
 
@@ -82,11 +83,18 @@ export const steps: steps = {
       return (
         <>
           {!props?.disableTitle && (
-            <Typography variant="h3" textAlign="center" fontWeight={800}>
-              <Trans id="visualize.ssp.title">
-                {SSPDetails[props.ssp].name}
-              </Trans>
-            </Typography>
+            <>
+              <Typography variant="h3" textAlign="center" fontWeight={800}>
+                <Trans id="visualize.ssp.title">
+                  {SSPDetails[props.ssp].name}
+                </Trans>
+                {"  "}
+                <Chip
+                  label={SSPDetails[props.ssp].icon}
+                  sx={{ backgroundColor: "#696969" }}
+                />
+              </Typography>
+            </>
           )}
           {!props?.disableSubtitle && (
             <Typography variant="subtitle2" textAlign="center">

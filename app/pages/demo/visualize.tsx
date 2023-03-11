@@ -7,7 +7,6 @@ import { Region, SSP } from "@prisma/client";
 import { RegionDetails } from "../../utils/details";
 import Visualize, { VisualizeProps } from "../../components/visualize";
 
-// TODO: replace with game
 const ssp = SSP.SSP460;
 
 import { loadTranslation } from "../../utils/translation";

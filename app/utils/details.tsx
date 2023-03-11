@@ -1,6 +1,9 @@
 import { Region, SSP, Model, QuestionTopic } from "@prisma/client";
 import { Trans, t, plural } from "@lingui/macro";
 import { ReactElement } from "react";
+import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
+import SentimentDissatisfiedIcon from "@mui/icons-material/SentimentDissatisfied";
+import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
 
 // TODO: Add type checking for <Trans>
 type RegionDetails = {
@@ -77,6 +80,7 @@ export const RegionDetails: RegionDetails = {
 type SSPDetails = {
   [key in SSP]: {
     name: any;
+    icon: any;
     oneLine: any;
     shortDescription: any;
     description: any;
@@ -91,6 +95,7 @@ type SSPDetails = {
 export const SSPDetails: SSPDetails = {
   [SSP.SSP119]: {
     name: <Trans>Scenario 1</Trans>,
+    icon: <SentimentSatisfiedAltIcon htmlColor="#05FF00" />,
     oneLine: <Trans>Taking the Green Road</Trans>,
     shortDescription: (
       <Trans>
@@ -135,6 +140,7 @@ export const SSPDetails: SSPDetails = {
   },
   [SSP.SSP126]: {
     name: <Trans>Scenario 2</Trans>,
+    icon: <SentimentSatisfiedAltIcon htmlColor="#05FF00" />,
     oneLine: <Trans>Taking the Green Road</Trans>,
     shortDescription: (
       <Trans>
@@ -178,6 +184,7 @@ export const SSPDetails: SSPDetails = {
   },
   [SSP.SSP245]: {
     name: <Trans>Scenario 3</Trans>,
+    icon: <SentimentDissatisfiedIcon htmlColor="#EBFF00" />,
     oneLine: <Trans>Middle of the road</Trans>,
     shortDescription: (
       <Trans>
@@ -221,6 +228,7 @@ export const SSPDetails: SSPDetails = {
   },
   [SSP.SSP370]: {
     name: <Trans>Scenario 4</Trans>,
+    icon: <SentimentVeryDissatisfiedIcon htmlColor="#FF0000" />,
     oneLine: <Trans>Regional Rivalry - A Rocky Road</Trans>,
     shortDescription: (
       <Trans>
@@ -269,10 +277,16 @@ export const SSPDetails: SSPDetails = {
   },
   [SSP.SSP434]: {
     name: <Trans>Scenario 5</Trans>,
+    icon: (
+      <>
+        <SentimentDissatisfiedIcon htmlColor="#EBFF00" />
+        <SentimentVeryDissatisfiedIcon htmlColor="#FF0000" />
+      </>
+    ),
     oneLine: <Trans>Inequality - A Road Divided</Trans>,
     shortDescription: (
       <Trans>
-        Inequality - A Road Divided. Society becomes increasingly more inequal
+        Inequality - A Road Divided. Society becomes increasingly more unequal
         however the energy sector diversifies which causes ~2.6 °C average
         temperature increase.
       </Trans>
@@ -315,6 +329,12 @@ export const SSPDetails: SSPDetails = {
   },
   [SSP.SSP460]: {
     name: <Trans>Scenario 6</Trans>,
+    icon: (
+      <>
+        <SentimentDissatisfiedIcon htmlColor="#EBFF00" />
+        <SentimentVeryDissatisfiedIcon htmlColor="#FF0000" />
+      </>
+    ),
     oneLine: <Trans>Inequality - A Road Divided</Trans>,
     shortDescription: (
       <Trans>
@@ -360,6 +380,7 @@ export const SSPDetails: SSPDetails = {
   },
   [SSP.SSP534OS]: {
     name: <Trans>Scenario 7</Trans>,
+    icon: <SentimentVeryDissatisfiedIcon htmlColor="#FF0000" />,
     oneLine: <Trans>Fossil fuelled development - Taking the Highway</Trans>,
     shortDescription: (
       <Trans>
@@ -411,6 +432,7 @@ export const SSPDetails: SSPDetails = {
   },
   [SSP.SSP585]: {
     name: <Trans>Scenario 8</Trans>,
+    icon: <SentimentVeryDissatisfiedIcon htmlColor="#FF0000" />,
     oneLine: <Trans>Fossil fuelled development - Taking the Highway</Trans>,
     shortDescription: (
       <Trans>
