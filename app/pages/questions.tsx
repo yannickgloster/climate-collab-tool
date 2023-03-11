@@ -117,33 +117,10 @@ export default function Questions({
         </Typography>
         {/* TODO: Localize questions */}
         {questionIndex < questions.length ? (
-          <>
-            <Button
-              onClick={() => {
-                const bestAnswer = questions[questionIndex].answers.reduce(
-                  (a, b) => {
-                    const regionWeight = questions[
-                      questionIndex
-                    ].regionWeights.filter((rw) => rw.region == user.region)[0];
-                    if (
-                      qFactor * regionWeight.weight * a.weight <
-                      qFactor * regionWeight.weight * b.weight
-                    )
-                      return a;
-                    else return b;
-                  }
-                );
-                console.log(bestAnswer);
-                answerCallback(bestAnswer, questionIndex);
-              }}
-            >
-              Worst answer
-            </Button>
-            <Question
-              question={questions[questionIndex]}
-              answerCallback={(answer) => answerCallback(answer, questionIndex)}
-            />
-          </>
+          <Question
+            question={questions[questionIndex]}
+            answerCallback={(answer) => answerCallback(answer, questionIndex)}
+          />
         ) : (
           <Typography variant="h6">
             <Trans>Thank you for answering all the questions!</Trans>

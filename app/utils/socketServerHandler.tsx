@@ -108,7 +108,6 @@ export default (io: Server, socket: Socket, rooms: Map<string, Game>) => {
       const game = rooms.get(code);
       game.userCompletedQuestion(user);
       game.addEmission(emission);
-      console.log(`${user.region}  Emission: ${emission}`);
       io.to(code).emit(socketEvent.game_update, game);
       io.to(socket.id).emit(socketEvent.recieved_questions);
       if (game.allUsersCompletedQuestion()) {
@@ -119,11 +118,6 @@ export default (io: Server, socket: Socket, rooms: Map<string, Game>) => {
             ? b
             : a;
         });
-        // TODO: Remove after debugging
-        console.log("Emmission: " + game.emission);
-        console.log(
-          "Closest SSP: " + finalSSP + " " + SSPDetails[finalSSP].emission
-        );
         game.ssp = SSP[finalSSP];
         io.to(code).emit(socketEvent.game_update, game);
       }
