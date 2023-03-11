@@ -91,12 +91,14 @@ export default function LineChart(props: LineProps) {
               dot={false}
               activeDot={false}
               name={t`Trend Line`}
+              label={{ fontFamily: "Roboto" }}
             />
             <Line
               type="monotone"
               dataKey="temp"
               stroke={theme.palette.primary.main}
               name={t`Max Temperature (°C)`}
+              label={{ fontFamily: "Roboto" }}
             />
             <CartesianGrid stroke="#ccc" />
             <XAxis dataKey="date" />

@@ -49,7 +49,7 @@ export default function Questions({
       });
     }
 
-    if (user.points - answer.cost > 0) {
+    if (user.points - answer.cost >= 0) {
       setUser(newUser);
       setQuestionIndex(questionIndex + 1);
       if (questionIndex == questions.length - 1) {
@@ -105,6 +105,7 @@ export default function Questions({
             ? questions[questionIndex].imgUrl
             : undefined
         }
+        progress={((questionIndex + 1) * 100) / questions.length}
       >
         <Typography variant="h6">
           {plural(user.points, {

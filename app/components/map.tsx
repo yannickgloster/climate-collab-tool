@@ -73,7 +73,10 @@ export default function Map({ data }: MapProps) {
                           {geo.properties.name}
                         </Typography>
                         <Typography variant="inherit">
-                          ~ {round(tasmax, 1)} °C
+                          {tasmax != -1
+                            ? `~ ${round(tasmax, 1)}`
+                            : t`Data precision too low`}{" "}
+                          °C
                         </Typography>
                       </Fragment>
                     }
