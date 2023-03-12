@@ -38,7 +38,7 @@ export default function LoadingTest() {
 
   return (
     <Layout>
-      <Box width={500} border="1px dashed grey">
+      <Box width={500}>
         <Map data={data.mapData} />
       </Box>
     </Layout>
