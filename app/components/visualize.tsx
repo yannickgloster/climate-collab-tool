@@ -79,7 +79,7 @@ type steps = {
   };
 };
 
-type DATATYPE = "temp" | "temp_max";
+export type DATATYPE = "temp" | "temp_max";
 
 export const steps: steps = {
   // TODO: Localize this to be based on the region of the user
