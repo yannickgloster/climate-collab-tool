@@ -37,6 +37,8 @@ import {
 
 import { Trans, t, plural } from "@lingui/macro";
 
+import { round } from "../utils/math";
+
 export interface VisualizeProps {
   data: {
     line: { temp_max: LineProps["data"]; temp: LineProps["data"] };
@@ -130,6 +132,14 @@ export const steps: steps = {
       message: "Ireland's Future",
     }),
     content: (props) => {
+      const tempMax = props.data.mapData.temp_max_map_rows.filter(
+        (row) => row.ISO3 === "IRL"
+      )[0];
+
+      const temp = props.data.mapData.temp_map_rows.filter(
+        (row) => row.ISO3 === "IRL"
+      )[0];
+
       return (
         <>
           {!props?.disableTitle && (
@@ -197,10 +207,10 @@ export const steps: steps = {
                 fontSize={27}
               >
                 <tspan x="-10" dy="-5">
-                  <Trans>Temperature in Ireland</Trans>
+                  <Trans>Mean Temperature</Trans>
                 </tspan>
                 <tspan x="-10" dy="1.2em">
-                  [TEMP] °C
+                  {round(temp.tas, 1)} °C
                 </tspan>
               </text>
             </Annotation>
