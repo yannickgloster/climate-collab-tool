@@ -55,6 +55,9 @@ const CustomTooltip = ({
 
 export interface LineProps {
   data: { date: Number; temp: Number }[];
+  variableName: string;
+  minDomainTemp?: number;
+  maxDomainTemp?: number;
 }
 
 // TODO: make chart more responsive
@@ -67,8 +70,12 @@ export default function LineChart(props: LineProps) {
   const temps = props.data.map<Number>((point) => point.temp);
 
   // TODO: Replace with d3 function
-  const minDomainTemp = 34.5; //Math.floor(Math.min.apply(Math, temps));
-  const maxDomainTemp = 60; // Math.ceil(Math.max.apply(Math, temps));
+  const minDomainTemp = props.minDomainTemp
+    ? props.minDomainTemp
+    : Math.floor(Math.min.apply(Math, temps));
+  const maxDomainTemp = props.maxDomainTemp
+    ? props.maxDomainTemp
+    : Math.ceil(Math.max.apply(Math, temps));
 
   return (
     <>
@@ -96,7 +103,7 @@ export default function LineChart(props: LineProps) {
               type="monotone"
               dataKey="temp"
               stroke={theme.palette.primary.main}
-              name={t`Max Temperature (°C)`}
+              name={props.variableName}
             />
             <CartesianGrid stroke="#ccc" />
             <XAxis

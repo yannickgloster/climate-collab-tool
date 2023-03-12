@@ -40,7 +40,7 @@ export default function VisualizeTest({ user, setUser }: userState) {
 
   return (
     <Layout gameCode={"TEST"} region={region}>
-      <Linechart data={data.line} />
+      <Linechart data={data.line.temp} variableName="Mean Temperature" />
     </Layout>
   );
 }

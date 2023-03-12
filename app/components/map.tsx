@@ -12,10 +12,16 @@ import { scaleLinear } from "d3-scale";
 import { extent } from "d3-array";
 import Tooltip from "@mui/material/Tooltip";
 import { VisualizeProps } from "./visualize";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import Typography from "@mui/material/Typography";
 import Legend from "./colorLegend";
 import { Trans, t, plural } from "@lingui/macro";
+
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Box from "@mui/material/Box";
 
 // https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json
 import world from "../utils/world_countries.json";
@@ -25,7 +31,19 @@ export interface MapProps {
   data: VisualizeProps["data"]["mapData"];
 }
 
+type DATATYPES = "temp_map_rows" | "temp_max_map_rows";
+
+// TODO: Bad practiice, refactor
+const selectOptions = {
+  temp_map_rows: t`Mean Temperature`,
+  temp_max_map_rows: t`Max Temperature over 100 years`,
+};
+
 export default function Map({ data }: MapProps) {
+  const [selectedData, setSelectedData] = useState<any[]>(data.temp_map_rows);
+  const [selectedDataMenu, setSelectedDataMenu] =
+    useState<DATATYPES>("temp_map_rows");
+
   const domain = [8, 60];
 
   const colorScale = scaleLinear()
@@ -33,8 +51,40 @@ export default function Map({ data }: MapProps) {
     // @ts-ignore: You can do colors actually
     .range(["#ffff00", "#be0000"]);
 
+  const handleDataSelect = (event: SelectChangeEvent) => {
+    setSelectedData(data[event.target.value as string]);
+    setSelectedDataMenu(event.target.value as DATATYPES);
+  };
+
   return (
     <Fragment>
+      <Box
+        pb={2}
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <FormControl>
+          <InputLabel id="select-data-label">
+            <Trans>Variable</Trans>
+          </InputLabel>
+          <Select
+            labelId="select-data-label"
+            id="select-data"
+            value={selectedDataMenu}
+            label="Variable"
+            onChange={handleDataSelect}
+          >
+            {Object.keys(selectOptions).map((option) => (
+              <MenuItem key={option} value={option}>
+                {selectOptions[option]}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
       <svg
         dangerouslySetInnerHTML={{
           __html: Legend(colorScale, {
@@ -59,11 +109,17 @@ export default function Map({ data }: MapProps) {
             {({ geographies }) =>
               geographies.map((geo, i) => {
                 // TODO: instead of maping an array, use a hashmap that is generated on the serverside
-                const countryData = data.filter(
+                const countryData = selectedData.filter(
                   (row) => row.ISO3 === geo.id || geo.properties.ISO3
                 )[0];
 
-                const tasmax = countryData ? countryData.tasmax : -1;
+                let temp = -1;
+                if (countryData && countryData?.tasmax) {
+                  temp = countryData.tasmax;
+                }
+                if (countryData && countryData?.tas) {
+                  temp = countryData.tas;
+                }
 
                 return (
                   <Tooltip
@@ -73,8 +129,8 @@ export default function Map({ data }: MapProps) {
                           {geo.properties.name}
                         </Typography>
                         <Typography variant="inherit">
-                          {tasmax != -1
-                            ? `~ ${round(tasmax, 1)}`
+                          {temp != -1
+                            ? `~ ${round(temp, 1)}`
                             : t`Data precision too low`}{" "}
                           °C
                         </Typography>
@@ -88,8 +144,8 @@ export default function Map({ data }: MapProps) {
                       style={{
                         default: {
                           fill:
-                            tasmax != -1
-                              ? colorScale(tasmax).toString()
+                            temp != -1
+                              ? colorScale(temp).toString()
                               : "#808080",
                           outline: "none",
                         },

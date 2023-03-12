@@ -6,7 +6,12 @@ import { loadTranslation } from "../utils/translation";
 import { GetStaticProps } from "next/types";
 import { Trans, t, plural } from "@lingui/macro";
 import { Region, SSP } from "@prisma/client";
-import { steps, VisualizeProps, VisualizeState } from "../components/visualize";
+import {
+  DATATYPE,
+  steps,
+  VisualizeProps,
+  VisualizeState,
+} from "../components/visualize";
 import { SelectChangeEvent } from "@mui/material";
 import { props } from "cypress/types/bluebird";
 import Loading from "../components/loading";
@@ -29,6 +34,10 @@ export default function Teaching() {
   const [selectedRegion, setSelectedRegion] = useState<Region>(Region.EU);
 
   const [selectedData, setSelectedData] = useState<VisualizeProps["data"]>();
+  const [selectedDataMenu, setSelectedDataMenu] = useState<DATATYPE>("temp");
+  const handleDataMenuChange = (event: SelectChangeEvent) => {
+    setSelectedDataMenu(event.target.value as DATATYPE);
+  };
 
   const fetchData = (ssp: SSP, region: Region) => {
     fetch(`/api/data?ssp=${ssp}&region=${region}`)
@@ -71,6 +80,8 @@ export default function Teaching() {
         selectedRegion,
         handleRegionChange,
         selectedData,
+        handleDataMenuChange,
+        selectedDataMenu,
         disableTitle: true,
         disableSubtitle: true,
       })}

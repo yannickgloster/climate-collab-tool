@@ -1,4 +1,4 @@
-import { Region, TempMaxMapRow } from "@prisma/client";
+import { Region, TempMaxMapRow, TempMapRow } from "@prisma/client";
 import { useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -37,10 +37,15 @@ import {
 
 import { Trans, t, plural } from "@lingui/macro";
 
+import { round } from "../utils/math";
+
 export interface VisualizeProps {
   data: {
-    line: LineProps["data"];
-    mapData: TempMaxMapRow[];
+    line: { temp_max: LineProps["data"]; temp: LineProps["data"] };
+    mapData: {
+      temp_max_map_rows: TempMaxMapRow[];
+      temp_map_rows: TempMapRow[];
+    };
   };
   ssp: SSP;
   region: Region;
@@ -61,6 +66,8 @@ export interface stepContentProps extends VisualizeProps {
   selectedRegion: Region;
   handleRegionChange: (event: SelectChangeEvent) => void;
   selectedData: VisualizeProps["data"];
+  handleDataMenuChange: (event: SelectChangeEvent) => void;
+  selectedDataMenu: DATATYPE;
   disableTitle?: boolean;
   disableSubtitle?: boolean;
 }
@@ -71,6 +78,8 @@ type steps = {
     content: (props: stepContentProps) => ReactNode;
   };
 };
+
+export type DATATYPE = "temp" | "temp_max";
 
 export const steps: steps = {
   // TODO: Localize this to be based on the region of the user
@@ -123,6 +132,14 @@ export const steps: steps = {
       message: "Ireland's Future",
     }),
     content: (props) => {
+      const tempMax = props.data.mapData.temp_max_map_rows.filter(
+        (row) => row.ISO3 === "IRL"
+      )[0];
+
+      const temp = props.data.mapData.temp_map_rows.filter(
+        (row) => row.ISO3 === "IRL"
+      )[0];
+
       return (
         <>
           {!props?.disableTitle && (
@@ -190,10 +207,10 @@ export const steps: steps = {
                 fontSize={27}
               >
                 <tspan x="-10" dy="-5">
-                  <Trans>Temperature in Ireland</Trans>
+                  <Trans>Mean Temperature</Trans>
                 </tspan>
                 <tspan x="-10" dy="1.2em">
-                  [TEMP] °C
+                  {round(temp.tas, 1)} °C
                 </tspan>
               </text>
             </Annotation>
@@ -246,22 +263,74 @@ export const steps: steps = {
         <>
           {!props?.disableTitle && (
             <Typography variant="h3" textAlign="center" fontWeight={800}>
-              <Trans id="visualize.line.title">
-                Predicted Max Temperature in Celcius
-              </Trans>
+              {props.selectedDataMenu == "temp_max" ? (
+                <Trans id="visualize.line.title.max">
+                  Predicted Max Temperature in Celcius
+                </Trans>
+              ) : (
+                <Trans id="visualize.line.title.mean">
+                  Predicted Mean Temperature in Celcius
+                </Trans>
+              )}
             </Typography>
           )}
           {!props?.disableSubtitle && (
             <Typography variant="subtitle2" textAlign="center">
-              <Trans id="visualize.line.description">
-                Based on a large amount of data modeling, this is the predicted
-                maximum yearly temperature for your region. On top of the data
-                points, a linear line of best fit has been included to show what
-                trends are occurring.
-              </Trans>
+              {props.selectedDataMenu == "temp_max" ? (
+                <Trans id="visualize.line.description.max">
+                  Based on a large amount of data modeling, this is the
+                  predicted maximum yearly temperature for your region. On top
+                  of the data points, a linear line of best fit has been
+                  included to show what trends are occurring.
+                </Trans>
+              ) : (
+                <Trans id="visualize.line.description.mean">
+                  Based on a large amount of data modeling, this is the
+                  predicted mean yearly temperature for your region. On top of
+                  the data points, a linear line of best fit has been included
+                  to show what trends are occurring.
+                </Trans>
+              )}
             </Typography>
           )}
-          <LineChart data={props.data.line} />
+          <Box
+            p={2}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <FormControl>
+              <InputLabel id="data-select">
+                <Trans id="visualize.line.dropdown.data.label">Variable</Trans>
+              </InputLabel>
+              <Select
+                labelId="data-select"
+                id="data-select-id"
+                defaultValue={"temp"}
+                value={props.selectedDataMenu}
+                label={t({
+                  id: "visualize.line.dropdown.data.label",
+                  message: "Variable",
+                })}
+                onChange={props.handleDataMenuChange}
+              >
+                <MenuItem value={"temp"}>Mean Temperature</MenuItem>
+                <MenuItem value={"temp_max"}>Max Temperature</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+          <LineChart
+            data={props.data.line[props.selectedDataMenu]}
+            variableName={
+              props.selectedDataMenu == "temp_max"
+                ? t`Max Temperature (°C)`
+                : t`Mean Temperature (°C)`
+            }
+            minDomainTemp={props.selectedDataMenu == "temp_max" ? 34.5 : 7.5}
+            maxDomainTemp={props.selectedDataMenu == "temp_max" ? 60 : 17.5}
+          />
         </>
       );
     },
@@ -398,6 +467,8 @@ export default function Visualize(props: VisualizeProps) {
     props.data
   );
 
+  const [selectedDataMenu, setSelectedDataMenu] = useState<DATATYPE>("temp");
+
   const handleNext = () => {
     setVisState((prevVisState) => prevVisState + 1);
   };
@@ -425,6 +496,10 @@ export default function Visualize(props: VisualizeProps) {
   const handleSSPChange = (event: SelectChangeEvent) => {
     const ssp = event.target.value as SSP;
     fetchData(ssp, selectedRegion);
+  };
+
+  const handleDataMenuChange = (event: SelectChangeEvent) => {
+    setSelectedDataMenu(event.target.value as DATATYPE);
   };
 
   return (
@@ -468,6 +543,8 @@ export default function Visualize(props: VisualizeProps) {
                 selectedRegion,
                 handleRegionChange,
                 selectedData,
+                handleDataMenuChange,
+                selectedDataMenu,
               })}
             </motion.div>
           </AnimatePresence>

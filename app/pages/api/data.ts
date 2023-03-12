@@ -17,6 +17,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     },
     select: {
       temp_max_rows: true,
+      temp_rows: true,
     },
   });
 
@@ -29,29 +30,53 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     },
     select: {
       temp_max_map_rows: true,
+      temp_map_rows: true,
     },
   });
 
-  const processedData = results.temp_max_rows.map((dataPoint) => {
+  const processedMaxTempData = results.temp_max_rows.map((dataPoint) => {
     return {
       date: dataPoint.year.getUTCFullYear(),
       temp: dataPoint.tasmax,
     };
   });
 
-  const regression = new SimpleLinearRegression(
-    processedData.map((dp) => dp.date),
-    processedData.map((dp) => dp.temp)
+  const processedTempData = results.temp_rows.map((dataPoint) => {
+    return {
+      date: dataPoint.year.getUTCFullYear(),
+      temp: dataPoint.tas,
+    };
+  });
+
+  const regressionMaxTemp = new SimpleLinearRegression(
+    processedMaxTempData.map((dp) => dp.date),
+    processedMaxTempData.map((dp) => dp.temp)
+  );
+
+  const regressionTemp = new SimpleLinearRegression(
+    processedTempData.map((dp) => dp.date),
+    processedTempData.map((dp) => dp.temp)
   );
 
   res.json({
-    line: processedData.map((dp) => {
-      return {
-        ...dp,
-        linear_regression: regression.predict(dp.date),
-      };
-    }),
-    mapData: mapData.temp_max_map_rows,
+    line: {
+      temp_max: processedMaxTempData.map((dp) => {
+        return {
+          ...dp,
+          linear_regression: regressionMaxTemp.predict(dp.date),
+        };
+      }),
+      temp: processedTempData.map((dp) => {
+        return {
+          ...dp,
+          linear_regression: regressionTemp.predict(dp.date),
+        };
+      }),
+    },
+    mapData: {
+      temp_max_map_rows: mapData.temp_max_map_rows,
+      temp_map_rows: mapData.temp_map_rows,
+    },
   });
 };
 
