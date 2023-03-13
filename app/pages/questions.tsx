@@ -15,6 +15,7 @@ import Typography from "@mui/material/Typography";
 import { qFactor } from "../utils/constants";
 import { Trans, t, plural } from "@lingui/macro";
 import { Button } from "@mui/material";
+import router from "next/router";
 
 export default function Questions({
   user,
@@ -91,6 +92,14 @@ export default function Questions({
         });
       });
   }, []);
+
+  useEffect(() => {
+    if (router.asPath === "/questions") {
+      window.onpopstate = () => {
+        history.go(1);
+      };
+    }
+  }, [router]);
 
   if (isLoading) return <Loading />;
   if (!questions) return <LoadingError href="/questions" />;
