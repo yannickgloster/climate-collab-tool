@@ -8,6 +8,11 @@ const nextConfig = {
         destination: "https://admin.socket.io/#/",
         permanent: true,
       },
+      {
+        source: "/survey",
+        destination:
+          "https://docs.google.com/forms/d/e/1FAIpQLSdlN9gs_-h1DDN6CUcBruhcBTC8LeB5fGddJ93GuY2WyQBt4Q/viewform?usp=sf_link",
+      },
     ];
   },
   i18n: {
