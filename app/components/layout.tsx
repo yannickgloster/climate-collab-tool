@@ -24,12 +24,14 @@ import Flag from "react-world-flags";
 import Fab from "@mui/material/Fab";
 import Tooltip from "@mui/material/Tooltip";
 import Grow from "@mui/material/Grow";
+import Head from "next/head";
 
 export interface LayoutProps {
   children: ReactNode;
   region?: Region;
   gameCode?: string;
   img?: string;
+  imgs?: string[];
   progress?: number;
 }
 
@@ -59,194 +61,204 @@ export default function Layout(props: LayoutProps) {
   }
 
   return (
-    <Box
-      style={{
-        backgroundImage: `url(${
-          props.img ??
-          "/images/eberhard-grossgasteiger-jCL98LGaeoE-unsplash.jpg"
-        })`,
-        backgroundPosition: "center",
-        backgroundRepeat: "repeat",
-        backgroundSize: "cover",
-      }}
-    >
-      {props.region && (
-        <Typography
-          variant="overline"
-          textAlign="left"
-          position="absolute"
-          top={0}
-          left={0}
-          fontSize={15}
-          padding={1}
-        >
-          <Trans>
-            Region: <strong>{RegionDetails[props.region].name}</strong>
-          </Trans>
-        </Typography>
-      )}
-      {props.gameCode && (
-        <Box position="absolute" top={0} right={0} padding={1}>
+    <>
+      <Head>
+        {props.imgs &&
+          props.imgs.map((img: string, i) => (
+            <link key={i} rel="preload" as="image" href={img} />
+          ))}
+      </Head>
+      <Box
+        style={{
+          backgroundImage: `url(${
+            props.img ??
+            "/images/eberhard-grossgasteiger-jCL98LGaeoE-unsplash.jpg"
+          })`,
+          backgroundPosition: "center",
+          backgroundRepeat: "repeat",
+          backgroundSize: "cover",
+        }}
+      >
+        {props.region && (
           <Typography
             variant="overline"
-            textAlign="right"
+            textAlign="left"
+            position="absolute"
+            top={0}
+            left={0}
             fontSize={15}
-            display="block"
-            onClick={() => copy(props.gameCode)}
+            padding={1}
           >
             <Trans>
-              Simulation Code: <strong>{props.gameCode}</strong>
+              Region: <strong>{RegionDetails[props.region].name}</strong>
             </Trans>
           </Typography>
-          {router.pathname === "/lobby" && (
-            <Tooltip
-              title="Click to copy to clipboard!"
-              placement={"bottom"}
-              TransitionComponent={Grow}
-              arrow
-              describeChild
-            >
-              <Typography
-                component={Link}
-                textAlign="right"
-                fontSize={15}
-                underline="hover"
-                display="block"
-                onClick={() =>
-                  copy(`${window.location.origin}?join=${props.gameCode}`)
-                }
-              >
-                {window.location.origin}?join={props.gameCode}
-              </Typography>
-            </Tooltip>
-          )}
-        </Box>
-      )}
-
-      <Stack
-        component={Container}
-        justifyContent="center"
-        minHeight="100vh"
-        paddingTop={7.5}
-        maxWidth="lg"
-      >
-        <motion.div
-          layout
-          initial={{ y: 10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: -10, opacity: 0 }}
-          transition={{ duration: 0.2 }}
-        >
-          {props.progress && props.progress < 100 && (
-            <LinearProgress
-              sx={{ mb: "4px", borderRadius: "2px", height: "8px" }}
-              variant="determinate"
-              value={props.progress}
-            />
-          )}
-          <Grid
-            container
-            alignItems="center"
-            justifyContent="center"
-            component={Paper}
-            sx={{ p: 2 }}
-            elevation={3}
-          >
-            <Grid
-              container
-              spacing={0}
-              direction="column"
-              alignItems="center"
-              justifyContent="center"
-            >
-              {Children.map(props.children, (child) => {
-                return (
-                  <Grid item p={1}>
-                    {child}
-                  </Grid>
-                );
-              })}
-            </Grid>
-          </Grid>
-        </motion.div>
-
-        <Box
-          position="absolute"
-          sx={{
-            position: "fixed",
-            bottom: (theme) => theme.spacing(2),
-            right: (theme) => theme.spacing(2),
-          }}
-        >
-          <Fab
-            variant="extended"
-            size="medium"
-            color="primary"
-            onClick={() => {
-              setOpenLocaleSelect(true);
-            }}
-          >
-            <Flag
-              code={languages[locale as unknown as LOCALES].code}
-              height="18"
-            />
-          </Fab>
-        </Box>
-        <Dialog
-          onClose={() => setOpenLocaleSelect(false)}
-          open={openLocaleSelect}
-        >
-          <DialogTitle>
-            <Trans>Select Language</Trans>
-          </DialogTitle>
-          <List sx={{ pt: 0 }}>
-            {Object.keys(languages).map((locale) => {
-              const lang = languages[locale as unknown as LOCALES];
-              return (
-                <ListItem disableGutters key={locale}>
-                  <ListItemButton
-                    onClick={() => {
-                      setLocale(locale as LOCALES);
-                      setOpenLocaleSelect(false);
-                      router.push(router.pathname, router.pathname, { locale });
-                    }}
-                  >
-                    <ListItemAvatar>
-                      <Flag code={lang.code} height="24" />
-                    </ListItemAvatar>
-                    <ListItemText primary={lang.name} />
-                  </ListItemButton>
-                </ListItem>
-              );
-            })}
-          </List>
-        </Dialog>
-        <footer>
-          <Box width="100%">
+        )}
+        {props.gameCode && (
+          <Box position="absolute" top={0} right={0} padding={1}>
             <Typography
               variant="overline"
-              textAlign="center"
+              textAlign="right"
               fontSize={15}
               display="block"
+              onClick={() => copy(props.gameCode)}
             >
-              <Trans id={"footer"}>
-                Built by{" "}
-                <Link
-                  href="https://yannickgloster.com"
-                  target="_blank"
-                  rel="noopener noreffer"
-                >
-                  Yannick Gloster
-                </Link>{" "}
-                |{" "}
-                <Link component={NextLink} href="/sources">
-                  Sources
-                </Link>
+              <Trans>
+                Simulation Code: <strong>{props.gameCode}</strong>
               </Trans>
             </Typography>
+            {router.pathname === "/lobby" && (
+              <Tooltip
+                title="Click to copy to clipboard!"
+                placement={"bottom"}
+                TransitionComponent={Grow}
+                arrow
+                describeChild
+              >
+                <Typography
+                  component={Link}
+                  textAlign="right"
+                  fontSize={15}
+                  underline="hover"
+                  display="block"
+                  onClick={() =>
+                    copy(`${window.location.origin}?join=${props.gameCode}`)
+                  }
+                >
+                  {window.location.origin}?join={props.gameCode}
+                </Typography>
+              </Tooltip>
+            )}
           </Box>
-        </footer>
-      </Stack>
-    </Box>
+        )}
+
+        <Stack
+          component={Container}
+          justifyContent="center"
+          minHeight="100vh"
+          paddingTop={7.5}
+          maxWidth="lg"
+        >
+          <motion.div
+            layout
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -10, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            {props.progress && props.progress < 100 && (
+              <LinearProgress
+                sx={{ mb: "4px", borderRadius: "2px", height: "8px" }}
+                variant="determinate"
+                value={props.progress}
+              />
+            )}
+            <Grid
+              container
+              alignItems="center"
+              justifyContent="center"
+              component={Paper}
+              sx={{ p: 2 }}
+              elevation={3}
+            >
+              <Grid
+                container
+                spacing={0}
+                direction="column"
+                alignItems="center"
+                justifyContent="center"
+              >
+                {Children.map(props.children, (child) => {
+                  return (
+                    <Grid item p={1}>
+                      {child}
+                    </Grid>
+                  );
+                })}
+              </Grid>
+            </Grid>
+          </motion.div>
+
+          <Box
+            position="absolute"
+            sx={{
+              position: "fixed",
+              bottom: (theme) => theme.spacing(2),
+              right: (theme) => theme.spacing(2),
+            }}
+          >
+            <Fab
+              variant="extended"
+              size="medium"
+              color="primary"
+              onClick={() => {
+                setOpenLocaleSelect(true);
+              }}
+            >
+              <Flag
+                code={languages[locale as unknown as LOCALES].code}
+                height="18"
+              />
+            </Fab>
+          </Box>
+          <Dialog
+            onClose={() => setOpenLocaleSelect(false)}
+            open={openLocaleSelect}
+          >
+            <DialogTitle>
+              <Trans>Select Language</Trans>
+            </DialogTitle>
+            <List sx={{ pt: 0 }}>
+              {Object.keys(languages).map((locale) => {
+                const lang = languages[locale as unknown as LOCALES];
+                return (
+                  <ListItem disableGutters key={locale}>
+                    <ListItemButton
+                      onClick={() => {
+                        setLocale(locale as LOCALES);
+                        setOpenLocaleSelect(false);
+                        router.push(router.pathname, router.pathname, {
+                          locale,
+                        });
+                      }}
+                    >
+                      <ListItemAvatar>
+                        <Flag code={lang.code} height="24" />
+                      </ListItemAvatar>
+                      <ListItemText primary={lang.name} />
+                    </ListItemButton>
+                  </ListItem>
+                );
+              })}
+            </List>
+          </Dialog>
+          <footer>
+            <Box width="100%">
+              <Typography
+                variant="overline"
+                textAlign="center"
+                fontSize={15}
+                display="block"
+              >
+                <Trans id={"footer"}>
+                  Built by{" "}
+                  <Link
+                    href="https://yannickgloster.com"
+                    target="_blank"
+                    rel="noopener noreffer"
+                  >
+                    Yannick Gloster
+                  </Link>{" "}
+                  |{" "}
+                  <Link component={NextLink} href="/sources">
+                    Sources
+                  </Link>
+                </Trans>
+              </Typography>
+            </Box>
+          </footer>
+        </Stack>
+      </Box>
+    </>
   );
 }

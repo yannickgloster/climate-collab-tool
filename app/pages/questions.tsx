@@ -25,6 +25,7 @@ export default function Questions({
   setSnackbar,
 }: userState & gameState & snackbarProps) {
   const [questionIndex, setQuestionIndex] = useState(0);
+  const [images, setImages] = useState<string[]>();
   const [questions, setQuestions] = useState<question[]>();
   const [isLoading, setLoading] = useState(true);
 
@@ -77,6 +78,8 @@ export default function Questions({
       .then((res) => res.json())
       .then((data) => {
         setQuestions(data.questions);
+        const imgs = data.questions.map((question) => question.imgUrl);
+        setImages(imgs);
         setLoading(false);
       })
       .catch((_error) => {
@@ -107,6 +110,7 @@ export default function Questions({
             ? questions[questionIndex].imgUrl
             : undefined
         }
+        imgs={images}
         progress={((questionIndex + 1) * 100) / questions.length}
       >
         <Typography variant="h6">
