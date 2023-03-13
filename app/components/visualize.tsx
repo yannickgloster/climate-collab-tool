@@ -328,7 +328,7 @@ export const steps: steps = {
                 ? t`Max Temperature (°C)`
                 : t`Mean Temperature (°C)`
             }
-            minDomainTemp={props.selectedDataMenu == "temp_max" ? 34.5 : 7.5}
+            minDomainTemp={props.selectedDataMenu == "temp_max" ? 34.5 : 6}
             maxDomainTemp={props.selectedDataMenu == "temp_max" ? 60 : 17.5}
           />
         </>
