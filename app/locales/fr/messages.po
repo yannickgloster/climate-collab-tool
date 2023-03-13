@@ -13,31 +13,31 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: utils/details.tsx:37
+#: utils/details.tsx:40
 msgid "A country in East Asia with a population exceeding 1.4 billion, the most in the world."
 msgstr ""
 
-#: utils/details.tsx:57
+#: utils/details.tsx:60
 msgid "A country in South Asia where it is the seventh-largest country by area, the second-most populous country, and the most populous democracy in the world."
 msgstr ""
 
-#: utils/details.tsx:28
+#: utils/details.tsx:31
 msgid "A country primarily located in North America consisting of 50 states."
 msgstr ""
 
-#: utils/details.tsx:233
+#: utils/details.tsx:241
 msgid "A resurgent nationalism, concerns about competitiveness and security, and regional conflicts push countries to increasingly focus on domestic or, at most, regional issues. Policies shift over time to become increasingly oriented toward national and regional security issues. Countries focus on achieving energy and food security goals within their own regions at the expense of broader-based development. Investments in education and technological development decline. Economic development is slow, consumption is material-intensive, and inequalities persist or worsen over time. Population growth is low in industrialized and high in developing countries. A low international priority for addressing environmental concerns leads to strong environmental degradation in some regions."
 msgstr ""
 
-#: utils/details.tsx:66
+#: utils/details.tsx:69
 msgid "Alliance of Small Island States"
 msgstr ""
 
-#: utils/details.tsx:68
+#: utils/details.tsx:71
 msgid "Alliance of Small Island States (AOSIS) is an intergovernmental organization of 39 low-lying coastal and small island countries."
 msgstr ""
 
-#: pages/questions.tsx:99
+#: pages/questions.tsx:102
 msgid "Answer Questions"
 msgstr ""
 
@@ -45,23 +45,23 @@ msgstr ""
 #~ msgid "Best Fit Line"
 #~ msgstr ""
 
-#: utils/details.tsx:474
-#: utils/details.tsx:497
+#: utils/details.tsx:496
+#: utils/details.tsx:519
 msgid "CNRM-CERFACS (National Center for Meteorological Research, Météo-France and CNRS laboratory, Climate Modeling and Global change)"
 msgstr ""
 
-#: utils/details.tsx:472
+#: utils/details.tsx:494
 msgid "CNRM-CM6-1"
 msgstr ""
 
-#: utils/details.tsx:495
+#: utils/details.tsx:517
 msgid "CNRM-ESM2-1"
 msgstr ""
 
-#: pages/index.tsx:93
 #: pages/_app.tsx:229
 #: pages/_app.tsx:240
 #: pages/_app.tsx:252
+#: pages/index.tsx:93
 msgid "Can you work with others to reduce the worst impacts of climate change? Built using the IPCC CMIP6 climate projections."
 msgstr "Pouvez-vous travailler avec d'autres pour réduire les pires effets du changement climatique ? Construit sur la base des projections climatiques CMIP6 du GIEC."
 
@@ -69,12 +69,12 @@ msgstr "Pouvez-vous travailler avec d'autres pour réduire les pires effets du c
 msgid "Cannot join lobby, lobby full."
 msgstr ""
 
-#: pages/lobby.tsx:53
 #: pages/_app.tsx:172
+#: pages/lobby.tsx:53
 msgid "Cannot start game, lobby not full."
 msgstr ""
 
-#: utils/details.tsx:35
+#: utils/details.tsx:38
 msgid "China"
 msgstr ""
 
@@ -92,7 +92,7 @@ msgstr ""
 msgid "Could not load data."
 msgstr ""
 
-#: pages/questions.tsx:85
+#: pages/questions.tsx:88
 msgid "Could not load questions."
 msgstr ""
 
@@ -100,15 +100,15 @@ msgstr ""
 msgid "Data could not be loaded"
 msgstr ""
 
-#: components/map.tsx:78
+#: components/map.tsx:134
 msgid "Data precision too low"
 msgstr ""
 
-#: components/layout.tsx:52
+#: components/layout.tsx:54
 msgid "English"
 msgstr "Anglais"
 
-#: utils/details.tsx:16
+#: utils/details.tsx:19
 msgid "European Union"
 msgstr "Union Européenne"
 
@@ -120,25 +120,25 @@ msgstr "Union Européenne"
 msgid "Everyone hasn't finished their questions."
 msgstr ""
 
-#: utils/details.tsx:363
-#: utils/details.tsx:414
+#: utils/details.tsx:384
+#: utils/details.tsx:436
 msgid "Fossil fuelled development - Taking the Highway"
 msgstr ""
 
-#: utils/details.tsx:416
+#: utils/details.tsx:438
 msgid "Fossil fuelled development - Taking the Highway. The world places faith in competitive markets that have yet to succeed in tackling the climate change crisis which causes a ~4.3 °C increase in average temperature."
 msgstr ""
 
-#: utils/details.tsx:365
+#: utils/details.tsx:386
 msgid "Fossil fuelled development - Taking the Highway. The world places faith in competitive markets that succeed in tackling the climate change crisis which cause only a ~2.4 °C increase in average temperature."
 msgstr ""
 
-#: components/layout.tsx:53
+#: components/layout.tsx:55
 msgid "French"
 msgstr "Français"
 
-#: utils/details.tsx:281
-#: utils/details.tsx:327
+#: utils/details.tsx:295
+#: utils/details.tsx:347
 msgid "Highly unequal investments in human capital, combined with increasing disparities in economic opportunity and political power, lead to increasing inequalities and stratification both across and within countries. Over time, a gap widens between an internationally-connected society that contributes to knowledge- and capital-intensive sectors of the global economy, and a fragmented collection of lower-income, poorly educated societies that work in a labour intensive, low-tech economy. Social cohesion degrades and conflict and unrest become increasingly common. Technology development is high in the high-tech economy and sectors. The globally connected energy sector diversifies, with investments in both carbon-intensive fuels like coal and unconventional oil, but also low-carbon energy sources."
 msgstr ""
 
@@ -146,21 +146,25 @@ msgstr ""
 msgid "Images"
 msgstr ""
 
-#: utils/details.tsx:55
+#: utils/details.tsx:58
 msgid "India"
 msgstr ""
 
-#: utils/details.tsx:272
-#: utils/details.tsx:318
+#: utils/details.tsx:286
+#: utils/details.tsx:338
 msgid "Inequality - A Road Divided"
 msgstr ""
 
 #: utils/details.tsx:274
-msgid "Inequality - A Road Divided. Society becomes increasingly more inequal however the energy sector diversifies which causes ~2.6 °C average temperature increase."
+#~ msgid "Inequality - A Road Divided. Society becomes increasingly more inequal however the energy sector diversifies which causes ~2.6 °C average temperature increase."
+#~ msgstr ""
+
+#: utils/details.tsx:340
+msgid "Inequality - A Road Divided. Society becomes increasingly more inequal however the energy sector diversifies which causing stabilising emissioons and ~2.8 °C average temperature increase."
 msgstr ""
 
-#: utils/details.tsx:320
-msgid "Inequality - A Road Divided. Society becomes increasingly more inequal however the energy sector diversifies which causing stabilising emissioons and ~2.8 °C average temperature increase."
+#: utils/details.tsx:288
+msgid "Inequality - A Road Divided. Society becomes increasingly more unequal however the energy sector diversifies which causes ~2.6 °C average temperature increase."
 msgstr ""
 
 #: pages/_app.tsx:156
@@ -175,15 +179,28 @@ msgstr ""
 msgid "Lobby timed out and you have been disconnected."
 msgstr ""
 
-#: components/lineChart.tsx:99
+#: components/visualize.tsx:328
 msgid "Max Temperature (°C)"
 msgstr ""
 
-#: utils/details.tsx:181
+#: components/map.tsx:39
+msgid "Max Temperature over 100 years"
+msgstr ""
+
+#: components/map.tsx:38
+#: components/visualize.tsx:210
+msgid "Mean Temperature"
+msgstr ""
+
+#: components/visualize.tsx:329
+msgid "Mean Temperature (°C)"
+msgstr ""
+
+#: utils/details.tsx:188
 msgid "Middle of the road"
 msgstr ""
 
-#: utils/details.tsx:183
+#: utils/details.tsx:190
 msgid "Middle of the road. Society follows a path with very change from history which leads to slowly declining emissions with ~2.4 °C average temperature increase."
 msgstr ""
 
@@ -195,7 +212,7 @@ msgstr ""
 msgid "Predicted Max Temperature in {label}"
 msgstr ""
 
-#: components/layout.tsx:58
+#: components/layout.tsx:60
 msgid "Pseudo"
 msgstr ""
 
@@ -207,15 +224,15 @@ msgstr ""
 msgid "Region Lobby"
 msgstr ""
 
-#: components/layout.tsx:83
+#: components/layout.tsx:92
 msgid "Region: <0>{0}</0>"
 msgstr "Région: <0>{0}</0>"
 
-#: utils/details.tsx:224
+#: utils/details.tsx:232
 msgid "Regional Rivalry - A Rocky Road"
 msgstr ""
 
-#: utils/details.tsx:226
+#: utils/details.tsx:234
 msgid "Regional Rivalry - A Rocky Road. Society focus more on domestic and regional issues which causes high emissions with ~2.8 °C average temperature increase."
 msgstr ""
 
@@ -224,111 +241,111 @@ msgstr ""
 msgid "Return Home"
 msgstr ""
 
-#: utils/details.tsx:114
+#: utils/details.tsx:119
 msgid "SSP 1-1.9"
 msgstr ""
 
-#: utils/details.tsx:159
+#: utils/details.tsx:165
 msgid "SSP 1-2.6"
 msgstr ""
 
-#: utils/details.tsx:202
+#: utils/details.tsx:209
 msgid "SSP 2-4.5"
 msgstr ""
 
-#: utils/details.tsx:248
+#: utils/details.tsx:256
 msgid "SSP 3-7.0"
 msgstr ""
 
-#: utils/details.tsx:296
+#: utils/details.tsx:310
 msgid "SSP 4-3.4"
 msgstr ""
 
-#: utils/details.tsx:342
+#: utils/details.tsx:362
 msgid "SSP 4-6.0"
 msgstr ""
 
-#: utils/details.tsx:388
+#: utils/details.tsx:409
 msgid "SSP 5-3.4OS"
 msgstr ""
 
-#: utils/details.tsx:439
+#: utils/details.tsx:461
 msgid "SSP 5-8.5"
 msgstr ""
 
-#: utils/details.tsx:116
+#: utils/details.tsx:121
 msgid "SSP1-1.9 is a scenario experiment extending into the near future from 2015 to 2100, it is performed with a coupled atmosphere-ocean general circulation model (AOGCM). The forcing for the CMIP6 SSP experiments is derived from shared socioeconomic pathways (SSPs), a set of emission scenarios driven by different socioeconomic assumptions, paired with representative concentration pathways (RCPs), global forcing pathways which lead to specific end of century radiative forcing targets. SSP1-1.9 is based on SSP1 with low climate change mitigation and adaptation challenges and RCP1.9, a future pathway with a radiative forcing of 1.9 W/m2 in the year 2100. The SSP1-1.9 scenario fills a gap at the very low end of the range of plausible future forcing pathways. SSP1-1.9 forcing will be substantially below SSP1-2.6 in 2100. There is policy interest in low-forcing scenarios that would inform a possible goal of limiting global mean warming to 1.5°C above pre-industrial levels based on the Paris COP21 agreement."
 msgstr ""
 
-#: utils/details.tsx:161
+#: utils/details.tsx:167
 msgid "SSP1-2.6 is a scenario experiment extending into the near future from 2015 to 2100, it is performed with a coupled atmosphere-ocean general circulation model (AOGCM). The forcing for the CMIP6 SSP experiments is derived from shared socioeconomic pathways (SSPs), a set of emission scenarios driven by different socioeconomic assumptions, paired with representative concentration pathways (RCPs), global forcing pathways which lead to specific end of century radiative forcing targets. SSP1-2.6 is based on SSP1 with low climate change mitigation and adaptation challenges and RCP2.6, a future pathway with a radiative forcing of 2.6 W/m2 in the year 2100. The SSP1-2.6 scenario represents the low end of plausible future forcing pathways. SSP1-2.6 depicts a 'best case' future from a sustainability perspective."
 msgstr ""
 
-#: utils/details.tsx:204
+#: utils/details.tsx:211
 msgid "SSP2-4.5 is a scenario experiment extending into the near future from 2015 to 2100, it is performed with a coupled atmosphere-ocean general circulation model (AOGCM). The forcing for the CMIP6 SSP experiments is derived from shared socioeconomic pathways (SSPs), a set of emission scenarios driven by different socioeconomic assumptions, paired with representative concentration pathways (RCPs), global forcing pathways which lead to specific end of century radiative forcing targets. SSP2-4.5 is based on SSP2 with intermediate climate change mitigation and adaptation challenges and RCP4.5, a future pathway with a radiative forcing of 4.5 W/m2 in the year 2100. The ssp245 scenario represents the medium part of plausible future forcing pathways. SSP2-4.5 is comparable to the CMIP5 experiment RCP4.5."
 msgstr ""
 
-#: utils/details.tsx:250
+#: utils/details.tsx:258
 msgid "SSP3-7.0 is a scenario experiment extending into the near future from 2015 to 2100, it is performed with a coupled atmosphere-ocean general circulation model (AOGCM). The forcing for the CMIP6 SSP experiments is derived from shared socioeconomic pathways (SSPs), a set of emission scenarios driven by different socioeconomic assumptions, paired with representative concentration pathways (RCPs), global forcing pathways which lead to specific end of century radiative forcing targets. SSP3-7.0 is based on SSP3 in which climate change mitigation and adaptation challenges are high and RCP7.0, a future pathway with a radiative forcing of 7.0 W/m2 in the year 2100. The SSP3-7.0 scenario represents the medium to high end of plausible future forcing pathways. SSP3-7.0 fills a gap in the CMIP5 forcing pathways that is particularly important because it represents a forcing level common to several (unmitigated) SSP baseline pathways."
 msgstr ""
 
-#: utils/details.tsx:298
+#: utils/details.tsx:312
 msgid "SSP4-3.4 is a scenario experiment extending into the near future from 2015 to 2100, it is performed with a coupled atmosphere-ocean general circulation model (AOGCM). The forcing for the CMIP6 SSP experiments is derived from shared socioeconomic pathways (SSPs), a set of emission scenarios driven by different socioeconomic assumptions, paired with representative concentration pathways (RCPs), global forcing pathways which lead to specific end of century radiative forcing targets. SSP4-3.4 is based on SSP4 in which climate change adaptation challenges dominate and RCP3.4, a future pathway with a radiative forcing of 3.4 W/m2 in the year 2100. The SSP4-3.4 scenario fills a gap at the low end of the range of plausible future forcing pathways. SSP4-3.4 is of interest to mitigation policy since mitigation costs differ substantially between forcing levels of 4.5 W/m2 and 2.6 W/m2."
 msgstr ""
 
-#: utils/details.tsx:344
+#: utils/details.tsx:364
 msgid "SSP4-6.0 is a scenario experiment extending into the near future from 2015 to 2100, it is performed with a coupled atmosphere-ocean general circulation model (AOGCM). The forcing for the CMIP6 SSP experiments is derived from shared socioeconomic pathways (SSPs), a set of emission scenarios driven by different socioeconomic assumptions, paired with representative concentration pathways (RCPs), global forcing pathways which lead to specific end of century radiative forcing targets. SSP4-6.0 is based on SSP4 in which climate change adaptation challenges dominate and RCP6.0, a future pathway with a radiative forcing of 6.0 W/m2 in the year 2100. The SSP4-6.0 scenario fills in the range of medium plausible future forcing pathways. SSP4-6.0 defines the low end of the forcing range for unmitigated SSP baseline scenarios."
 msgstr ""
 
-#: utils/details.tsx:390
+#: utils/details.tsx:411
 msgid "SSP5-3.4OS is a scenario experiment with simulations beginning in the mid-21st century running from 2040 to 2100, it is performed with a coupled atmosphere-ocean general circulation model (AOGCM). The forcing for the CMIP6 SSP experiments is derived from shared socioeconomic pathways (SSPs), a set of emission scenarios driven by different socioeconomic assumptions, paired with representative concentration pathways (RCPs), global forcing pathways which lead to specific end of century radiative forcing targets. SSP5-3.4OS is based on SSP5 in which climate change mitigation challenges dominate and RCP3.4-over, a future pathway with a peak and decline in forcing towards an eventual radiative forcing of 3.4 W/m2 in the year 2100. The SSP5-3.4OS scenario branches from SSP5-8.5 in the year 2040 whereupon it applies substantially negative net emissions. SSP5-3.4OS explores the climate science and policy implications of a peak and decline in forcing during the 21st century. SSP5-3.4OS fills a gap in existing climate simulations by investigating the implications of a substantial overshoot in radiative forcing relative to a longer-term target."
 msgstr ""
 
-#: utils/details.tsx:441
+#: utils/details.tsx:463
 msgid "SSP5-8.5 is a scenario experiment extending into the near future from 2015 to 2100, it is performed with a coupled atmosphere-ocean general circulation model (AOGCM). The forcing for the CMIP6 SSP experiments is derived from shared socioeconomic pathways (SSPs), a set of emission scenarios driven by different socioeconomic assumptions, paired with representative concentration pathways (RCPs), global forcing pathways which lead to specific end of century radiative forcing targets. SSP5-8.5 is based on SSP5 in which climate change mitigation challenges dominate and RCP8.5, a future pathway with a radiative forcing of 8.5 W/m2 in the year 2100. The ssp585 scenario represents the high end of plausible future forcing pathways. SSP5-8.5 is comparable to the CMIP5 experiment RCP8.5."
 msgstr ""
 
-#: utils/details.tsx:93
+#: utils/details.tsx:97
 msgid "Scenario 1"
 msgstr ""
 
-#: utils/details.tsx:137
+#: utils/details.tsx:142
 msgid "Scenario 2"
 msgstr ""
 
-#: utils/details.tsx:180
+#: utils/details.tsx:186
 msgid "Scenario 3"
 msgstr ""
 
-#: utils/details.tsx:223
+#: utils/details.tsx:230
 msgid "Scenario 4"
 msgstr ""
 
-#: utils/details.tsx:271
+#: utils/details.tsx:279
 msgid "Scenario 5"
 msgstr ""
 
-#: utils/details.tsx:317
+#: utils/details.tsx:331
 msgid "Scenario 6"
 msgstr ""
 
-#: utils/details.tsx:362
+#: utils/details.tsx:382
 msgid "Scenario 7"
 msgstr ""
 
-#: utils/details.tsx:413
+#: utils/details.tsx:434
 msgid "Scenario 8"
 msgstr ""
 
-#: pages/teaching.tsx:63
+#: pages/teaching.tsx:72
 msgid "Scenarios"
 msgstr ""
 
-#: components/layout.tsx:200
+#: components/layout.tsx:209
 msgid "Select Language"
 msgstr "Sélectionnez votre langue"
 
-#: components/layout.tsx:97
+#: components/layout.tsx:106
 msgid "Simulation Code: <0>{0}</0>"
 msgstr "Code PIN de Simulation: <0>{0}</0>"
 
@@ -336,7 +353,7 @@ msgstr "Code PIN de Simulation: <0>{0}</0>"
 msgid "Sources"
 msgstr ""
 
-#: utils/details.tsx:45
+#: utils/details.tsx:48
 msgid "South American Amazonian Countries"
 msgstr ""
 
@@ -344,62 +361,62 @@ msgstr ""
 msgid "Taken Region"
 msgstr ""
 
-#: utils/details.tsx:94
-#: utils/details.tsx:138
+#: utils/details.tsx:99
+#: utils/details.tsx:144
 msgid "Taking the Green Road"
 msgstr ""
 
-#: utils/details.tsx:96
+#: utils/details.tsx:101
 msgid "Taking the Green Road. A sustainable society leads to very strongly declining emissions with ~1.5 °C average temperature increase."
 msgstr ""
 
-#: utils/details.tsx:140
+#: utils/details.tsx:146
 msgid "Taking the Green Road. Our best-case scenario. A sustainable society leads to strongly declining emissions with ~2.0 °C average temperature increase."
 msgstr ""
 
-#: components/map.tsx:41
+#: components/map.tsx:91
 msgid "Temperature (°C)"
 msgstr ""
 
 #: components/visualize.tsx:185
-msgid "Temperature in Ireland"
-msgstr ""
+#~ msgid "Temperature in Ireland"
+#~ msgstr ""
 
-#: pages/questions.tsx:126
+#: pages/questions.tsx:130
 msgid "Thank you for answering all the questions!"
 msgstr ""
 
-#: utils/details.tsx:18
+#: utils/details.tsx:21
 msgid "The European Union (EU) is a political and economic union of 27 member states that are located primarily in Europe."
 msgstr ""
 
-#: utils/details.tsx:47
+#: utils/details.tsx:50
 msgid "The following group of countries: Brazil, Columbia, Bolivia, Peru, Ecuador, Venezuela, Suriname, and Guyana."
 msgstr ""
 
-#: utils/details.tsx:503
+#: utils/details.tsx:525
 msgid "The model includes the components: aerosol: TACTIC_v2, atmos: Arpege 6.3 (T127; Gaussian Reduced with 24572 grid points in total distributed over 128 latitude circles (with 256 grid points per latitude circle between 30degN and 30degS reducing to 20 grid points per latitude circle at 88.9degN and 88.9degS); 91 levels; top-level 78.4 km), atmosChem: REPROBUS-C_v2, land: Surfex 8.0c, ocean: Nemo 3.6 (eORCA1, tripolar primarily 1deg; 362 x 294 longitude/latitude; 75 levels; top grid cell 0-1 m), ocnBgchem: Pisces 2.s, seaIce: Gelato 6.1. The model was run in native nominal resolutions: aerosol: 250 km, atmos: 250 km, atmosChem: 250 km, land: 250 km, ocean: 100 km, ocnBgchem: 100 km, seaIce: 100 km."
 msgstr ""
 
-#: utils/details.tsx:480
+#: utils/details.tsx:502
 msgid "The model includes the components: aerosol: prescribed monthly fields computed by TACTIC_v2 scheme, atmos: Arpege 6.3 (T127; Gaussian Reduced with 24572 grid points in total distributed over 128 latitude circles (with 256 grid points per latitude circle between 30degN and 30degS reducing to 20 grid points per latitude circle at 88.9degN and 88.9degS); 91 levels; top-level 78.4 km), atmosChem: OZL_v2, land: Surfex 8.0c, ocean: Nemo 3.6 (eORCA1, tripolar primarily 1deg; 362 x 294 longitude/latitude; 75 levels; top grid cell 0-1 m), seaIce: Gelato 6.1. The model was run in native nominal resolutions: aerosol: 250 km, atmos: 250 km, atmosChem: 250 km, land: 250 km, ocean: 100 km, seaIce: 100 km."
 msgstr ""
 
-#: utils/details.tsx:147
-#: utils/details.tsx:190
+#: utils/details.tsx:153
+#: utils/details.tsx:197
 msgid "The world follows a path in which social, economic, and technological trends do not shift markedly from historical patterns. Development and income growth proceeds unevenly, with some countries making relatively good progress while others fall short of expectations. Global and national institutions work toward but make slow progress in achieving sustainable development goals. Environmental systems experience degradation, although there are some improvements and overall the intensity of resource and energy use declines. Global population growth is moderate and levels off in the second half of the century."
 msgstr ""
 
-#: utils/details.tsx:102
+#: utils/details.tsx:107
 msgid "The world shifts gradually, but pervasively, toward a more sustainable path, emphasizing more inclusive development that respects perceived environmental boundaries. Management of the global commons slowly improves, educational and health investments accelerate the demographic transition, and the emphasis on economic growth shifts toward a broader emphasis on human well-being. Driven by an increasing commitment to achieving development goals, inequality is reduced both across and within countries. Consumption is oriented toward low material growth and lower resource and energy intensity."
 msgstr ""
 
-#: utils/details.tsx:372
-#: utils/details.tsx:423
+#: utils/details.tsx:393
+#: utils/details.tsx:445
 msgid "This world places increasing faith in competitive markets, innovation and participatory societies to produce rapid technological progress and development of human capital as the path to sustainable development. Global markets are increasingly integrated. There are also strong investments in health, education, and institutions to enhance human and social capital. At the same time, the push for economic and social development is coupled with the exploitation of abundant fossil fuel resources and the adoption of resource and energy intensive lifestyles around the world. All these factors lead to rapid growth of the global economy, while global population peaks and declines in the 21st century. Local environmental problems like air pollution are successfully managed. There is faith in the ability to effectively manage social and ecological systems, including by geo-engineering if necessary."
 msgstr ""
 
-#: components/lineChart.tsx:93
+#: components/lineChart.tsx:100
 msgid "Trend Line"
 msgstr ""
 
@@ -411,8 +428,12 @@ msgstr ""
 msgid "Unassigned Region"
 msgstr ""
 
-#: utils/details.tsx:26
+#: utils/details.tsx:29
 msgid "United States of America"
+msgstr ""
+
+#: components/map.tsx:71
+msgid "Variable"
 msgstr ""
 
 #: components/visualize.tsx:273
@@ -427,7 +448,7 @@ msgstr ""
 msgid "You aren't in a lobby."
 msgstr ""
 
-#: pages/questions.tsx:67
+#: pages/questions.tsx:68
 msgid "You cannot afford this option"
 msgstr ""
 
@@ -447,7 +468,7 @@ msgstr "Rejoindre une Simulation"
 msgid "button.newSimulation"
 msgstr "Nouvelle Simulation"
 
-#: components/layout.tsx:232
+#: components/layout.tsx:243
 msgid "footer"
 msgstr "Créé par Yannick <0>Yannick Gloster</0> | <1>Sources</1>"
 
@@ -535,11 +556,11 @@ msgstr ""
 msgid "image.credit.9"
 msgstr ""
 
-#: utils/details.tsx:527
+#: utils/details.tsx:549
 msgid "question.type.energyProduction"
 msgstr ""
 
-#: utils/details.tsx:531
+#: utils/details.tsx:553
 msgid "question.type.landUseChange"
 msgstr ""
 
@@ -563,77 +584,98 @@ msgstr "Lobby de jeu des Régions"
 msgid "title"
 msgstr "Simulation du Changement Climatique"
 
-#: components/visualize.tsx:127
+#: components/visualize.tsx:152
 msgid "visualize.contextualize.description"
 msgstr ""
 
-#: components/visualize.tsx:113
+#: components/visualize.tsx:130
 msgid "visualize.contextualize.label"
 msgstr ""
 
-#: components/visualize.tsx:122
+#: components/visualize.tsx:147
 msgid "visualize.contextualize.title"
 msgstr ""
 
 #: components/visualize.tsx:248
-msgid "visualize.line.description"
+#~ msgid "visualize.line.description"
+#~ msgstr ""
+
+#: components/visualize.tsx:280
+msgid "visualize.line.description.max"
 msgstr ""
 
-#: components/visualize.tsx:232
+#: components/visualize.tsx:287
+msgid "visualize.line.description.mean"
+msgstr ""
+
+#: components/visualize.tsx:306
+#: components/visualize.tsx:313
+msgid "visualize.line.dropdown.data.label"
+msgstr ""
+
+#: components/visualize.tsx:257
 msgid "visualize.line.label"
 msgstr ""
 
 #: components/visualize.tsx:241
-msgid "visualize.line.title"
+#~ msgid "visualize.line.title"
+#~ msgstr ""
+
+#: components/visualize.tsx:267
+msgid "visualize.line.title.max"
 msgstr ""
 
-#: components/visualize.tsx:216
+#: components/visualize.tsx:271
+msgid "visualize.line.title.mean"
+msgstr ""
+
+#: components/visualize.tsx:241
 msgid "visualize.map.description"
 msgstr ""
 
-#: components/visualize.tsx:201
+#: components/visualize.tsx:226
 msgid "visualize.map.label"
 msgstr ""
 
-#: components/visualize.tsx:211
+#: components/visualize.tsx:236
 msgid "visualize.map.title"
 msgstr ""
 
-#: components/visualize.tsx:283
+#: components/visualize.tsx:360
 msgid "visualize.other.description"
 msgstr ""
 
-#: components/visualize.tsx:323
-#: components/visualize.tsx:330
+#: components/visualize.tsx:400
+#: components/visualize.tsx:407
 msgid "visualize.other.dropdown.regions.label"
 msgstr ""
 
-#: components/visualize.tsx:293
-#: components/visualize.tsx:302
+#: components/visualize.tsx:370
+#: components/visualize.tsx:379
 msgid "visualize.other.dropdown.scenarios.label"
 msgstr ""
 
-#: components/visualize.tsx:262
+#: components/visualize.tsx:339
 msgid "visualize.other.label"
 msgstr ""
 
-#: components/visualize.tsx:276
+#: components/visualize.tsx:353
 msgid "visualize.other.title"
 msgstr ""
 
-#: components/visualize.tsx:93
+#: components/visualize.tsx:110
 msgid "visualize.ssp.description"
 msgstr ""
 
-#: components/visualize.tsx:77
+#: components/visualize.tsx:87
 msgid "visualize.ssp.label"
 msgstr ""
 
-#: components/visualize.tsx:86
+#: components/visualize.tsx:97
 msgid "visualize.ssp.title"
 msgstr ""
 
-#: pages/questions.tsx:113
+#: pages/questions.tsx:117
 msgid "{0, plural, one {# Point Remaining To Spend} other {# Points Remaining To Spend}}"
 msgstr ""
 
@@ -649,6 +691,6 @@ msgstr ""
 #~ msgid "{0} Region"
 #~ msgstr ""
 
-#: pages/questions.tsx:45
+#: pages/questions.tsx:46
 msgid "{extraPoints, plural, one {You've been given an extra point to spend!} other {You've been given # extra points to spend!}}"
 msgstr ""
