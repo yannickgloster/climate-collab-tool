@@ -110,6 +110,8 @@ export default function QuestionTest({
       }
       imgs={images}
       progress={((questionIndex + 1) * 100) / questions.length}
+      index={questionIndex}
+      length={questions.length}
     >
       <Typography variant="h6">Points Remaining: {user.points}</Typography>
       {questionIndex < questions.length - 1 ? (

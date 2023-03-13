@@ -33,6 +33,8 @@ export interface LayoutProps {
   img?: string;
   imgs?: string[];
   progress?: number;
+  index?: number;
+  length?: number;
 }
 
 type LOCALES = "en" | "fr" | "pseudo";
@@ -146,12 +148,31 @@ export default function Layout(props: LayoutProps) {
             exit={{ y: -10, opacity: 0 }}
             transition={{ duration: 0.2 }}
           >
-            {props.progress && props.progress < 100 && (
-              <LinearProgress
-                sx={{ mb: "4px", borderRadius: "2px", height: "8px" }}
-                variant="determinate"
-                value={props.progress}
-              />
+            {props.progress && props.index < props.length && (
+              <Box
+                height="8px"
+                mb="4px"
+                sx={{ display: "flex", alignItems: "center" }}
+              >
+                <Box sx={{ width: "100%", mr: 1 }}>
+                  <LinearProgress
+                    sx={{ borderRadius: "2px", height: "8px" }}
+                    variant="determinate"
+                    value={props.progress}
+                  />
+                </Box>
+                <Box
+                  sx={{ minWidth: 60 }}
+                  component={Paper}
+                  elevation={3}
+                  pl={1}
+                  pr={1}
+                >
+                  <Typography variant="overline">
+                    {props.index + 1} of {props.length}{" "}
+                  </Typography>
+                </Box>
+              </Box>
             )}
             <Grid
               container
