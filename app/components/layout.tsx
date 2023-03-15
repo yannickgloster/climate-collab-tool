@@ -271,7 +271,7 @@ export default function Layout(props: LayoutProps) {
                     Yannick Gloster
                   </Link>{" "}
                   |{" "}
-                  <Link component={NextLink} href="/sources">
+                  <Link component={NextLink} href="/sources" target="_blank">
                     Sources
                   </Link>
                 </Trans>
