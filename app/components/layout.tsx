@@ -199,8 +199,7 @@ export default function Layout(props: LayoutProps) {
               </Grid>
             </Grid>
           </motion.div>
-          {/* TODO: Enable Multiple Languages */}
-          {/* <Box
+          <Box
             position="absolute"
             sx={{
               position: "fixed",
@@ -221,7 +220,7 @@ export default function Layout(props: LayoutProps) {
                 height="18"
               />
             </Fab>
-          </Box> */}
+          </Box>
           <Dialog
             onClose={() => setOpenLocaleSelect(false)}
             open={openLocaleSelect}
