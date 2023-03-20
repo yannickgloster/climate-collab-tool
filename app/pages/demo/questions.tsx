@@ -64,6 +64,7 @@ export default function QuestionTest({
       if (questionIndex == questions.length - 1) {
         alert("(not) Alerting server of completion");
       }
+      console.log(newUser.emission);
     } else {
       setSnackbar({
         text: "You cannot afford this option",
@@ -124,7 +125,6 @@ export default function QuestionTest({
           Thank you for answering all the questions!
         </Typography>
       )}
-      <Typography variant="h6">DEBUG Emission: {user.emission}</Typography>
     </Layout>
   );
 }
