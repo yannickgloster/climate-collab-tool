@@ -350,24 +350,24 @@ async def process_zos_map() -> None:
             decode_times=True,
             use_cftime=True,
         )
-        # data = rioxarray.open_rasterio(
-        #     f"{datasets_root}/{ds_var_name}_Omon_{model}_ssp{ssp}.nc",
-        #     decode_times=True,
-        #     use_cftime=True,
-        #     masked=True,
-        #     parse_coordinates=False
-        # )
-        print(ds)
-        # print(data)
-        ds[ds_var_name][0, ...].plot()
+        data = rioxarray.open_rasterio(
+            f"{datasets_root}/{ds_var_name}_Omon_{model}_ssp{ssp}.nc",
+            decode_times=True,
+            use_cftime=True,
+            masked=True,
+            parse_coordinates=False
+        )[0]
+        # data.coords["x"] = (data.coords["x"] + 180) % 360 - 180
+        # data = data.sortby(data.x)
+        # Add in the correct crs
+        data.rio.write_crs(oceanShape.crs, inplace=True)
+        data[ds_var_name][0, ...].plot()
+        plt.title(f"{ssp}")
         plt.show()
-        # ds.rio.set_spatial_dims(x_dim="x", y_dim="y", inplace=True)
-        # ds.rio.write_crs("WGS84", inplace=True)
-
 
 if __name__ == "__main__":
     # asyncio.run(process_tasmax())
     # asyncio.run(process_tasmax_map())
-    # asyncio.run(process_zos_map())
-    asyncio.run(process_tas_map())
-    asyncio.run(process_tas())
+    asyncio.run(process_zos_map())
+    # asyncio.run(process_tas_map())
+    # asyncio.run(process_tas())
