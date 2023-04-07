@@ -1,4 +1,4 @@
-# Thesis
+# Climate Collab Tool
 
 ## `./app`
 
